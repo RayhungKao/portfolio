@@ -32,7 +32,7 @@ export const CARDS: Card[] = [
     detail: {
       lead: 'Product-minded software engineer who builds from rendering performance to the backend boundary.',
       points: [
-        'Core developer on YouCam Online Editor at Perfect Corp (NYSE: PERF), an AI photo and video editor that grew from about 10 tools to 80+ across 17 locales.',
+        'From 2024 to 2026, core developer on YouCam Online Editor at Perfect Corp (NYSE: PERF), an AI photo and video editor that grew from about 10 tools to 80+ across 17 locales.',
         'Earlier co-founded a startup and, as its sole developer, built its full-stack web product end to end.',
         'Five years of blockchain research (two as an undergraduate, three in my M.S. focused on applied cryptography), ending with an IEEE paper.',
       ],

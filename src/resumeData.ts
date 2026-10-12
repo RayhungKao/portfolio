@@ -34,7 +34,7 @@ export const RESUME = {
   title: 'Software Engineer',
   location: 'Taipei, Taiwan',
   summary:
-    "Core developer on YouCam Online Editor at Perfect Corp since 2024 — the company's only browser-based product, an AI photo and video editing platform in React and Next.js, grown from roughly 10 editing tools to 80+ across 17 locales. Works from rendering performance to the backend boundary: SSE streaming, asynchronous task architecture, payment integrations, and the data layers beneath them. Earlier co-founded a startup and, as sole developer, built its full-stack web product end to end.",
+    "From 2024 to 2026, core developer on YouCam Online Editor at Perfect Corp — the company's only browser-based product, an AI photo and video editing platform in React and Next.js, grown from roughly 10 editing tools to 80+ across 17 locales. Works from rendering performance to the backend boundary: SSE streaming, asynchronous task architecture, payment integrations, and the data layers beneath them. Earlier co-founded a startup and, as sole developer, built its full-stack web product end to end.",
 
   experience: [
     {
@@ -43,7 +43,7 @@ export const RESUME = {
       product: { name: 'YouCam Online Editor', url: 'https://yce.perfectcorp.com' },
       place: 'New Taipei City, Taiwan',
       title: 'Frontend Engineer, YouCam Online Editor',
-      dates: 'January 2024 – Present',
+      dates: 'January 2024 – October 2026',
       bullets: [
         "Architected the frontend from scratch for the AI Agent, a conversational editing assistant launched with ~80 task-run features in its first two months: SSE response streaming, a capability handshake that tells the backend which features the client supports, async task polling, and a cancel flow that works at every stage of a reply and is restored from history on reload. Led integration across product, AI engine, backend, and Beauty SDK teams.",
         "Built the editor's Fabric.js canvas interactions from day one: drag, resize, and rotate, snapping with alignment guides, and zoom and pan, powering the editing tools, undo/redo, image export, and the AI Agent's in-browser task execution.",
