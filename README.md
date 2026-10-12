@@ -1,12 +1,13 @@
 # Canvas Desk — Ray Kao's personal site
 
-A personal site with three pages:
+A personal site with four pages:
 
 | Page | URL | What it is |
 | --- | --- | --- |
 | Home | `#/` | "Hello, I'm Ray", a short intro, a prompt box that jumps to matching work or posts, selected work, and the latest posts. The avatar photo turns into the illustrated version on hover or tap |
 | Work | `#/work` | The interactive canvas described below |
 | Blog | `#/blog` | Posts grouped by category, with a two-level sidebar directory |
+| Résumé | `#/resume` | The résumé as a web page (there is no PDF in the repo) |
 
 On the Work page the portfolio is a desk: each piece of work is a card you can
 drag, resize, and rotate. Cards snap to each other with alignment guides, and the
@@ -99,4 +100,4 @@ from the body.
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
 | `src/App.tsx` | Page shell: top bar, theme toggle, routes, desk/list toggle, open/flip/close sequencing |
 | `src/styles.css` | Theme tokens and styles |
-| `public/resume.pdf` | Résumé served by the "Résumé" button |
+| `src/resume.ts`, `src/Resume.tsx` | Résumé text and the `#/resume` page; edit the text in `src/resume.ts` |

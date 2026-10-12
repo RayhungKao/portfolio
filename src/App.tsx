@@ -3,11 +3,13 @@ import { createDesk, type DeskApi, type Rect2D } from './desk';
 import { CARDS, LINKS } from './content';
 import { BlogList, BlogPost } from './Blog';
 import { Home } from './Home';
+import { Resume } from './Resume';
 import { Slide, type SlidePhase } from './Slide';
 import { DeckContent, SLIDE_W, measureLayouts } from './DeckContent';
 
 type Route =
   | { name: 'home' }
+  | { name: 'resume' }
   | { name: 'desk' } // the Work page: the canvas with every card
   | { name: 'work'; id: string } // the Work page with one card open
   | { name: 'blog'; category?: string }
@@ -17,6 +19,7 @@ function readRoute(): Route {
   const hash = window.location.hash;
   const work = hash.match(/^#\/work(?:\/([^/?#]+))?/);
   if (work) return work[1] && CARDS.some((c) => c.id === work[1]) ? { name: 'work', id: work[1] } : { name: 'desk' };
+  if (/^#\/resume\/?$/.test(hash)) return { name: 'resume' };
   const category = hash.match(/^#\/blog\/category\/([^/?#]+)/);
   if (category) return { name: 'blog', category: decodeURIComponent(category[1]) };
   const blog = hash.match(/^#\/blog(?:\/([^/?#]+))?/);
@@ -223,7 +226,7 @@ export default function App() {
           >
             Blog
           </a>
-          <a className="pill primary" href={LINKS.resume} target="_blank" rel="noreferrer">
+          <a className="pill primary" href={LINKS.resume} aria-current={route.name === 'resume' ? 'page' : undefined}>
             Résumé
           </a>
           <ThemeToggle />
@@ -232,6 +235,8 @@ export default function App() {
 
       {route.name === 'home' ? (
         <Home />
+      ) : route.name === 'resume' ? (
+        <Resume />
       ) : route.name === 'blog' ? (
         <BlogList category={route.category} />
       ) : route.name === 'post' ? (
