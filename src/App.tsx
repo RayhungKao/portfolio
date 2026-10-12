@@ -4,6 +4,7 @@ import { CARDS, LINKS } from './content';
 import { BlogList, BlogPost } from './Blog';
 import { Home } from './Home';
 import { Logo } from './Logo';
+import { appPath, interceptLinkClicks, navigate, onPathChange, to } from './router';
 import { Resume } from './Resume';
 import { Slide, type SlidePhase } from './Slide';
 import { DeckContent, SLIDE_W, measureLayouts } from './DeckContent';
@@ -17,15 +18,15 @@ type Route =
   | { name: 'post'; slug: string };
 
 function readRoute(): Route {
-  const hash = window.location.hash;
-  const work = hash.match(/^#\/work(?:\/([^/?#]+))?/);
+  const path = appPath().replace(/\/+$/, '') || '/';
+  const work = path.match(/^\/work(?:\/([^/]+))?$/);
   if (work) return work[1] && CARDS.some((c) => c.id === work[1]) ? { name: 'work', id: work[1] } : { name: 'desk' };
-  if (/^#\/resume\/?$/.test(hash)) return { name: 'resume' };
-  const category = hash.match(/^#\/blog\/category\/([^/?#]+)/);
+  if (path === '/resume') return { name: 'resume' };
+  const category = path.match(/^\/blog\/category\/([^/]+)$/);
   if (category) return { name: 'blog', category: decodeURIComponent(category[1]) };
-  const blog = hash.match(/^#\/blog(?:\/([^/?#]+))?/);
-  if (!blog) return { name: 'home' };
-  return blog[1] ? { name: 'post', slug: decodeURIComponent(blog[1]) } : { name: 'blog' };
+  const blog = path.match(/^\/blog(?:\/([^/]+))?$/);
+  if (blog) return blog[1] ? { name: 'post', slug: decodeURIComponent(blog[1]) } : { name: 'blog' };
+  return { name: 'home' };
 }
 
 const isNarrow = () => window.matchMedia('(max-width: 767px)').matches;
@@ -88,8 +89,12 @@ export default function App() {
       setRoute(next);
       if (next.name !== 'desk' && next.name !== 'work') window.scrollTo(0, 0);
     };
-    window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
+    const stopIntercepting = interceptLinkClicks();
+    const stopListening = onPathChange(onHash);
+    return () => {
+      stopIntercepting();
+      stopListening();
+    };
   }, []);
 
   // Create the Fabric desk when the Work page shows it.
@@ -109,7 +114,7 @@ export default function App() {
       desk = createDesk(host, layouts, {
         onOpen: (id) => {
           pushedFromHome.current = true;
-          window.location.hash = `#/work/${id}`;
+          navigate(`/work/${id}`);
         },
         onZoom: setZoom,
       });
@@ -173,7 +178,7 @@ export default function App() {
       pushedFromHome.current = false;
       window.history.back();
     } else {
-      window.location.replace('#/work');
+      navigate('/work', { replace: true });
     }
   }, []);
 
@@ -182,7 +187,7 @@ export default function App() {
     if (!s) return;
     const i = CARDS.findIndex((c) => c.id === s.id);
     const next = CARDS[(i + delta + CARDS.length) % CARDS.length];
-    window.location.replace(`#/work/${next.id}`);
+    navigate(`/work/${next.id}`, { replace: true });
   }, []);
 
   useEffect(() => {
@@ -198,7 +203,7 @@ export default function App() {
 
   const openFromList = (id: string) => {
     pushedFromHome.current = true;
-    window.location.hash = `#/work/${id}`;
+    navigate(`/work/${id}`);
   };
 
   const card = slide ? CARDS.find((c) => c.id === slide.id) : undefined;
@@ -207,7 +212,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <a className="brand" href="#/">
+        <a className="brand" href={to('/')}>
           <Logo />
           <strong>Ray Kao</strong>
           <span>Software Engineer</span>
@@ -218,20 +223,20 @@ export default function App() {
               {view === 'desk' ? 'List view' : 'Canvas view'}
             </button>
           )}
-          <a className={route.name === 'home' ? 'nav-link active' : 'nav-link'} href="#/" aria-current={route.name === 'home' ? 'page' : undefined}>
+          <a className={route.name === 'home' ? 'nav-link active' : 'nav-link'} href={to('/')} aria-current={route.name === 'home' ? 'page' : undefined}>
             Home
           </a>
-          <a className={onDeskPage ? 'nav-link active' : 'nav-link'} href="#/work" aria-current={onDeskPage ? 'page' : undefined}>
+          <a className={onDeskPage ? 'nav-link active' : 'nav-link'} href={to('/work')} aria-current={onDeskPage ? 'page' : undefined}>
             Work
           </a>
           <a
             className={route.name === 'blog' || route.name === 'post' ? 'nav-link active' : 'nav-link'}
-            href="#/blog"
+            href={to('/blog')}
             aria-current={route.name === 'blog' || route.name === 'post' ? 'page' : undefined}
           >
             Blog
           </a>
-          <a className="pill primary" href={LINKS.resume} aria-current={route.name === 'resume' ? 'page' : undefined}>
+          <a className="pill primary" href={to(LINKS.resume)} aria-current={route.name === 'resume' ? 'page' : undefined}>
             Résumé
           </a>
           <ThemeToggle />

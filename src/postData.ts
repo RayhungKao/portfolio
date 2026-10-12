@@ -12,7 +12,7 @@
  * ---
  * Post body…
  *
- * The file name (without .md) becomes the URL: #/blog/<file-name>.
+ * The file name (without .md) becomes the URL: /blog/<file-name>.
  * Reading time and tags (the post's #hashtags) are derived from the body.
  */
 

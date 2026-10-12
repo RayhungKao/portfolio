@@ -1,26 +1,27 @@
 import { useMemo, useRef, useState } from 'react';
 import { CARDS, LINKS } from './content';
 import { POSTS, formatDate } from './postData';
+import { asset, isInternal, navigate, to } from './router';
 
 /**
  * Shortcuts behind the home prompt box. It is a navigator, not a chatbot: typing filters these,
  * Enter opens the first match.
  */
 const SUGGESTIONS = [
-  { label: 'How I built the AI Agent', href: '#/work/ai-agent', keywords: 'ai agent chat sse streaming llm assistant' },
-  { label: 'Cutting load time by 95%', href: '#/work/performance', keywords: 'performance video history speed load fast' },
-  { label: 'Tripbook, my startup', href: '#/work/tripbook', keywords: 'tripbook startup rails ruby postgres redis full-stack backend' },
-  { label: 'Read the blog', href: '#/blog', keywords: 'blog writing posts articles notes' },
-  { label: 'Payments and subscriptions', href: '#/work/payments', keywords: 'stripe payment paypal subscription billing checkout' },
-  { label: 'Research: verifiable accounting', href: '#/work/research', keywords: 'research blockchain ieee paper cryptography accounting' },
-  { label: 'Canvas interactions', href: '#/work/canvas', keywords: 'canvas fabric drag zoom snapping editor' },
+  { label: 'How I built the AI Agent', href: '/work/ai-agent', keywords: 'ai agent chat sse streaming llm assistant' },
+  { label: 'Cutting load time by 95%', href: '/work/performance', keywords: 'performance video history speed load fast' },
+  { label: 'Tripbook, my startup', href: '/work/tripbook', keywords: 'tripbook startup rails ruby postgres redis full-stack backend' },
+  { label: 'Read the blog', href: '/blog', keywords: 'blog writing posts articles notes' },
+  { label: 'Payments and subscriptions', href: '/work/payments', keywords: 'stripe payment paypal subscription billing checkout' },
+  { label: 'Research: verifiable accounting', href: '/work/research', keywords: 'research blockchain ieee paper cryptography accounting' },
+  { label: 'Canvas interactions', href: '/work/canvas', keywords: 'canvas fabric drag zoom snapping editor' },
   { label: 'Résumé', href: LINKS.resume, keywords: 'resume cv experience' },
 ];
 const DEFAULT_COUNT = 4;
 const SELECTED = ['ai-agent', 'performance', 'tripbook'];
 
 function go(href: string) {
-  if (href.startsWith('#')) window.location.hash = href;
+  if (isInternal(href)) navigate(href);
   else window.open(href, '_blank', 'noopener');
 }
 
@@ -62,7 +63,7 @@ function AskBox() {
         {matches.length ? (
           matches.map((s) => (
             <li key={s.href}>
-              <a href={s.href} {...(s.href.startsWith('#') ? {} : { target: '_blank', rel: 'noreferrer' })}>{s.label}</a>
+              <a href={to(s.href)} {...(isInternal(s.href) ? {} : { target: '_blank', rel: 'noreferrer' })}>{s.label}</a>
             </li>
           ))
         ) : (
@@ -88,8 +89,8 @@ function Avatar() {
     >
       <span className="avatar-plate" aria-hidden="true" />
       <span className="avatar-frame">
-        <img src="/avatar-photo.jpg" alt="" width={360} height={360} />
-        <img className="avatar-alt" src="/avatar-illustration.jpg" alt="" width={360} height={360} />
+        <img src={asset('avatar-photo.jpg')} alt="" width={360} height={360} />
+        <img className="avatar-alt" src={asset('avatar-illustration.jpg')} alt="" width={360} height={360} />
       </span>
     </button>
   );
@@ -117,7 +118,7 @@ export function Home() {
           </p>
           <AskBox />
           <div className="hero-links">
-            <a href="#/work">Explore the interactive canvas →</a>
+            <a href={to('/work')}>Explore the interactive canvas →</a>
             <a href={LINKS.github} target="_blank" rel="noreferrer">GitHub</a>
             <a href={LINKS.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             <a href={LINKS.email}>Email</a>
@@ -129,12 +130,12 @@ export function Home() {
       <section className="home-section">
         <div className="home-section-head">
           <h2>Selected work</h2>
-          <a href="#/work">See everything on the canvas →</a>
+          <a href={to('/work')}>See everything on the canvas →</a>
         </div>
         <ul className="work-list">
           {work.map((c) => (
             <li key={c.id}>
-              <a href={`#/work/${c.id}`}>
+              <a href={to(`/work/${c.id}`)}>
                 <span className="work-kicker">{c.kicker}</span>
                 <span className="work-title">{c.title}</span>
                 <span className="work-sub">{c.subtitle}</span>
@@ -148,12 +149,12 @@ export function Home() {
       <section className="home-section">
         <div className="home-section-head">
           <h2>Latest writing</h2>
-          <a href="#/blog">All articles →</a>
+          <a href={to('/blog')}>All articles →</a>
         </div>
         <ul className="latest-list">
           {latest.map((p) => (
             <li key={p.slug}>
-              <a href={`#/blog/${p.slug}`}>
+              <a href={to(`/blog/${p.slug}`)}>
                 <span className="latest-meta">
                   {p.category} · {formatDate(p.date)} · {p.readingMinutes} min read
                 </span>

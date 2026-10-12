@@ -4,10 +4,10 @@ A personal site with four pages:
 
 | Page | URL | What it is |
 | --- | --- | --- |
-| Home | `#/` | "Hello, I'm Ray", a short intro, a prompt box that jumps to matching work or posts, selected work, and the latest posts. The avatar photo turns into the illustrated version on hover or tap |
-| Work | `#/work` | The interactive canvas described below |
-| Blog | `#/blog` | Posts grouped by category, with a two-level sidebar directory |
-| Résumé | `#/resume` | The résumé as a web page (there is no PDF in the repo) |
+| Home | `/` | "Hello, I'm Ray", a short intro, a prompt box that jumps to matching work or posts, selected work, and the latest posts. The avatar photo turns into the illustrated version on hover or tap |
+| Work | `/work` | The interactive canvas described below |
+| Blog | `/blog` | Posts grouped by category, with a two-level sidebar directory |
+| Résumé | `/resume` | The résumé as a web page (there is no PDF in the repo) |
 
 On the Work page the portfolio is a desk: each piece of work is a card you can
 drag, resize, and rotate. Cards snap to each other with alignment guides, and the
@@ -36,11 +36,22 @@ npm run preview   # serve the production build
 
 Every push to `main` builds the site and publishes it to GitHub Pages
 (`.github/workflows/deploy.yml`). One-time setup: in the repository's Settings → Pages,
-set Source to "GitHub Actions". The site is served at https://rayhungkao.github.io.
+set Source to "GitHub Actions". The repository is `portfolio`, so the site is served at
+https://rayhungkao.github.io/portfolio/.
+
+URLs are ordinary paths (`/blog/<slug>`), handled in the browser by `src/router.ts`. GitHub
+Pages has no rewrites, so the build also writes `404.html` as a copy of `index.html`: a deep
+link that matches no file loads the app, which then shows the right page. Such a deep link is
+answered with HTTP status 404 even though the page renders. Old `#/…` links are redirected to
+their path.
+
+The build's base path comes from the Pages settings (`/portfolio/` now). In code, write app
+paths (`/blog/x`) and pass internal hrefs through `to()` and public files through `asset()`,
+both from `src/router.ts`, so links keep working under any base path.
 
 To move to a custom domain later: verify the domain in your GitHub account settings, enter
-it under Settings → Pages → Custom domain, then add the DNS records GitHub shows. No
-`CNAME` file is needed with an Actions deployment, and Vite's default `base` (`/`) works for both.
+it under Settings → Pages → Custom domain, then add the DNS records GitHub shows. The base
+path then becomes `/` automatically, and no `CNAME` file is needed with an Actions deployment.
 
 ## Controls
 
@@ -62,7 +73,7 @@ survives a reload until they press "Tidy up".
 Each desk card is drawn from its slide's own layout, so a zoomed-in card and the opened
 slide always match. A name label above each card stays the same size at any zoom.
 
-Each open card has its own URL (`#/work/ai-agent`, `#/work/performance`, …), so you can
+Each open card has its own URL (`/work/ai-agent`, `/work/performance`, …), so you can
 link straight to one; the page opens on the desk and flies to that card.
 
 ## Theme
@@ -74,11 +85,11 @@ navy theme, and the choice is remembered in localStorage. All colors are CSS var
 
 ## Blog
 
-The blog lives at `#/blog`, and each category has its own page (`#/blog/category/ai-agent`).
+The blog lives at `/blog`, and each category has its own page (`/blog/category/ai-agent`).
 Each post is one plain-text file in `src/posts/`, written the way you would write a
 LinkedIn post: line breaks are kept, a blank line starts a new paragraph, URLs become
 links, and `#hashtags` are highlighted. The file name becomes the post URL
-(`src/posts/cancel-flow.md` → `#/blog/cancel-flow`).
+(`src/posts/cancel-flow.md` → `/blog/cancel-flow`).
 
 ```text
 ---
@@ -109,6 +120,7 @@ from the body.
 | `src/DeckContent.tsx` | The slide layout, plus the measuring that turns it into a desk card |
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
 | `src/Logo.tsx`, `public/favicon.svg` | The R mark: the top-bar logo (follows the theme) and the browser-tab icon |
+| `src/router.ts` | Path routing: reads the URL, base-path-aware links (`to()`, `asset()`), in-app navigation |
 | `src/App.tsx` | Page shell: top bar, theme toggle, routes, desk/list toggle, open/flip/close sequencing |
 | `src/styles.css` | Theme tokens and styles |
-| `src/resumeData.ts`, `src/Resume.tsx` | Résumé text and the `#/resume` page; edit the text in `src/resumeData.ts` |
+| `src/resumeData.ts`, `src/Resume.tsx` | Résumé text and the `/resume` page; edit the text in `src/resumeData.ts` |
