@@ -108,6 +108,7 @@ from the body.
 | `src/desk.ts` | Fabric.js desk: draws cards from measured layouts, snapping guides, zoom/pan, camera flights, persistence |
 | `src/DeckContent.tsx` | The slide layout, plus the measuring that turns it into a desk card |
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
+| `src/Logo.tsx`, `public/favicon.svg` | The R mark: the top-bar logo (follows the theme) and the browser-tab icon |
 | `src/App.tsx` | Page shell: top bar, theme toggle, routes, desk/list toggle, open/flip/close sequencing |
 | `src/styles.css` | Theme tokens and styles |
 | `src/resumeData.ts`, `src/Resume.tsx` | Résumé text and the `#/resume` page; edit the text in `src/resumeData.ts` |
