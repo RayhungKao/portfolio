@@ -6,13 +6,27 @@
  * ---
  * title: What I learned building an AI agent's cancel flow
  * date: 2026-10-09
+ * category: AI Agent
  * linkedin: https://www.linkedin.com/feed/update/urn:li:activity:...
  * summary: Optional one-line teaser for the post list.
  * ---
  * Post body…
  *
  * The file name (without .md) becomes the URL: #/blog/<file-name>.
+ * Reading time and tags (the post's #hashtags) are derived from the body.
  */
+
+/** Sidebar order of the blog categories. A post with an unlisted category is shown after these. */
+export const CATEGORY_ORDER = [
+  'AI Agent',
+  'System Design',
+  'Performance',
+  'Frontend Architecture',
+  'Canvas & Animation',
+  'Building with AI',
+  'Industry Insights',
+];
+export const UNCATEGORIZED = 'Notes';
 
 export type Post = {
   slug: string;
@@ -21,7 +35,14 @@ export type Post = {
   linkedin?: string;
   summary: string;
   body: string;
+  category: string;
+  /** Minutes, from the word count (about 230 words a minute, rounded up). */
+  readingMinutes: number;
+  tags: string[];
 };
+
+export const categorySlug = (name: string) =>
+  name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const files = import.meta.glob('./posts/*.md', { query: '?raw', import: 'default', eager: true }) as Record<
   string,
@@ -43,6 +64,9 @@ function parse(path: string, raw: string): Post {
   body = body.trim();
   const firstLine = body.split('\n').find((l) => l.trim()) ?? '';
   const summary = meta.summary || (firstLine.length > 180 ? `${firstLine.slice(0, 177)}…` : firstLine);
+  const words = body.match(/[A-Za-z0-9'’-]+/g)?.length ?? 0;
+  const cjk = body.match(/[\u3400-\u9fff]/g)?.length ?? 0; // CJK reads at roughly two characters per word
+  const tags = [...new Set([...body.matchAll(/#([\p{L}\p{N}_]+)/gu)].map((m) => m[1]))];
   return {
     slug,
     title: meta.title || firstLine || slug,
@@ -50,6 +74,9 @@ function parse(path: string, raw: string): Post {
     linkedin: meta.linkedin || undefined,
     summary,
     body,
+    category: meta.category || UNCATEGORIZED,
+    readingMinutes: Math.max(1, Math.ceil((words + cjk / 2) / 230)),
+    tags,
   };
 }
 
@@ -63,3 +90,11 @@ export function formatDate(iso: string): string {
     ? iso
     : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
+
+/** Categories in sidebar order, each with its posts (newest first). Empty categories are left out. */
+export const CATEGORIES: { name: string; slug: string; posts: Post[] }[] = (() => {
+  const names = [...CATEGORY_ORDER, ...new Set(POSTS.map((p) => p.category).filter((c) => !CATEGORY_ORDER.includes(c)))];
+  return names
+    .map((name) => ({ name, slug: categorySlug(name), posts: POSTS.filter((p) => p.category === name) }))
+    .filter((c) => c.posts.length > 0);
+})();

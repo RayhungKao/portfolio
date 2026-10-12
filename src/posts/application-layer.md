@@ -1,6 +1,7 @@
 ---
 title: Developer Insights: why our edge is the application layer
 date: 2025-12-07
+category: Industry Insights
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7403362203363684352/
 summary: The core question is no longer "How do we generate?" but: "What's next after users have created an incredible piece of work?"
 ---

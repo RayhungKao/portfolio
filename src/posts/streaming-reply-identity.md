@@ -1,6 +1,7 @@
 ---
 title: Why chat apps lock the message box while a reply streams
 date: 2026-09-12
+category: AI Agent
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7504403672907460608/
 ---
 💡 ChatGPT, Claude, Gemini and Perplexity all disable the message box while a reply streams. Reasonable product choice, and it keeps a whole class of bug out of their codebase.

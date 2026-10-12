@@ -1,6 +1,7 @@
 ---
 title: Building a real-time AI chat end to end, from a frontend engineer's side of the stack
 date: 2026-08-01
+category: System Design
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7489228431860350976/
 ---
 💡 I built and own most of the frontend architecture of the YCO AI Agent, a streaming multimodal AI chat. But I wanted to understand the whole machine, not just the surface I own. So as a side project I built an entire real-time AI chat end to end: the group-chat UI, the backend, and a fake LLM service. I treated it as a system-design exercise rather than a frontend one.

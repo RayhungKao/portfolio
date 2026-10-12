@@ -1,6 +1,7 @@
 ---
 title: How I built YCO's AI Agent: a streaming, multimodal chat that runs the whole platform from a single prompt
 date: 2026-07-25
+category: AI Agent
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7486691736392585217/
 ---
 An AI assistant that edits and generates your photos is really four frontend problems at once: streaming responses, on-device media compute, routing one prompt to the right feature, and keeping the conversation durable.

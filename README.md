@@ -6,7 +6,7 @@ A personal site with three pages:
 | --- | --- | --- |
 | Home | `#/` | "Hello, I'm Ray", a short intro, a prompt box that jumps to matching work or posts, selected work, and the latest posts. The avatar photo turns into the illustrated version on hover or tap |
 | Work | `#/work` | The interactive canvas described below |
-| Blog | `#/blog` | Posts, each written as one plain-text file |
+| Blog | `#/blog` | Posts grouped by category, with a two-level sidebar directory |
 
 On the Work page the portfolio is a desk: each piece of work is a card you can
 drag, resize, and rotate. Cards snap to each other with alignment guides, and the
@@ -56,23 +56,28 @@ link straight to one; the page opens on the desk and flies to that card.
 
 ## Blog
 
-The blog lives at `#/blog`. Each post is one plain-text file in `src/posts/`, written the
-way you would write a LinkedIn post: line breaks are kept, a blank line starts a new
-paragraph, URLs become links, and `#hashtags` are highlighted. The file name becomes the
-post URL (`src/posts/cancel-flow.md` → `#/blog/cancel-flow`).
+The blog lives at `#/blog`, and each category has its own page (`#/blog/category/ai-agent`).
+Each post is one plain-text file in `src/posts/`, written the way you would write a
+LinkedIn post: line breaks are kept, a blank line starts a new paragraph, URLs become
+links, and `#hashtags` are highlighted. The file name becomes the post URL
+(`src/posts/cancel-flow.md` → `#/blog/cancel-flow`).
 
 ```text
 ---
 title: What I learned building an AI agent's cancel flow
 date: 2026-10-09
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:...
+category: AI Agent
 summary: Optional one-line teaser for the post list
 ---
 Post body…
 ```
 
-`title` and `date` (YYYY-MM-DD) are needed for a tidy list; `linkedin` adds a
-"Discuss on LinkedIn" button; `summary` defaults to the first line of the post.
+`title` and `date` (YYYY-MM-DD) are needed for a tidy list; `category` places the post in
+the sidebar directory (the order of categories is `CATEGORY_ORDER` in `src/postData.ts`;
+posts without one go under "Notes"); `linkedin` adds a "Discuss on LinkedIn" button;
+`summary` defaults to the first line of the post. Reading time and tags are computed
+from the body.
 
 ## Where things live
 
@@ -81,7 +86,7 @@ Post body…
 | `src/content.ts` | Card text, colors, and links — edit content here; the desk card and the slide both update |
 | `src/posts/*.md` | Blog posts |
 | `src/Home.tsx` | Home page: intro, prompt box, avatar, selected work, latest posts |
-| `src/postData.ts`, `src/Blog.tsx` | Loads posts and renders the blog list and post pages |
+| `src/postData.ts`, `src/Blog.tsx` | Loads posts, categories, reading time; renders the sidebar directory, lists, and post pages |
 | `src/desk.ts` | Fabric.js desk: draws cards from measured layouts, snapping guides, zoom/pan, camera flights, persistence |
 | `src/DeckContent.tsx` | The slide layout, plus the measuring that turns it into a desk card |
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |

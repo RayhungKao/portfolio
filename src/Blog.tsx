@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { POSTS, formatDate, type Post } from './postData';
+import { useEffect, useState, type ReactNode } from 'react';
+import { CATEGORIES, POSTS, categorySlug, formatDate, type Post } from './postData';
 
 const TOKEN = /(`[^`]+`|https?:\/\/[^\s)]+|#[\p{L}\p{N}_]+)/gu;
 
@@ -44,55 +44,141 @@ function PostBody({ body }: { body: string }) {
   );
 }
 
-export function BlogList() {
+function PostMeta({ post }: { post: Post }) {
   return (
-    <main className="blog">
-      <header className="blog-head">
-        <h1>Writing</h1>
-        <p>Notes on building products, frontend systems, and moving toward the backend.</p>
-      </header>
-      {POSTS.length === 0 ? (
-        <p className="blog-empty">No posts yet.</p>
-      ) : (
-        <ul className="post-list">
-          {POSTS.map((p) => (
-            <li key={p.slug}>
-              <a className="post-item" href={`#/blog/${p.slug}`}>
-                {p.date && <time dateTime={p.date}>{formatDate(p.date)}</time>}
-                <span className="post-title">{p.title}</span>
-                <span className="post-summary">{p.summary}</span>
-              </a>
+    <div className="post-meta">
+      <a href={`#/blog/category/${categorySlug(post.category)}`}>{post.category}</a>
+      {post.date && <time dateTime={post.date}>{formatDate(post.date)}</time>}
+      <span>{post.readingMinutes} min read</span>
+    </div>
+  );
+}
+
+function Tags({ tags }: { tags: string[] }) {
+  if (!tags.length) return null;
+  return (
+    <ul className="post-tags" aria-label="Tags">
+      {tags.slice(0, 6).map((t) => (
+        <li key={t}>{t}</li>
+      ))}
+    </ul>
+  );
+}
+
+/** Two-level directory: All articles, then each category with its posts. */
+function BlogNav({ category, slug }: { category?: string; slug?: string }) {
+  const activeCategory = category ?? (slug ? categorySlug(POSTS.find((p) => p.slug === slug)?.category ?? '') : undefined);
+  const [open, setOpen] = useState<Set<string>>(() => new Set(activeCategory ? [activeCategory] : []));
+  useEffect(() => {
+    if (activeCategory) setOpen((s) => new Set(s).add(activeCategory));
+  }, [activeCategory]);
+  const toggle = (c: string) =>
+    setOpen((s) => {
+      const next = new Set(s);
+      if (next.has(c)) next.delete(c);
+      else next.add(c);
+      return next;
+    });
+
+  return (
+    <nav className="blog-nav" aria-label="Blog categories">
+      <a className={!activeCategory && !slug ? 'blog-nav-all active' : 'blog-nav-all'} href="#/blog">
+        All articles <span>{POSTS.length}</span>
+      </a>
+      <ul>
+        {CATEGORIES.map((c) => {
+          const isOpen = open.has(c.slug);
+          return (
+            <li key={c.slug} className={activeCategory === c.slug ? 'active' : undefined}>
+              <div className="blog-nav-row">
+                <a href={`#/blog/category/${c.slug}`}>
+                  {c.name} <span>{c.posts.length}</span>
+                </a>
+                <button aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${c.name}`} aria-expanded={isOpen} onClick={() => toggle(c.slug)}>
+                  {isOpen ? '▾' : '▸'}
+                </button>
+              </div>
+              {isOpen && (
+                <ul className="blog-nav-posts">
+                  {c.posts.map((p) => (
+                    <li key={p.slug}>
+                      <a className={p.slug === slug ? 'active' : undefined} href={`#/blog/${p.slug}`}>
+                        {p.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
-          ))}
-        </ul>
-      )}
-    </main>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+export function BlogList({ category }: { category?: string }) {
+  const current = category ? CATEGORIES.find((c) => c.slug === category) : undefined;
+  const posts = current ? current.posts : POSTS;
+  return (
+    <div className="blog-layout">
+      <BlogNav category={current?.slug} />
+      <main className="blog">
+        <header className="blog-head">
+          <h1>Writing</h1>
+          <p>Notes on building products, frontend systems, and moving toward the backend.</p>
+        </header>
+        <h2 className="blog-section">
+          {current ? current.name : 'All articles'} <span>{posts.length} {posts.length === 1 ? 'article' : 'articles'}</span>
+        </h2>
+        {posts.length === 0 ? (
+          <p className="blog-empty">No posts yet.</p>
+        ) : (
+          <ul className="post-list">
+            {posts.map((p) => (
+              <li key={p.slug} className="post-item">
+                <PostMeta post={p} />
+                <a className="post-title" href={`#/blog/${p.slug}`}>{p.title}</a>
+                <p className="post-summary">{p.summary}</p>
+                <Tags tags={p.tags} />
+                <a className="post-read" href={`#/blog/${p.slug}`}>Read article →</a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </main>
+    </div>
   );
 }
 
 export function BlogPost({ slug }: { slug: string }) {
   const post: Post | undefined = POSTS.find((p) => p.slug === slug);
-  if (!post) {
-    return (
-      <main className="blog">
-        <a className="back" href="#/blog">← All posts</a>
-        <p className="blog-empty">This post doesn’t exist.</p>
-      </main>
-    );
-  }
   return (
-    <main className="blog">
-      <a className="back" href="#/blog">← All posts</a>
-      <article>
-        {post.date && <time dateTime={post.date}>{formatDate(post.date)}</time>}
-        <h1>{post.title}</h1>
-        <PostBody body={post.body} />
-        {post.linkedin && (
-          <a className="pill linkedin" href={post.linkedin} target="_blank" rel="noreferrer">
-            Discuss on LinkedIn →
-          </a>
+    <div className="blog-layout">
+      <BlogNav slug={slug} />
+      <main className="blog">
+        {!post ? (
+          <>
+            <a className="back" href="#/blog">← All articles</a>
+            <p className="blog-empty">This post doesn’t exist.</p>
+          </>
+        ) : (
+          <>
+            <a className="back" href={`#/blog/category/${categorySlug(post.category)}`}>← {post.category}</a>
+            <article>
+              <PostMeta post={post} />
+              <h1>{post.title}</h1>
+              <PostBody body={post.body} />
+              <Tags tags={post.tags} />
+              {post.linkedin && (
+                <a className="pill linkedin" href={post.linkedin} target="_blank" rel="noreferrer">
+                  Discuss on LinkedIn →
+                </a>
+              )}
+            </article>
+          </>
         )}
-      </article>
-    </main>
+      </main>
+    </div>
   );
 }
