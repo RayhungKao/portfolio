@@ -132,7 +132,7 @@ export function Resume() {
         </article>
       </section>
 
-      <footer className="home-footer cv-footer">© {new Date().getFullYear()} Ray Kao</footer>
+      <footer className="home-footer cv-footer">© {new Date().getFullYear()} Jui-Hung (Ray) Kao</footer>
     </main>
   );
 }
