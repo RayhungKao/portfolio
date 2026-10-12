@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { CARDS, LINKS } from './content';
 import { POSTS, formatDate } from './postData';
 import { asset, isInternal, navigate, to } from './router';
+import { SocialLinks } from './SocialLinks';
 
 /**
  * Shortcuts behind the home prompt box. It is a navigator, not a chatbot: typing filters these,
@@ -119,9 +120,7 @@ export function Home() {
           <AskBox />
           <div className="hero-links">
             <a href={to('/work')}>Explore the interactive canvas →</a>
-            <a href={LINKS.github} target="_blank" rel="noreferrer">GitHub</a>
-            <a href={LINKS.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href={LINKS.email}>Email</a>
+            <SocialLinks />
           </div>
         </div>
         <Avatar />

@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { LINKS } from './content';
+import { SocialLinks } from './SocialLinks';
 import { RESUME, type Role } from './resumeData';
 
 const PinIcon = () => (
@@ -63,7 +64,6 @@ function RoleBlock({ role }: { role: Role }) {
 /** The résumé as a page: the same wording as the résumé document, without the phone number. */
 export function Resume() {
   const r = RESUME;
-  const email = LINKS.email.replace('mailto:', '');
   return (
     <main className="cv">
       <header className="cv-hero">
@@ -73,11 +73,7 @@ export function Resume() {
           <PinIcon /> {r.location}
         </p>
         <p className="cv-summary">{r.summary}</p>
-        <ul className="cv-links">
-          <li><a href={LINKS.github} target="_blank" rel="noreferrer">GitHub</a></li>
-          <li><a href={LINKS.linkedin} target="_blank" rel="noreferrer">LinkedIn</a></li>
-          <li><a href={LINKS.email}>{email}</a></li>
-        </ul>
+        <SocialLinks />
       </header>
 
       <section className="cv-section" aria-labelledby="cv-experience">
