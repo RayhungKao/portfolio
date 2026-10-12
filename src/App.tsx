@@ -3,6 +3,7 @@ import { createDesk, type DeskApi, type Rect2D } from './desk';
 import { CARDS, LINKS } from './content';
 import { BlogList, BlogPost } from './Blog';
 import { Home } from './Home';
+import { Logo } from './Logo';
 import { Resume } from './Resume';
 import { Slide, type SlidePhase } from './Slide';
 import { DeckContent, SLIDE_W, measureLayouts } from './DeckContent';
@@ -207,6 +208,7 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <a className="brand" href="#/">
+          <Logo />
           <strong>Ray Kao</strong>
           <span>Software Engineer</span>
         </a>
@@ -216,6 +218,9 @@ export default function App() {
               {view === 'desk' ? 'List view' : 'Canvas view'}
             </button>
           )}
+          <a className={route.name === 'home' ? 'nav-link active' : 'nav-link'} href="#/" aria-current={route.name === 'home' ? 'page' : undefined}>
+            Home
+          </a>
           <a className={onDeskPage ? 'nav-link active' : 'nav-link'} href="#/work" aria-current={onDeskPage ? 'page' : undefined}>
             Work
           </a>
