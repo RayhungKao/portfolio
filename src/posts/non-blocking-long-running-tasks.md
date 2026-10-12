@@ -1,6 +1,7 @@
 ---
 title: How I made every long-running task in YCO non-blocking: fire it, keep working, never lose it
 date: 2026-08-15
+category: Frontend Architecture
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7494301875429593088/
 ---
 A lot of what our app does is heavy, server-side task processing: video generation, image editing, filter and effect application, and more. Any one of these can take anywhere from seconds to several minutes. The request was always asynchronous, but the experience was blocking. The UI waited on one task at a time, and navigating away killed it. So we moved task-tracking out of the page into a header-level monitor backed by IndexedDB, and turned it into one shared pattern that every task-processing feature uses. Now our users can queue many tasks, keep editing, switch tools, refresh the tab, even close it, and results still land with a red-dot notification.

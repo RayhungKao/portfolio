@@ -66,13 +66,17 @@ post URL (`src/posts/cancel-flow.md` → `#/blog/cancel-flow`).
 title: What I learned building an AI agent's cancel flow
 date: 2026-10-09
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:...
+category: AI Agent
 summary: Optional one-line teaser for the post list
 ---
 Post body…
 ```
 
-`title` and `date` (YYYY-MM-DD) are needed for a tidy list; `linkedin` adds a
-"Discuss on LinkedIn" button; `summary` defaults to the first line of the post.
+`title` and `date` (YYYY-MM-DD) are needed for a tidy list; `category` places the post in
+the sidebar directory (the order of categories is `CATEGORY_ORDER` in `src/postData.ts`;
+posts without one go under "Notes"); `linkedin` adds a "Discuss on LinkedIn" button;
+`summary` defaults to the first line of the post. Reading time and tags are computed
+from the body.
 
 ## Where things live
 
@@ -81,7 +85,7 @@ Post body…
 | `src/content.ts` | Card text, colors, and links — edit content here; the desk card and the slide both update |
 | `src/posts/*.md` | Blog posts |
 | `src/Home.tsx` | Home page: intro, prompt box, avatar, selected work, latest posts |
-| `src/postData.ts`, `src/Blog.tsx` | Loads posts and renders the blog list and post pages |
+| `src/postData.ts`, `src/Blog.tsx` | Loads posts with their category and reading time; renders the blog list and post pages |
 | `src/desk.ts` | Fabric.js desk: draws cards from measured layouts, snapping guides, zoom/pan, camera flights, persistence |
 | `src/DeckContent.tsx` | The slide layout, plus the measuring that turns it into a desk card |
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |

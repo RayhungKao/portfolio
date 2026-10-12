@@ -153,7 +153,7 @@ export function Home() {
             <li key={p.slug}>
               <a href={`#/blog/${p.slug}`}>
                 <span className="latest-meta">
-                  {formatDate(p.date)}
+                  {p.category} · {formatDate(p.date)} · {p.readingMinutes} min read
                 </span>
                 <span className="latest-title">{p.title}</span>
               </a>

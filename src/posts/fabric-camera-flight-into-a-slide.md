@@ -1,6 +1,7 @@
 ---
 title: Flying a Fabric.js camera into a card, then turning the card into a page
 date: 2026-10-09
+category: Canvas & Animation
 summary: Treat the viewport as a camera, draw each card as a scaled copy of its slide, and let the URL drive every animation.
 ---
 The Work page of this site is a Fabric.js desk. Click a card and the camera flies to it, then the card becomes a readable page. Four pieces make that work.

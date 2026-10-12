@@ -1,6 +1,7 @@
 ---
 title: How I made YCO's video history handle media-heavy list performance
 date: 2026-07-12
+category: Performance
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7481974349168566272/
 ---
 Media-heavy list performance requires network, main-thread, data-structure, pagination, and memory. Picking a technique means knowing exactly which axis it acts on.
