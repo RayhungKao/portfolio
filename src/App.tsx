@@ -236,7 +236,7 @@ export default function App() {
           >
             Blog
           </a>
-          <a className="pill primary" href={to(LINKS.resume)} aria-current={route.name === 'resume' ? 'page' : undefined}>
+          <a className={route.name === 'resume' ? 'nav-link active' : 'nav-link'} href={to(LINKS.resume)} aria-current={route.name === 'resume' ? 'page' : undefined}>
             Résumé
           </a>
           <ThemeToggle />

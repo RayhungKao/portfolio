@@ -69,7 +69,6 @@ a { color: var(--tan-ink); }
   padding: 7px 14px; font-size: 14px; text-decoration: none;
 }
 .pill.subtle { background: transparent; color: var(--ink-2); font-size: 13px; }
-.pill.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); margin-left: 6px; }
 .theme-toggle { border: 1px solid var(--line); background: transparent; color: var(--ink-2); width: 34px; height: 34px; border-radius: 999px; font-size: 15px; line-height: 1; }
 .theme-toggle:hover { color: var(--ink); background: var(--bg-deep); }
 
@@ -321,7 +320,6 @@ a { color: var(--tan-ink); }
   .actions { gap: 0; }
   .nav-link { padding: 6px 7px; font-size: 14px; }
   .pill { padding: 6px 12px; font-size: 13px; }
-  .pill.primary { margin-left: 4px; }
   .theme-toggle { width: 30px; height: 30px; margin-left: 4px; }
   .brand strong, .brand span { display: none; } /* the logo alone carries the name on phones */
 }
