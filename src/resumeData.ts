@@ -5,6 +5,9 @@
 
 export type Role = {
   org: string;
+  orgUrl?: string;
+  /** A product named inside the title, linked to its site. */
+  product?: { name: string; url: string };
   place?: string;
   title: string;
   dates: string;
@@ -21,6 +24,8 @@ export const RESUME = {
   experience: [
     {
       org: 'Perfect Corp. (NYSE: PERF)',
+      orgUrl: 'https://www.perfectcorp.com',
+      product: { name: 'YouCam Online Editor', url: 'https://yce.perfectcorp.com' },
       place: 'New Taipei City, Taiwan',
       title: 'Frontend Engineer, YouCam Online Editor',
       dates: 'January 2024 – Present',

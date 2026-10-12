@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { LINKS } from './content';
 import { RESUME, type Role } from './resumeData';
 
@@ -8,13 +9,44 @@ const PinIcon = () => (
   </svg>
 );
 
+const ExternalIcon = () => (
+  <svg className="ext-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+  </svg>
+);
+
+function ExtLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a className="ext" href={href} target="_blank" rel="noreferrer">
+      {children}
+      <ExternalIcon />
+    </a>
+  );
+}
+
+/** Links the product name inside a role title, if the role names one. */
+function Title({ role }: { role: Role }) {
+  const p = role.product;
+  if (!p || !role.title.includes(p.name)) return <>{role.title}</>;
+  const [before, after] = role.title.split(p.name);
+  return (
+    <>
+      {before}
+      <ExtLink href={p.url}>{p.name}</ExtLink>
+      {after}
+    </>
+  );
+}
+
 function RoleBlock({ role }: { role: Role }) {
   return (
     <article className="cv-role">
       <header className="cv-role-head">
         <h3>
-          <span className="cv-role-title">{role.title}</span>
-          <span className="cv-role-org">{role.org}</span>
+          <span className="cv-role-title">
+            <Title role={role} />
+          </span>
+          <span className="cv-role-org">{role.orgUrl ? <ExtLink href={role.orgUrl}>{role.org}</ExtLink> : role.org}</span>
         </h3>
         <span className="cv-dates">{role.dates}</span>
       </header>
