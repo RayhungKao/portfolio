@@ -109,7 +109,9 @@ export function Home() {
           </h1>
           <p className="tagline">From rendering performance to the backend boundary.</p>
           <p className="lede">
-            Core developer on <strong>YouCam Online Editor</strong> at Perfect Corp, an AI photo and video editor that grew
+            Core developer on{' '}
+            <a className="ext" href={LINKS.yco} target="_blank" rel="noreferrer"><strong>YouCam Online Editor</strong></a> at{' '}
+            <a className="ext" href={LINKS.perfectCorp} target="_blank" rel="noreferrer">Perfect Corp</a>, an AI photo and video editor that grew
             from about 10 tools to 80+. I build <strong>streaming AI interfaces</strong>, <strong>asynchronous task systems</strong>,
             and the data layers beneath them.
           </p>

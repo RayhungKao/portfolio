@@ -187,4 +187,6 @@ export const LINKS = {
   linkedin: 'https://www.linkedin.com/in/juihungkao',
   resume: '#/resume',
   paper: 'https://ieeexplore.ieee.org/document/10252842',
+  yco: 'https://yce.perfectcorp.com',
+  perfectCorp: 'https://www.perfectcorp.com',
 };
