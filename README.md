@@ -1,6 +1,14 @@
-# Canvas Desk — interactive portfolio prototype
+# Canvas Desk — Ray Kao's personal site
 
-A personal site where the portfolio is a desk: each piece of work is a card you can
+A personal site with three pages:
+
+| Page | URL | What it is |
+| --- | --- | --- |
+| Home | `#/` | "Hello, I'm Ray", a short intro, a prompt box that jumps to matching work or posts, selected work, and the latest posts. The avatar photo turns into the illustrated version on hover or tap |
+| Work | `#/work` | The interactive canvas described below |
+| Blog | `#/blog` | Posts, each written as one plain-text file |
+
+On the Work page the portfolio is a desk: each piece of work is a card you can
 drag, resize, and rotate. Cards snap to each other with alignment guides, and the
 desk zooms and pans like a design tool. Click a card and the camera flies to it and
 it opens into a full slide; flip between cards like a deck, and go back to the desk anytime.
@@ -35,7 +43,7 @@ npm run preview   # serve the production build
 | Flip between cards | ← / → keys, or the ‹ › buttons on the slide |
 | Back to the desk | Esc, "← Back to the desk", clicking outside the slide, or the browser Back button |
 | Reset layout | "Tidy up" |
-| Plain list | "Skip to content" (default on screens under 768px) |
+| Plain list | "List view" (default on screens under 768px) |
 
 Card positions are saved in the browser (localStorage), so a visitor's layout
 survives a reload until they press "Tidy up".
@@ -72,10 +80,11 @@ Post body…
 | --- | --- |
 | `src/content.ts` | Card text, colors, and links — edit content here; the desk card and the slide both update |
 | `src/posts/*.md` | Blog posts |
+| `src/Home.tsx` | Home page: intro, prompt box, avatar, selected work, latest posts |
 | `src/postData.ts`, `src/Blog.tsx` | Loads posts and renders the blog list and post pages |
 | `src/desk.ts` | Fabric.js desk: draws cards from measured layouts, snapping guides, zoom/pan, camera flights, persistence |
 | `src/DeckContent.tsx` | The slide layout, plus the measuring that turns it into a desk card |
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
-| `src/App.tsx` | Page shell: top bar, desk/list toggle, routes, open/flip/close sequencing |
-| `src/styles.css` | Styles |
+| `src/App.tsx` | Page shell: top bar, routes, desk/list toggle, open/flip/close sequencing |
+| `src/styles.css` | Color tokens and styles |
 | `public/resume.pdf` | Résumé served by the "Résumé" button |
