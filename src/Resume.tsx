@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { LINKS } from './content';
+import { SocialLinks } from './SocialLinks';
 import { RESUME, type Role } from './resumeData';
 
 const PinIcon = () => (
@@ -15,11 +15,17 @@ const ExternalIcon = () => (
   </svg>
 );
 
+/** An external link with a ↗ icon. The icon stays on the same line as the last word. */
 function ExtLink({ href, children }: { href: string; children: ReactNode }) {
+  const text = typeof children === 'string' ? children : null;
+  const cut = text ? text.lastIndexOf(' ') + 1 : 0;
   return (
     <a className="ext" href={href} target="_blank" rel="noreferrer">
-      {children}
-      <ExternalIcon />
+      {text ? text.slice(0, cut) : children}
+      <span className="ext-tail">
+        {text ? text.slice(cut) : null}
+        <ExternalIcon />
+      </span>
     </a>
   );
 }
@@ -63,7 +69,6 @@ function RoleBlock({ role }: { role: Role }) {
 /** The résumé as a page: the same wording as the résumé document, without the phone number. */
 export function Resume() {
   const r = RESUME;
-  const email = LINKS.email.replace('mailto:', '');
   return (
     <main className="cv">
       <header className="cv-hero">
@@ -73,11 +78,7 @@ export function Resume() {
           <PinIcon /> {r.location}
         </p>
         <p className="cv-summary">{r.summary}</p>
-        <ul className="cv-links">
-          <li><a href={LINKS.github} target="_blank" rel="noreferrer">GitHub</a></li>
-          <li><a href={LINKS.linkedin} target="_blank" rel="noreferrer">LinkedIn</a></li>
-          <li><a href={LINKS.email}>{email}</a></li>
-        </ul>
+        <SocialLinks />
       </header>
 
       <section className="cv-section" aria-labelledby="cv-experience">
@@ -106,30 +107,48 @@ export function Resume() {
         </dl>
       </section>
 
+      <section className="cv-section" aria-labelledby="cv-academic">
+        <h2 id="cv-academic">Academic Experience</h2>
+        {r.academic.map((role) => (
+          <RoleBlock key={role.org} role={role} />
+        ))}
+      </section>
+
       <section className="cv-section" aria-labelledby="cv-education">
         <h2 id="cv-education">Education</h2>
-        <article className="cv-role">
-          <header className="cv-role-head">
-            <h3>
-              <span className="cv-role-title">{r.education.school}</span>
-            </h3>
-          </header>
-          <p className="cv-place">{r.education.place}</p>
-          <ul className="cv-degrees">
-            {r.education.degrees.map(([degree, dates]) => (
-              <li key={degree}>
-                <span>{degree}</span>
-                <span className="cv-dates">{dates}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="cv-publication">
-            Publication:{' '}
-            <a href={LINKS.paper} target="_blank" rel="noreferrer">
-              {r.education.publication}
-            </a>
-          </p>
-        </article>
+        {r.education.degrees.map((d) => (
+          <article className="cv-role" key={d.degree}>
+            <header className="cv-role-head">
+              <h3>
+                <span className="cv-role-title">{d.degree}</span>
+                <span className="cv-role-org">{r.education.school}</span>
+              </h3>
+              <span className="cv-dates">{d.dates}</span>
+            </header>
+            <p className="cv-place">
+              {r.education.place} · {d.grade}
+            </p>
+            <ul className="cv-bullets">
+              {d.bullets.map((b) => (
+                <li key={b}>{b}</li>
+              ))}
+              {d.activities && <li>Activities and societies: {d.activities}</li>}
+            </ul>
+          </article>
+        ))}
+      </section>
+
+      <section className="cv-section" aria-labelledby="cv-publications">
+        <h2 id="cv-publications">Publications</h2>
+        <ol className="cv-pubs">
+          {r.publications.map((p) => (
+            <li key={p.title}>
+              <p className="cv-pub-title">{p.url ? <ExtLink href={p.url}>{p.title}</ExtLink> : p.title}</p>
+              <p className="cv-pub-venue">{p.venue}</p>
+              <p className="cv-pub-when">{p.when}</p>
+            </li>
+          ))}
+        </ol>
       </section>
 
       <footer className="home-footer cv-footer">© {new Date().getFullYear()} Jui-Hung (Ray) Kao</footer>

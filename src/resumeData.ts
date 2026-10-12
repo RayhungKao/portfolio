@@ -1,7 +1,22 @@
 /**
- * Résumé content, word for word from the résumé (minus the phone number, which stays off the web).
- * Edit here; the /resume page renders it.
+ * Résumé content: the résumé's wording (minus the phone number, which stays off the web), plus the
+ * education details, visiting role and publications from LinkedIn. Edit here; the /resume page renders it.
  */
+
+export type Degree = {
+  degree: string;
+  dates: string;
+  grade: string;
+  bullets: string[];
+  activities?: string;
+};
+
+export type Publication = {
+  title: string;
+  url?: string;
+  venue: string;
+  when: string;
+};
 
 export type Role = {
   org: string;
@@ -72,13 +87,51 @@ export const RESUME = {
     ['Spoken Languages', 'Mandarin (native), English (professional, TOEIC 865)'],
   ] as [string, string][],
 
+  academic: [
+    {
+      org: 'Tsinghua University',
+      title: 'Visiting Student',
+      dates: 'July 2018 – August 2018',
+      bullets: ['Independent research with scholarship and accommodation'],
+    },
+  ] as Role[],
+
   education: {
     school: 'National Tsing Hua University',
     place: 'Hsinchu, Taiwan',
     degrees: [
-      ['M.S. in Computer Science, GPA 4.18/4.30', 'September 2020 – July 2023'],
-      ['B.S. in Computer Science, Minor in Quantitative Finance, GPA 3.75/4.30', 'September 2016 – June 2020'],
-    ] as [string, string][],
-    publication: 'Preventing Financial Statement Fraud with Blockchain-based Verifiable Accounting System, IEEE ICECCME 2023',
+      {
+        degree: 'M.S. in Computer Science',
+        dates: 'September 2020 – July 2023',
+        grade: 'GPA 4.18/4.30',
+        bullets: ['3 years of research on blockchain and applied cryptography'],
+        activities: 'Table tennis',
+      },
+      {
+        degree: 'B.S. in Computer Science, Minor in Quantitative Finance',
+        dates: 'September 2016 – June 2020',
+        grade: 'GPA 3.75/4.30 (84.83%)',
+        bullets: ['2 years of independent research on blockchain technology and applications'],
+      },
+    ] as Degree[],
   },
+
+  publications: [
+    {
+      title: 'Preventing Financial Statement Fraud with Blockchain-based Verifiable Accounting System',
+      url: 'https://doi.org/10.1109/ICECCME57830.2023.10252842',
+      venue: 'IEEE International Conference on Electrical, Computer, Communications, and Mechatronics Engineering (ICECCME)',
+      when: 'July 19–21, 2023 · Santa Cruz de Tenerife, Spain',
+    },
+    {
+      title: 'Enhancing Transparency and Trust in Accounting with Triple-Entry Transactions and Digital Signatures in a Blockchain-based AIS Approach',
+      venue: 'International Conference on Information, Management, and Knowledge Community',
+      when: 'May 26, 2023 · Taipei, Taiwan',
+    },
+    {
+      title: 'Designing A Compact Convolutional Neural Network Processor on Embedded FPGAs',
+      venue: 'VLSI Design/CAD Symposium',
+      when: 'August 3–6, 2021 · Virtual',
+    },
+  ] as Publication[],
 };
