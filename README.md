@@ -32,6 +32,16 @@ npm run build     # type-check and build to dist/
 npm run preview   # serve the production build
 ```
 
+## Deploy
+
+Every push to `main` builds the site and publishes it to GitHub Pages
+(`.github/workflows/deploy.yml`). One-time setup: in the repository's Settings → Pages,
+set Source to "GitHub Actions". The site is served at https://rayhungkao.github.io.
+
+To move to a custom domain later: verify the domain in your GitHub account settings, enter
+it under Settings → Pages → Custom domain, then add the DNS records GitHub shows. No
+`CNAME` file is needed with an Actions deployment, and Vite's default `base` (`/`) works for both.
+
 ## Controls
 
 | Action | How |
