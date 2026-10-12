@@ -185,6 +185,6 @@ export const LINKS = {
   email: 'mailto:rayhungkao@gmail.com',
   github: 'https://github.com/RayhungKao',
   linkedin: 'https://www.linkedin.com/in/juihungkao',
-  resume: '/resume.pdf',
+  resume: '#/resume',
   paper: 'https://ieeexplore.ieee.org/document/10252842',
 };
