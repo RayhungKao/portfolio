@@ -357,9 +357,10 @@ a { color: var(--tan-ink); }
 .cv-role-head h3 { margin: 0; font-size: 17px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
 .cv-role-title { font-weight: 700; color: var(--ink); }
 .cv-role-org { font-weight: 500; color: var(--ink-3); padding-left: 12px; border-left: 1px solid var(--line); }
-.cv-role-head a.ext { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.cv-role-head a.ext { color: inherit; text-decoration: none; }
 .cv-role-head a.ext:hover { color: var(--tan-ink); text-decoration: underline; text-underline-offset: 3px; }
-.ext-icon { opacity: 0.6; flex: none; }
+.ext-tail { white-space: nowrap; }
+.ext-icon { opacity: 0.6; flex: none; margin-left: 4px; vertical-align: -1px; }
 .cv-dates { font-size: 13.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .cv-place { font-size: 13.5px; color: var(--ink-3); margin: 4px 0 0; }
 .cv-bullets { margin: 12px 0 0; padding-left: 20px; }
@@ -369,9 +370,13 @@ a { color: var(--tan-ink); }
 .cv-skills > div { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 16px; font-size: 15px; line-height: 1.55; }
 .cv-skills dt { font-weight: 600; color: var(--ink); }
 .cv-skills dd { margin: 0; color: var(--ink-2); }
-.cv-degrees { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; }
-.cv-degrees li { display: flex; justify-content: space-between; gap: 6px 20px; flex-wrap: wrap; font-size: 15px; color: var(--ink-2); }
-.cv-publication { font-size: 15px; line-height: 1.6; color: var(--ink-2); margin: 14px 0 0; }
+.cv-pubs { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
+.cv-pubs p { margin: 0; }
+.cv-pub-title { font-size: 16px; font-weight: 600; line-height: 1.45; color: var(--ink); }
+.cv-pub-title a.ext { color: inherit; text-decoration: none; }
+.cv-pub-title a.ext:hover { color: var(--tan-ink); text-decoration: underline; text-underline-offset: 3px; }
+.cv-pub-venue { font-size: 14.5px; color: var(--ink-2); margin-top: 4px !important; line-height: 1.5; }
+.cv-pub-when { font-size: 13.5px; color: var(--ink-3); margin-top: 2px !important; }
 .cv-footer { margin-top: 48px; }
 @media (max-width: 640px) {
   .cv-hero { padding-top: 36px; }
