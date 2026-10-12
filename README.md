@@ -77,5 +77,5 @@ Post body…
 | `src/DeckContent.tsx` | The slide layout, plus the measuring that turns it into a desk card |
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
 | `src/App.tsx` | Page shell: top bar, desk/list toggle, routes, open/flip/close sequencing |
-| `src/styles.css` | Styles |
+| `src/styles.css` | Color tokens and styles |
 | `public/resume.pdf` | Résumé served by the "Résumé" button |
