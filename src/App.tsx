@@ -10,13 +10,15 @@ type Route =
   | { name: 'home' }
   | { name: 'desk' } // the Work page: the canvas with every card
   | { name: 'work'; id: string } // the Work page with one card open
-  | { name: 'blog' }
+  | { name: 'blog'; category?: string }
   | { name: 'post'; slug: string };
 
 function readRoute(): Route {
   const hash = window.location.hash;
   const work = hash.match(/^#\/work(?:\/([^/?#]+))?/);
   if (work) return work[1] && CARDS.some((c) => c.id === work[1]) ? { name: 'work', id: work[1] } : { name: 'desk' };
+  const category = hash.match(/^#\/blog\/category\/([^/?#]+)/);
+  if (category) return { name: 'blog', category: decodeURIComponent(category[1]) };
   const blog = hash.match(/^#\/blog(?:\/([^/?#]+))?/);
   if (!blog) return { name: 'home' };
   return blog[1] ? { name: 'post', slug: decodeURIComponent(blog[1]) } : { name: 'blog' };
@@ -200,7 +202,7 @@ export default function App() {
       {route.name === 'home' ? (
         <Home />
       ) : route.name === 'blog' ? (
-        <BlogList />
+        <BlogList category={route.category} />
       ) : route.name === 'post' ? (
         <BlogPost slug={route.slug} />
       ) : (
