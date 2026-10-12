@@ -44,7 +44,7 @@ A per-frame probe now checks one invariant: in every frame, either the canvas ca
 
 4. Let the URL drive everything
 
-Every open card has a route: #/work/ai-agent. Clicking a card only changes the hash. A single effect reads the route and runs the sequence: fade the current slide back into its card, fly the camera, fade in the next slide.
+Every open card has a route: /work/ai-agent. Clicking a card only changes the URL. A single effect reads the route and runs the sequence: fade the current slide back into its card, fly the camera, fade in the next slide.
 
 That gives deep links and a working Back button for free. Opening pushes a history entry, flipping replaces it, and closing goes back. Fast clicks are safe too: each sequence takes a number from a counter, and any step that finishes after a newer sequence has started simply stops. If the desk itself is rebuilt mid-sequence, by a hot reload or by switching to the list view and back, the same effect re-runs against the new desk instead of waiting for an animation that will never finish.
 

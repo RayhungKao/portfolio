@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import { LINKS, type Card } from './content';
+import { isInternal, to } from './router';
 
 /** Layout width of every slide. Desk cards are this layout drawn at cardWidth / SLIDE_W. */
 export const SLIDE_W = 880;
@@ -87,8 +88,8 @@ export function DeckContent({ card, measureId }: { card: Card; measureId?: strin
               <a
                 key={l.href}
                 data-l="text"
-                href={l.href}
-                {...(l.href.startsWith('#') ? {} : { target: '_blank', rel: 'noreferrer' })}
+                href={to(l.href)}
+                {...(isInternal(l.href) ? {} : { target: '_blank', rel: 'noreferrer' })}
               >
                 {l.label} →
               </a>

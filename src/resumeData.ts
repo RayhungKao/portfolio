@@ -1,6 +1,6 @@
 /**
  * Résumé content, word for word from the résumé (minus the phone number, which stays off the web).
- * Edit here; the #/resume page renders it.
+ * Edit here; the /resume page renders it.
  */
 
 export type Role = {

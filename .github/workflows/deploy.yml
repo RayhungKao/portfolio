@@ -29,8 +29,11 @@ jobs:
           node-version: lts/*
           cache: npm
       - run: npm ci
-      - run: npm run build
-      - uses: actions/configure-pages@v6
+      # base_path is '/portfolio' on rayhungkao.github.io/portfolio and '' once a custom domain is set,
+      # so the build follows the Pages settings with no code change.
+      - id: pages
+        uses: actions/configure-pages@v6
+      - run: npm run build -- --base="${{ steps.pages.outputs.base_path }}/"
       - uses: actions/upload-pages-artifact@v5
         with:
           path: ./dist
