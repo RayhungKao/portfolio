@@ -54,6 +54,13 @@ slide always match. A name label above each card stays the same size at any zoom
 Each open card has its own URL (`#/work/ai-agent`, `#/work/performance`, …), so you can
 link straight to one; the page opens on the desk and flies to that card.
 
+## Theme
+
+Light (warm paper) is the default. The ☾ / ☀ button in the top bar switches to the dark
+navy theme, and the choice is remembered in localStorage. All colors are CSS variables in
+`src/styles.css` (`:root` for light, `:root[data-theme="dark"]` for dark). A small script in
+`index.html` applies the saved theme before the page renders, so there is no flash.
+
 ## Blog
 
 The blog lives at `#/blog`, and each category has its own page (`#/blog/category/ai-agent`).
@@ -90,6 +97,6 @@ from the body.
 | `src/desk.ts` | Fabric.js desk: draws cards from measured layouts, snapping guides, zoom/pan, camera flights, persistence |
 | `src/DeckContent.tsx` | The slide layout, plus the measuring that turns it into a desk card |
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
-| `src/App.tsx` | Page shell: top bar, routes, desk/list toggle, open/flip/close sequencing |
-| `src/styles.css` | Color tokens and styles |
+| `src/App.tsx` | Page shell: top bar, theme toggle, routes, desk/list toggle, open/flip/close sequencing |
+| `src/styles.css` | Theme tokens and styles |
 | `public/resume.pdf` | Résumé served by the "Résumé" button |

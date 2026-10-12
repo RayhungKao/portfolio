@@ -47,6 +47,33 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 const FONT = 'Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
 
+// ---------- readable label colors ----------
+type RGB = [number, number, number];
+const hexToRgb = (hex: string): RGB => {
+  const h = hex.replace('#', '');
+  const full = h.length === 3 ? [...h].map((c) => c + c).join('') : h;
+  return [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16)) as RGB;
+};
+const luminance = ([r, g, b]: RGB) => {
+  const lin = (c: number) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+};
+const contrast = (a: RGB, b: RGB) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+/** Keeps the card's hue but mixes it toward white (dark page) or black (light page) until it reads at 4.5:1. */
+function readableOn(color: string, background: string): string {
+  const fg = hexToRgb(color);
+  const bg = hexToRgb(background);
+  const target: RGB = luminance(bg) < 0.2 ? [255, 255, 255] : [0, 0, 0];
+  for (let t = 0; t <= 1; t += 0.05) {
+    const mix = fg.map((c, i) => Math.round(c + (target[i] - c) * t)) as RGB;
+    if (contrast(mix, bg) >= 4.5) return `rgb(${mix.join(',')})`;
+  }
+  return `rgb(${target.join(',')})`;
+}
+
 /** Places an object so that its top-left corner sits at (x, y). Fabric 7 positions objects by their center. */
 function placeTopLeft(obj: FabricObject, x: number, y: number) {
   obj.set({ left: x + obj.width / 2, top: y + obj.height / 2 });
@@ -326,6 +353,16 @@ export function createDesk(
   // ---------- name labels (constant screen size, like frame names in Figma) ----------
   let labelAlpha = 1;
   const cardOf = new Map(cards.map((c) => [c.id, c]));
+  // Label colors follow the page theme; re-read only when the theme changes, not on every frame.
+  const readLabelColors = () => {
+    const root = getComputedStyle(document.documentElement);
+    const bg = root.getPropertyValue('--bg').trim() || '#f4ede2';
+    return {
+      title: root.getPropertyValue('--ink-2').trim() || '#4c524f',
+      kicker: new Map(CARDS.map((c) => [c.id, readableOn(c.color, bg)])),
+    };
+  };
+  let labelColors = readLabelColors();
   /**
    * Draws one card's name label. Called right after that card renders, so the label sits in the
    * card's own layer: cards higher in the stack cover it, exactly like frame names in Figma.
@@ -357,11 +394,11 @@ export function createDesk(
       }
       if (showKicker) {
         ctx.font = `600 10.5px ${FONT}`;
-        ctx.fillStyle = card.color;
+        ctx.fillStyle = labelColors.kicker.get(id) ?? card.color;
         ctx.fillText(kicker, x, y);
         ctx.font = `600 13px ${FONT}`;
       }
-      ctx.fillStyle = '#374151';
+      ctx.fillStyle = labelColors.title;
       ctx.fillText(title, showKicker ? x + kw : x, y + 1);
     }
     ctx.restore();
@@ -576,6 +613,12 @@ export function createDesk(
   };
 
   // ---------- resize ----------
+  const repaint = () => {
+    labelColors = readLabelColors();
+    canvas.requestRenderAll();
+  };
+  window.addEventListener('themechange', repaint);
+
   let lastScreenWidth = 0;
   const ro = new ResizeObserver(() => {
     canvas.setDimensions({ width: host.clientWidth, height: host.clientHeight });
@@ -608,6 +651,7 @@ export function createDesk(
     dispose: () => {
       cancelAnimationFrame(frame);
       finishTween?.();
+      window.removeEventListener('themechange', repaint);
       ro.disconnect();
       void canvas.dispose().then(() => host.replaceChildren());
     },
