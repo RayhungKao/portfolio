@@ -112,6 +112,9 @@ a { color: var(--tan-ink); }
 .hero-links > a { color: var(--tan-ink); font-weight: 600; }
 .hero-links { align-items: center; }
 
+.icon { display: inline-flex; flex: none; }
+.icon svg { width: 100%; height: 100%; display: block; }
+
 /* Icon buttons for GitHub, LinkedIn and email (home and résumé). */
 .social { list-style: none; padding: 0; margin: 0; display: flex; gap: 8px; }
 .social a {
