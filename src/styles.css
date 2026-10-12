@@ -18,6 +18,25 @@
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/* Dark: the navy knit vest, white shirt and green trim from the LinkedIn photo. */
+:root[data-theme="dark"] {
+  --bg: #151a26;
+  --bg-deep: #1d2333;
+  --surface: #1d2333;
+  --line: #2e3548;
+  --ink: #ece6e4;
+  --ink-2: #c4bdbe;
+  --ink-3: #9c97a0;
+  --tan: #a7c9b6;
+  --tan-ink: #8fbfa6;
+  --slate: #a7c9b6;
+  --dot: #2f3649;
+  --chrome: rgba(29, 35, 51, 0.92);
+  --backdrop: rgba(21, 26, 38, 0.88);
+  --shadow: rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
 * { box-sizing: border-box; }
 html, body, #root { margin: 0; height: 100%; }
 body {
@@ -50,6 +69,8 @@ a { color: var(--tan-ink); }
 }
 .pill.subtle { background: transparent; color: var(--ink-2); font-size: 13px; }
 .pill.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); margin-left: 6px; }
+.theme-toggle { border: 1px solid var(--line); background: transparent; color: var(--ink-2); width: 34px; height: 34px; border-radius: 999px; font-size: 15px; line-height: 1; }
+.theme-toggle:hover { color: var(--ink); background: var(--bg-deep); }
 
 /* ---------- home ---------- */
 .home { flex: 1; overflow: auto; }

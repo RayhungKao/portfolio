@@ -26,6 +26,36 @@ function readRoute(): Route {
 
 const isNarrow = () => window.matchMedia('(max-width: 767px)').matches;
 
+type Theme = 'light' | 'dark';
+const THEME_KEY = 'theme';
+function savedTheme(): Theme {
+  try {
+    return window.localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light';
+  } catch {
+    return 'light';
+  }
+}
+
+/** Light (warm paper) by default; dark uses the navy-and-white palette. The choice is remembered. */
+function ThemeToggle() {
+  const [theme, setTheme] = useState<Theme>(savedTheme);
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    window.dispatchEvent(new Event('themechange')); // the canvas repaints its name labels
+    try {
+      window.localStorage.setItem(THEME_KEY, theme);
+    } catch {
+      // Storage can be unavailable; the toggle still works for this visit.
+    }
+  }, [theme]);
+  const next = theme === 'dark' ? 'light' : 'dark';
+  return (
+    <button className="theme-toggle" onClick={() => setTheme(next)} aria-label={`Switch to ${next} theme`} title={`Switch to ${next} theme`}>
+      {theme === 'dark' ? '☀' : '☾'}
+    </button>
+  );
+}
+
 type SlideState = { id: string; origin: Rect2D | null; phase: SlidePhase };
 
 export default function App() {
@@ -196,6 +226,7 @@ export default function App() {
           <a className="pill primary" href={LINKS.resume} target="_blank" rel="noreferrer">
             Résumé
           </a>
+          <ThemeToggle />
         </nav>
       </header>
 

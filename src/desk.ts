@@ -361,7 +361,7 @@ export function createDesk(
         ctx.fillText(kicker, x, y);
         ctx.font = `600 13px ${FONT}`;
       }
-      ctx.fillStyle = '#374151';
+      ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink-2').trim() || '#4c524f';
       ctx.fillText(title, showKicker ? x + kw : x, y + 1);
     }
     ctx.restore();
@@ -463,6 +463,7 @@ export function createDesk(
     new Promise<void>((resolve) => {
       cancelAnimationFrame(frame);
       finishTween?.();
+      window.removeEventListener('themechange', repaint);
       const duration = reducedMotion() ? 0 : ms;
       const start = performance.now();
       finishTween = resolve;
@@ -576,6 +577,9 @@ export function createDesk(
   };
 
   // ---------- resize ----------
+  const repaint = () => canvas.requestRenderAll();
+  window.addEventListener('themechange', repaint);
+
   let lastScreenWidth = 0;
   const ro = new ResizeObserver(() => {
     canvas.setDimensions({ width: host.clientWidth, height: host.clientHeight });
