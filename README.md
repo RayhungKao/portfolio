@@ -110,4 +110,4 @@ from the body.
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
 | `src/App.tsx` | Page shell: top bar, theme toggle, routes, desk/list toggle, open/flip/close sequencing |
 | `src/styles.css` | Theme tokens and styles |
-| `src/resume.ts`, `src/Resume.tsx` | Résumé text and the `#/resume` page; edit the text in `src/resume.ts` |
+| `src/resumeData.ts`, `src/Resume.tsx` | Résumé text and the `#/resume` page; edit the text in `src/resumeData.ts` |
