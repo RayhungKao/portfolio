@@ -104,7 +104,10 @@ export const RESUME = {
         degree: 'M.S. in Computer Science',
         dates: 'September 2020 – July 2023',
         grade: 'GPA 4.18/4.30',
-        bullets: ['3 years of research on blockchain and applied cryptography'],
+        bullets: [
+          '3 years of research on blockchain and applied cryptography',
+          'Published “Preventing Financial Statement Fraud with Blockchain-based Verifiable Accounting System” at IEEE ICECCME 2023',
+        ],
         activities: 'Table tennis',
       },
       {

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Icon } from './icons/Icon';
 import { SocialLinks } from './SocialLinks';
 import { RESUME, type Role } from './resumeData';
 
@@ -44,24 +45,36 @@ function Title({ role }: { role: Role }) {
   );
 }
 
-function RoleBlock({ role }: { role: Role }) {
+/** A generic marker for an entry: a building for organizations, a cap for schools, a book for papers. */
+function ItemIcon({ children }: { children: ReactNode }) {
   return (
-    <article className="cv-role">
-      <header className="cv-role-head">
-        <h3>
-          <span className="cv-role-title">
-            <Title role={role} />
-          </span>
-          <span className="cv-role-org">{role.orgUrl ? <ExtLink href={role.orgUrl}>{role.org}</ExtLink> : role.org}</span>
-        </h3>
-        <span className="cv-dates">{role.dates}</span>
-      </header>
-      {role.place && <p className="cv-place">{role.place}</p>}
-      <ul className="cv-bullets">
-        {role.bullets.map((b) => (
-          <li key={b.slice(0, 40)}>{b}</li>
-        ))}
-      </ul>
+    <span className="cv-icon" aria-hidden="true">
+      {children}
+    </span>
+  );
+}
+
+function RoleBlock({ role, icon = <Icon name="organization" /> }: { role: Role; icon?: ReactNode }) {
+  return (
+    <article className="cv-role cv-item">
+      <ItemIcon>{icon}</ItemIcon>
+      <div className="cv-body">
+        <header className="cv-role-head">
+          <h3>
+            <span className="cv-role-title">
+              <Title role={role} />
+            </span>
+            <span className="cv-role-org">{role.orgUrl ? <ExtLink href={role.orgUrl}>{role.org}</ExtLink> : role.org}</span>
+          </h3>
+          <span className="cv-dates">{role.dates}</span>
+        </header>
+        {role.place && <p className="cv-place">{role.place}</p>}
+        <ul className="cv-bullets">
+          {role.bullets.map((b) => (
+            <li key={b.slice(0, 40)}>{b}</li>
+          ))}
+        </ul>
+      </div>
     </article>
   );
 }
@@ -110,30 +123,35 @@ export function Resume() {
       <section className="cv-section" aria-labelledby="cv-academic">
         <h2 id="cv-academic">Academic Experience</h2>
         {r.academic.map((role) => (
-          <RoleBlock key={role.org} role={role} />
+          <RoleBlock key={role.org} role={role} icon={<Icon name="mortar-board" />} />
         ))}
       </section>
 
       <section className="cv-section" aria-labelledby="cv-education">
         <h2 id="cv-education">Education</h2>
         {r.education.degrees.map((d) => (
-          <article className="cv-role" key={d.degree}>
-            <header className="cv-role-head">
-              <h3>
-                <span className="cv-role-title">{d.degree}</span>
-                <span className="cv-role-org">{r.education.school}</span>
-              </h3>
-              <span className="cv-dates">{d.dates}</span>
-            </header>
-            <p className="cv-place">
-              {r.education.place} · {d.grade}
-            </p>
-            <ul className="cv-bullets">
-              {d.bullets.map((b) => (
-                <li key={b}>{b}</li>
-              ))}
-              {d.activities && <li>Activities and societies: {d.activities}</li>}
-            </ul>
+          <article className="cv-role cv-item" key={d.degree}>
+            <ItemIcon>
+              <Icon name="mortar-board" />
+            </ItemIcon>
+            <div className="cv-body">
+              <header className="cv-role-head">
+                <h3>
+                  <span className="cv-role-title">{d.degree}</span>
+                  <span className="cv-role-org">{r.education.school}</span>
+                </h3>
+                <span className="cv-dates">{d.dates}</span>
+              </header>
+              <p className="cv-place">
+                {r.education.place} · {d.grade}
+              </p>
+              <ul className="cv-bullets">
+                {d.bullets.map((b) => (
+                  <li key={b}>{b}</li>
+                ))}
+                {d.activities && <li>Activities and societies: {d.activities}</li>}
+              </ul>
+            </div>
           </article>
         ))}
       </section>
@@ -142,10 +160,15 @@ export function Resume() {
         <h2 id="cv-publications">Publications</h2>
         <ol className="cv-pubs">
           {r.publications.map((p) => (
-            <li key={p.title}>
-              <p className="cv-pub-title">{p.url ? <ExtLink href={p.url}>{p.title}</ExtLink> : p.title}</p>
-              <p className="cv-pub-venue">{p.venue}</p>
-              <p className="cv-pub-when">{p.when}</p>
+            <li key={p.title} className="cv-item">
+              <ItemIcon>
+                <Icon name="book" />
+              </ItemIcon>
+              <div className="cv-body">
+                <p className="cv-pub-title">{p.url ? <ExtLink href={p.url}>{p.title}</ExtLink> : p.title}</p>
+                <p className="cv-pub-venue">{p.venue}</p>
+                <p className="cv-pub-when">{p.when}</p>
+              </div>
             </li>
           ))}
         </ol>
