@@ -7,6 +7,22 @@
       // Apply a saved dark theme before first paint, so it never flashes light.
       try { if (localStorage.getItem('theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) {}
     </script>
+    <script>
+      // Home page only: start downloading the avatar photo right away, in parallel with the app's JS,
+      // instead of waiting for React to render the <img>.
+      (function () {
+        var base = '%BASE_URL%';
+        var path = location.pathname;
+        if (path !== base && path + '/' !== base) return;
+        var link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.type = 'image/webp';
+        link.href = base + 'avatar-photo.webp';
+        link.setAttribute('fetchpriority', 'high');
+        document.head.appendChild(link);
+      })();
+    </script>
     <title>Jui-Hung (Ray) Kao · Software Engineer</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

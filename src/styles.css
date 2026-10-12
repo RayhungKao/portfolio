@@ -14,6 +14,7 @@
   --chrome: rgba(251, 248, 243, 0.92); /* floating controls over the canvas */
   --backdrop: rgba(244, 237, 226, 0.88);
   --shadow: rgba(35, 44, 43, 0.08);
+  --shimmer: rgba(255, 255, 255, 0.65); /* highlight that sweeps across loading placeholders */
   --sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
@@ -34,6 +35,7 @@
   --chrome: rgba(29, 35, 51, 0.92);
   --backdrop: rgba(21, 26, 38, 0.88);
   --shadow: rgba(0, 0, 0, 0.35);
+  --shimmer: rgba(255, 255, 255, 0.07);
   color-scheme: dark;
 }
 
@@ -126,10 +128,24 @@ a { color: var(--tan-ink); }
 
 .avatar { position: relative; width: 320px; height: 320px; padding: 0; border: 0; background: none; border-radius: 50%; }
 .avatar-plate { position: absolute; inset: 0; transform: translate(14px, 14px); border-radius: 50%; background: var(--tan); opacity: 0.35; }
-.avatar-frame { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; border: 4px solid var(--surface); box-shadow: 0 18px 40px rgba(35, 44, 43, 0.16); }
+.avatar-frame { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; border: 4px solid var(--surface); box-shadow: 0 18px 40px rgba(35, 44, 43, 0.16); background: var(--bg-deep); }
+/* Shimmer while the photo downloads; it fades out once the photo is ready. */
+.avatar-frame::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(100deg, transparent 30%, var(--shimmer) 50%, transparent 70%);
+  background-size: 200% 100%; animation: avatar-shimmer 1.4s linear infinite; transition: opacity 300ms ease;
+}
+.avatar-frame.ready::before { opacity: 0; animation: none; }
+@keyframes avatar-shimmer { from { background-position: 150% 0; } to { background-position: -50% 0; } }
 .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 450ms ease; }
+.avatar .avatar-photo { opacity: 0; }
+.avatar-frame.ready .avatar-photo { opacity: 1; }
 .avatar .avatar-alt { opacity: 0; }
 .avatar.drawn .avatar-alt { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .avatar-frame::before { animation: none; }
+  .avatar img { transition: none; }
+}
 
 .home-section { max-width: 1080px; margin: 0 auto; padding: 24px 24px 40px; }
 .home-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; border-top: 1px solid var(--line); padding-top: 28px; margin-bottom: 18px; }

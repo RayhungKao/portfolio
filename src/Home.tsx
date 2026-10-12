@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARDS, LINKS } from './content';
 import { POSTS, formatDate } from './postData';
 import { asset, isInternal, navigate, to } from './router';
@@ -75,23 +75,80 @@ function AskBox() {
   );
 }
 
-/** The photo turns into the illustrated avatar on hover (or tap on touch screens). */
+/**
+ * The photo turns into the illustrated avatar on hover (or tap on touch screens).
+ * The photo is preloaded from index.html on the home page and fades in once fully downloaded, over a
+ * shimmer placeholder. The illustration is fetched only after the photo (when the browser is idle) or
+ * on the first hover, so it never competes with the photo for bandwidth.
+ */
 function Avatar() {
   const [drawn, setDrawn] = useState(false);
+  const [photoReady, setPhotoReady] = useState(false);
+  const [wantAlt, setWantAlt] = useState(false);
+  const [altReady, setAltReady] = useState(false);
+  const photoRef = useRef<HTMLImageElement>(null);
+
+  // A cached photo can finish before React attaches onLoad.
+  useEffect(() => {
+    const img = photoRef.current;
+    if (img?.complete && img.naturalWidth > 0) setPhotoReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!photoReady) return;
+    // Safari has no requestIdleCallback; a short timeout does the same job there.
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(() => setWantAlt(true));
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = setTimeout(() => setWantAlt(true), 300);
+    return () => clearTimeout(id);
+  }, [photoReady]);
+
+  const show = (on: boolean) => {
+    if (on) setWantAlt(true);
+    setDrawn(on);
+  };
+
   return (
     <button
       type="button"
-      className={drawn ? 'avatar drawn' : 'avatar'}
-      onMouseEnter={() => setDrawn(true)}
-      onMouseLeave={() => setDrawn(false)}
-      onClick={() => setDrawn((d) => !d)}
+      className={drawn && altReady ? 'avatar drawn' : 'avatar'}
+      onMouseEnter={() => show(true)}
+      onMouseLeave={() => show(false)}
+      onClick={() => show(!drawn)}
       aria-pressed={drawn}
       aria-label="Photo of Ray Kao. Press to switch to the illustrated version."
     >
       <span className="avatar-plate" aria-hidden="true" />
-      <span className="avatar-frame">
-        <img src={asset('avatar-photo.jpg')} alt="" width={360} height={360} />
-        <img className="avatar-alt" src={asset('avatar-illustration.jpg')} alt="" width={360} height={360} />
+      <span className={photoReady ? 'avatar-frame ready' : 'avatar-frame'}>
+        <picture>
+          <source type="image/webp" srcSet={asset('avatar-photo.webp')} />
+          <img
+            ref={photoRef}
+            className="avatar-photo"
+            src={asset('avatar-photo.jpg')}
+            alt=""
+            width={360}
+            height={360}
+            fetchPriority="high"
+            onLoad={() => setPhotoReady(true)}
+          />
+        </picture>
+        {wantAlt && (
+          <picture>
+            <source type="image/webp" srcSet={asset('avatar-illustration.webp')} />
+            <img
+              className="avatar-alt"
+              src={asset('avatar-illustration.jpg')}
+              alt=""
+              width={360}
+              height={360}
+              decoding="async"
+              onLoad={() => setAltReady(true)}
+            />
+          </picture>
+        )}
       </span>
     </button>
   );
