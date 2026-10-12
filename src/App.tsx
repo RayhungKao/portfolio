@@ -2,19 +2,21 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createDesk, type DeskApi, type Rect2D } from './desk';
 import { CARDS, LINKS } from './content';
 import { BlogList, BlogPost } from './Blog';
+import { Home } from './Home';
 import { Slide, type SlidePhase } from './Slide';
 import { DeckContent, SLIDE_W, measureLayouts } from './DeckContent';
 
 type Route =
   | { name: 'home' }
-  | { name: 'work'; id: string }
+  | { name: 'desk' } // the Work page: the canvas with every card
+  | { name: 'work'; id: string } // the Work page with one card open
   | { name: 'blog' }
   | { name: 'post'; slug: string };
 
 function readRoute(): Route {
   const hash = window.location.hash;
-  const work = hash.match(/^#\/work\/([^/?#]+)/);
-  if (work && CARDS.some((c) => c.id === work[1])) return { name: 'work', id: work[1] };
+  const work = hash.match(/^#\/work(?:\/([^/?#]+))?/);
+  if (work) return work[1] && CARDS.some((c) => c.id === work[1]) ? { name: 'work', id: work[1] } : { name: 'desk' };
   const blog = hash.match(/^#\/blog(?:\/([^/?#]+))?/);
   if (!blog) return { name: 'home' };
   return blog[1] ? { name: 'post', slug: decodeURIComponent(blog[1]) } : { name: 'blog' };
@@ -42,19 +44,19 @@ export default function App() {
   const slideRef = useRef<SlideState | null>(null);
   slideRef.current = slide;
 
-  const onDeskPage = route.name === 'home' || route.name === 'work';
+  const onDeskPage = route.name === 'desk' || route.name === 'work';
 
   useEffect(() => {
     const onHash = () => {
       const next = readRoute();
       setRoute(next);
-      if (next.name === 'blog' || next.name === 'post') window.scrollTo(0, 0);
+      if (next.name !== 'desk' && next.name !== 'work') window.scrollTo(0, 0);
     };
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  // Create the Fabric desk when the home page shows it.
+  // Create the Fabric desk when the Work page shows it.
   useEffect(() => {
     const host = hostRef.current;
     if (!onDeskPage || view !== 'desk' || !host) return;
@@ -135,7 +137,7 @@ export default function App() {
       pushedFromHome.current = false;
       window.history.back();
     } else {
-      window.location.replace('#/');
+      window.location.replace('#/work');
     }
   }, []);
 
@@ -174,14 +176,19 @@ export default function App() {
           <span>Software Engineer</span>
         </a>
         <nav className="actions">
-          {onDeskPage ? (
-            <button className="pill" onClick={() => setView(view === 'desk' ? 'list' : 'desk')}>
-              {view === 'desk' ? 'Skip to content' : 'Open the desk'}
+          {onDeskPage && (
+            <button className="pill subtle" onClick={() => setView(view === 'desk' ? 'list' : 'desk')}>
+              {view === 'desk' ? 'List view' : 'Canvas view'}
             </button>
-          ) : (
-            <a className="pill" href="#/">Home</a>
           )}
-          <a className={onDeskPage ? 'pill' : 'pill active'} href="#/blog">
+          <a className={onDeskPage ? 'nav-link active' : 'nav-link'} href="#/work" aria-current={onDeskPage ? 'page' : undefined}>
+            Work
+          </a>
+          <a
+            className={route.name === 'blog' || route.name === 'post' ? 'nav-link active' : 'nav-link'}
+            href="#/blog"
+            aria-current={route.name === 'blog' || route.name === 'post' ? 'page' : undefined}
+          >
             Blog
           </a>
           <a className="pill primary" href={LINKS.resume} target="_blank" rel="noreferrer">
@@ -190,7 +197,9 @@ export default function App() {
         </nav>
       </header>
 
-      {route.name === 'blog' ? (
+      {route.name === 'home' ? (
+        <Home />
+      ) : route.name === 'blog' ? (
         <BlogList />
       ) : route.name === 'post' ? (
         <BlogPost slug={route.slug} />
