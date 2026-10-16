@@ -1,3 +1,5 @@
+'use client';
+
 import { useLayoutEffect, useRef } from 'react';
 import type { Card } from './content';
 import { LINKS } from './content';

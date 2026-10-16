@@ -21,16 +21,12 @@
         "name": "next"
       }
     ],
-    "types": [
-      "vite/client"
-    ],
     "allowJs": true
   },
   "include": [
     "next-env.d.ts",
     "app",
     "src",
-    "vite.config.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],

@@ -1,6 +1,8 @@
+'use client';
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARDS, LINKS } from './content';
-import { POSTS, formatDate } from './postData';
+import { formatDate, type Post } from './postTypes';
 import { asset, isInternal, navigate, to } from './router';
 import { SocialLinks } from './SocialLinks';
 
@@ -154,9 +156,9 @@ function Avatar() {
   );
 }
 
-export function Home() {
+export function Home({ posts }: { posts: Post[] }) {
   const work = SELECTED.map((id) => CARDS.find((c) => c.id === id)!).filter(Boolean);
-  const latest = POSTS.slice(0, 3);
+  const latest = posts.slice(0, 3);
 
   return (
     <main className="home">

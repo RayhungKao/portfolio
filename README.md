@@ -14,22 +14,21 @@ drag, resize, and rotate. Cards snap to each other with alignment guides, and th
 desk zooms and pans like a design tool. Click a card and the camera flies to it and
 it opens into a full slide; flip between cards like a deck, and go back to the desk anytime.
 
-Built with React, TypeScript, Vite, and Fabric.js 7.
+Built with Next.js (App Router, static export), React, TypeScript, and Fabric.js 7.
 
 ## Run it
 
-Requires Node.js 20.19+ or 22.12+ (`node -v` to check; on a Mac, `brew install node` works).
+Requires Node.js 20.9+ (`.nvmrc` pins 22) (`node -v` to check; on a Mac, `brew install node` works).
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open http://localhost:5173.
+Then open http://localhost:3000.
 
 ```bash
-npm run build     # type-check and build to dist/
-npm run preview   # serve the production build
+npm run build     # type-check and build the static site to out/
 ```
 
 ## Deploy
@@ -39,11 +38,10 @@ Every push to `main` builds the site and publishes it to GitHub Pages
 set Source to "GitHub Actions". The repository is `portfolio`, so the site is served at
 https://rayhungkao.github.io/portfolio/.
 
-URLs are ordinary paths (`/blog/<slug>`), handled in the browser by `src/router.ts`. GitHub
-Pages has no rewrites, so the build also writes `404.html` as a copy of `index.html`: a deep
-link that matches no file loads the app, which then shows the right page. Such a deep link is
-answered with HTTP status 404 even though the page renders. Old `#/…` links are redirected to
-their path.
+Pages are Next.js App Router routes under `app/`, and the build (`output: 'export'`) writes one
+HTML file per URL into `out/`, so there is no SPA fallback: an unknown URL gets GitHub Pages' own
+404. The Work page's canvas lives in `app/work/layout.tsx` so it stays mounted between `/work` and
+`/work/<id>`.
 
 The build's base path comes from the Pages settings (`/portfolio/` now). In code, write app
 paths (`/blog/x`) and pass internal hrefs through `to()` and public files through `asset()`,
@@ -120,7 +118,8 @@ from the body.
 | `src/DeckContent.tsx` | The slide layout, plus the measuring that turns it into a desk card |
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
 | `src/Logo.tsx`, `public/favicon.svg` | The R mark: the top-bar logo (follows the theme) and the browser-tab icon |
-| `src/router.ts` | Path routing: reads the URL, base-path-aware links (`to()`, `asset()`), in-app navigation |
-| `src/App.tsx` | Page shell: top bar, theme toggle, routes, desk/list toggle, open/flip/close sequencing |
+| `app/` | Routes and the root layout (`layout.tsx`); `app/work/layout.tsx` keeps the canvas mounted |
+| `src/router.ts`, `src/RouterBridge.tsx` | Base-path-aware links (`to()`, `asset()`) and a bridge from `<a href>` clicks to the App Router |
+| `src/Topbar.tsx`, `src/WorkStage.tsx` | Top bar and theme toggle; desk/list view, open/flip/close sequencing |
 | `src/styles.css` | Theme tokens and styles |
 | `src/resumeData.ts`, `src/Resume.tsx` | Résumé text and the `/resume` page; edit the text in `src/resumeData.ts` |

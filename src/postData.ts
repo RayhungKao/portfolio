@@ -16,41 +16,15 @@
  * Reading time and tags (the post's #hashtags) are derived from the body.
  */
 
-/** Sidebar order of the blog categories. A post with an unlisted category is shown after these. */
-export const CATEGORY_ORDER = [
-  'AI Agent',
-  'System Design',
-  'Performance',
-  'Frontend Architecture',
-  'Canvas & Animation',
-  'Building with AI',
-  'Industry Insights',
-];
-export const UNCATEGORIZED = 'Notes';
+import fs from 'node:fs';
+import path from 'node:path';
+import { CATEGORY_ORDER, UNCATEGORIZED, categorySlug, type Category, type Post } from './postTypes';
 
-export type Post = {
-  slug: string;
-  title: string;
-  date: string;
-  linkedin?: string;
-  summary: string;
-  body: string;
-  category: string;
-  /** Minutes, from the word count (about 230 words a minute, rounded up). */
-  readingMinutes: number;
-  tags: string[];
-};
+/** Server only: reads src/posts/*.md at build time. Client components get posts as props. */
+const POSTS_DIR = path.join(process.cwd(), 'src', 'posts');
 
-export const categorySlug = (name: string) =>
-  name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-const files = import.meta.glob('./posts/*.md', { query: '?raw', import: 'default', eager: true }) as Record<
-  string,
-  string
->;
-
-function parse(path: string, raw: string): Post {
-  const slug = path.replace(/^.*\/(.+)\.md$/, '$1');
+function parse(file: string, raw: string): Post {
+  const slug = file.replace(/\.md$/, '');
   const meta: Record<string, string> = {};
   let body = raw.replace(/\r\n/g, '\n');
   const fm = body.match(/^---\n([\s\S]*?)\n---\n?/);
@@ -80,19 +54,14 @@ function parse(path: string, raw: string): Post {
   };
 }
 
-export const POSTS: Post[] = Object.entries(files)
-  .map(([path, raw]) => parse(path, raw))
+export const POSTS: Post[] = fs
+  .readdirSync(POSTS_DIR)
+  .filter((f) => f.endsWith('.md'))
+  .map((f) => parse(f, fs.readFileSync(path.join(POSTS_DIR, f), 'utf8')))
   .sort((a, b) => b.date.localeCompare(a.date));
 
-export function formatDate(iso: string): string {
-  const d = new Date(`${iso}T00:00:00`);
-  return Number.isNaN(d.getTime())
-    ? iso
-    : d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-}
-
 /** Categories in sidebar order, each with its posts (newest first). Empty categories are left out. */
-export const CATEGORIES: { name: string; slug: string; posts: Post[] }[] = (() => {
+export const CATEGORIES: Category[] = (() => {
   const names = [...CATEGORY_ORDER, ...new Set(POSTS.map((p) => p.category).filter((c) => !CATEGORY_ORDER.includes(c)))];
   return names
     .map((name) => ({ name, slug: categorySlug(name), posts: POSTS.filter((p) => p.category === name) }))

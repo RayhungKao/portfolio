@@ -1,5 +1,7 @@
+'use client';
+
 import { useEffect, useState, type ReactNode } from 'react';
-import { CATEGORIES, POSTS, categorySlug, formatDate, type Post } from './postData';
+import { categorySlug, formatDate, type Category, type Post } from './postTypes';
 import { to } from './router';
 
 const TOKEN = /(`[^`]+`|https?:\/\/[^\s)]+|#[\p{L}\p{N}_]+)/gu;
@@ -67,8 +69,8 @@ function Tags({ tags }: { tags: string[] }) {
 }
 
 /** Two-level directory: All articles, then each category with its posts. */
-function BlogNav({ category, slug }: { category?: string; slug?: string }) {
-  const activeCategory = category ?? (slug ? categorySlug(POSTS.find((p) => p.slug === slug)?.category ?? '') : undefined);
+function BlogNav({ category, slug, posts, categories }: { category?: string; slug?: string; posts: Post[]; categories: Category[] }) {
+  const activeCategory = category ?? (slug ? categorySlug(posts.find((p) => p.slug === slug)?.category ?? '') : undefined);
   const [open, setOpen] = useState<Set<string>>(() => new Set(activeCategory ? [activeCategory] : []));
   useEffect(() => {
     if (activeCategory) setOpen((s) => new Set(s).add(activeCategory));
@@ -84,10 +86,10 @@ function BlogNav({ category, slug }: { category?: string; slug?: string }) {
   return (
     <nav className="blog-nav" aria-label="Blog categories">
       <a className={!activeCategory && !slug ? 'blog-nav-all active' : 'blog-nav-all'} href={to('/blog')}>
-        All articles <span>{POSTS.length}</span>
+        All articles <span>{posts.length}</span>
       </a>
       <ul>
-        {CATEGORIES.map((c) => {
+        {categories.map((c) => {
           const isOpen = open.has(c.slug);
           return (
             <li key={c.slug} className={activeCategory === c.slug ? 'active' : undefined}>
@@ -118,12 +120,12 @@ function BlogNav({ category, slug }: { category?: string; slug?: string }) {
   );
 }
 
-export function BlogList({ category }: { category?: string }) {
-  const current = category ? CATEGORIES.find((c) => c.slug === category) : undefined;
-  const posts = current ? current.posts : POSTS;
+export function BlogList({ category, posts: allPosts, categories }: { category?: string; posts: Post[]; categories: Category[] }) {
+  const current = category ? categories.find((c) => c.slug === category) : undefined;
+  const posts = current ? current.posts : allPosts;
   return (
     <div className="blog-layout">
-      <BlogNav category={current?.slug} />
+      <BlogNav category={current?.slug} posts={allPosts} categories={categories} />
       <main className="blog">
         <header className="blog-head">
           <h1>Writing</h1>
@@ -152,33 +154,24 @@ export function BlogList({ category }: { category?: string }) {
   );
 }
 
-export function BlogPost({ slug }: { slug: string }) {
-  const post: Post | undefined = POSTS.find((p) => p.slug === slug);
+export function BlogPost({ post, posts, categories }: { post: Post; posts: Post[]; categories: Category[] }) {
+  const slug = post.slug;
   return (
     <div className="blog-layout">
-      <BlogNav slug={slug} />
+      <BlogNav slug={slug} posts={posts} categories={categories} />
       <main className="blog">
-        {!post ? (
-          <>
-            <a className="back" href={to('/blog')}>← All articles</a>
-            <p className="blog-empty">This post doesn’t exist.</p>
-          </>
-        ) : (
-          <>
-            <a className="back" href={to(`/blog/category/${categorySlug(post.category)}`)}>← {post.category}</a>
-            <article>
-              <PostMeta post={post} />
-              <h1>{post.title}</h1>
-              <PostBody body={post.body} />
-              <Tags tags={post.tags} />
-              {post.linkedin && (
-                <a className="pill linkedin" href={post.linkedin} target="_blank" rel="noreferrer">
-                  Discuss on LinkedIn →
-                </a>
-              )}
-            </article>
-          </>
-        )}
+        <a className="back" href={to(`/blog/category/${categorySlug(post.category)}`)}>← {post.category}</a>
+        <article>
+          <PostMeta post={post} />
+          <h1>{post.title}</h1>
+          <PostBody body={post.body} />
+          <Tags tags={post.tags} />
+          {post.linkedin && (
+            <a className="pill linkedin" href={post.linkedin} target="_blank" rel="noreferrer">
+              Discuss on LinkedIn →
+            </a>
+          )}
+        </article>
       </main>
     </div>
   );

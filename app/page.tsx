@@ -1,3 +1,6 @@
-export default function Home() {
-  return <main>Next.js skeleton. The pages move over from src/ one at a time.</main>;
+import { Home } from '../src/Home';
+import { POSTS } from '../src/postData';
+
+export default function HomePage() {
+  return <Home posts={POSTS} />;
 }

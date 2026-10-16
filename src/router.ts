@@ -1,47 +1,33 @@
 /**
- * Path routing on the History API (/work, /blog/<slug>, /resume …), under Vite's base path.
- * Code uses app paths ('/blog/x'); hrefs go through to(), which adds the base path.
- * GitHub Pages has no server-side rewrites, so the build also writes 404.html (a copy of
- * index.html): a deep link that matches no file loads the app, which then reads the path.
+ * Small routing helpers on top of the Next.js App Router.
+ * Code uses app paths ('/blog/x'); hrefs go through to(), which adds the base path
+ * ('/portfolio' on a GitHub project site, '' on a custom domain).
  */
 
-const NAV_EVENT = 'app:navigate';
+/** The site's base path without a trailing slash. Set from next.config.ts. */
+export const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
-/** The site's base path without a trailing slash: '' at a domain root, '/portfolio' on a GitHub project site. */
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+export const isInternal = (href: string) => href.startsWith('/') && !href.startsWith('//');
 
 /** An app path ('/blog/x') as the href the browser needs ('/portfolio/blog/x'). External URLs pass through. */
 export const to = (path: string) => (isInternal(path) ? BASE + path : path);
 
 /** A file in public/, under the base path. */
-export const asset = (file: string) => import.meta.env.BASE_URL + file;
+export const asset = (file: string) => `${BASE}/${file}`;
 
-/** The current path inside the app, with the base path removed. */
-export function appPath(pathname = window.location.pathname) {
-  const inside = BASE && (pathname === BASE || pathname.startsWith(BASE + '/')) ? pathname.slice(BASE.length) : pathname;
-  return inside || '/';
+type Navigator = (path: string, replace: boolean) => void;
+let navigator: Navigator | null = null;
+
+/** RouterBridge registers the App Router here, so code outside React components can navigate. */
+export function registerNavigator(next: Navigator | null) {
+  navigator = next;
 }
 
 /** Goes to an internal path without a page load. `replace` swaps the current history entry. */
 export function navigate(path: string, { replace = false } = {}) {
-  const current = appPath() + window.location.search;
-  if (path === current && !replace) return;
-  if (replace) window.history.replaceState(null, '', BASE + path);
-  else window.history.pushState(null, '', BASE + path);
-  window.dispatchEvent(new Event(NAV_EVENT));
+  if (navigator) navigator(path, replace);
+  else window.location.assign(to(path));
 }
-
-/** Calls `listener` whenever the path changes: in-app navigation and the Back/Forward buttons. */
-export function onPathChange(listener: () => void) {
-  window.addEventListener('popstate', listener);
-  window.addEventListener(NAV_EVENT, listener);
-  return () => {
-    window.removeEventListener('popstate', listener);
-    window.removeEventListener(NAV_EVENT, listener);
-  };
-}
-
-export const isInternal = (href: string) => href.startsWith('/') && !href.startsWith('//');
 
 /**
  * Turns plain clicks on internal links into in-app navigation. Modified clicks (⌘/Ctrl/Shift,
@@ -56,14 +42,8 @@ export function interceptLinkClicks() {
     if (!href || !isInternal(href)) return;
     if (BASE && href !== BASE && !href.startsWith(BASE + '/')) return; // outside this site: let the browser go
     e.preventDefault();
-    navigate(appPath(href));
+    navigate(href.slice(BASE.length) || '/');
   };
   document.addEventListener('click', onClick);
   return () => document.removeEventListener('click', onClick);
-}
-
-/** Links from before path routing (#/blog/…) land on the matching path. */
-export function upgradeHashUrl() {
-  const { hash } = window.location;
-  if (hash.startsWith('#/')) window.history.replaceState(null, '', BASE + hash.slice(1));
 }
