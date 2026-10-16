@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LINKS } from './content';
 import { Logo } from './Logo';
-import { to } from './router';
 import { useWorkView } from './WorkViewContext';
 
 type Theme = 'light' | 'dark';
@@ -57,29 +57,29 @@ export function Topbar() {
 
   return (
     <header className="topbar">
-      <a className="brand" href={to('/')}>
+      <Link className="brand" href="/">
         <Logo />
         <strong>Ray Kao</strong>
         <span>Software Engineer</span>
-      </a>
+      </Link>
       <nav className="actions">
         {onDeskPage && (
           <button className="pill subtle" onClick={() => setView(view === 'desk' ? 'list' : 'desk')}>
             {view === 'desk' ? 'List view' : 'Canvas view'}
           </button>
         )}
-        <a className={isHome ? 'nav-link active' : 'nav-link'} href={to('/')} aria-current={cur(isHome)}>
+        <Link className={isHome ? 'nav-link active' : 'nav-link'} href="/" aria-current={cur(isHome)}>
           Home
-        </a>
-        <a className={onDeskPage ? 'nav-link active' : 'nav-link'} href={to('/work')} aria-current={cur(onDeskPage)}>
+        </Link>
+        <Link className={onDeskPage ? 'nav-link active' : 'nav-link'} href="/work" aria-current={cur(onDeskPage)}>
           Work
-        </a>
-        <a className={onBlog ? 'nav-link active' : 'nav-link'} href={to('/blog')} aria-current={cur(onBlog)}>
+        </Link>
+        <Link className={onBlog ? 'nav-link active' : 'nav-link'} href="/blog" aria-current={cur(onBlog)}>
           Blog
-        </a>
-        <a className={onResume ? 'nav-link active' : 'nav-link'} href={to(LINKS.resume)} aria-current={cur(onResume)}>
+        </Link>
+        <Link className={onResume ? 'nav-link active' : 'nav-link'} href={LINKS.resume} aria-current={cur(onResume)}>
           Résumé
-        </a>
+        </Link>
         <ThemeToggle />
       </nav>
     </header>

@@ -1,13 +1,13 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState, type ReactNode } from 'react';
 import { categorySlug, formatDate, type Category, type Post } from './postTypes';
-import { to } from './router';
 
 function PostMeta({ post }: { post: Post }) {
   return (
     <div className="post-meta">
-      <a href={to(`/blog/category/${categorySlug(post.category)}`)}>{post.category}</a>
+      <Link href={`/blog/category/${categorySlug(post.category)}`}>{post.category}</Link>
       {post.date && <time dateTime={post.date}>{formatDate(post.date)}</time>}
       <span>{post.readingMinutes} min read</span>
     </div>
@@ -42,18 +42,18 @@ function BlogNav({ category, slug, posts, categories }: { category?: string; slu
 
   return (
     <nav className="blog-nav" aria-label="Blog categories">
-      <a className={!activeCategory && !slug ? 'blog-nav-all active' : 'blog-nav-all'} href={to('/blog')}>
+      <Link className={!activeCategory && !slug ? 'blog-nav-all active' : 'blog-nav-all'} href="/blog">
         All articles <span>{posts.length}</span>
-      </a>
+      </Link>
       <ul>
         {categories.map((c) => {
           const isOpen = open.has(c.slug);
           return (
             <li key={c.slug} className={activeCategory === c.slug ? 'active' : undefined}>
               <div className="blog-nav-row">
-                <a href={to(`/blog/category/${c.slug}`)}>
+                <Link href={`/blog/category/${c.slug}`}>
                   {c.name} <span>{c.posts.length}</span>
-                </a>
+                </Link>
                 <button aria-label={`${isOpen ? 'Collapse' : 'Expand'} ${c.name}`} aria-expanded={isOpen} onClick={() => toggle(c.slug)}>
                   {isOpen ? '▾' : '▸'}
                 </button>
@@ -62,9 +62,9 @@ function BlogNav({ category, slug, posts, categories }: { category?: string; slu
                 <ul className="blog-nav-posts">
                   {c.posts.map((p) => (
                     <li key={p.slug}>
-                      <a className={p.slug === slug ? 'active' : undefined} href={to(`/blog/${p.slug}`)}>
+                      <Link className={p.slug === slug ? 'active' : undefined} href={`/blog/${p.slug}`}>
                         {p.title}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -98,10 +98,10 @@ export function BlogList({ category, posts: allPosts, categories }: { category?:
             {posts.map((p) => (
               <li key={p.slug} className="post-item">
                 <PostMeta post={p} />
-                <a className="post-title" href={to(`/blog/${p.slug}`)}>{p.title}</a>
+                <Link className="post-title" href={`/blog/${p.slug}`}>{p.title}</Link>
                 <p className="post-summary">{p.summary}</p>
                 <Tags tags={p.tags} />
-                <a className="post-read" href={to(`/blog/${p.slug}`)}>Read article →</a>
+                <Link className="post-read" href={`/blog/${p.slug}`}>Read article →</Link>
               </li>
             ))}
           </ul>
@@ -117,7 +117,7 @@ export function BlogPost({ post, posts, categories, children }: { post: Post; po
     <div className="blog-layout">
       <BlogNav slug={slug} posts={posts} categories={categories} />
       <main className="blog">
-        <a className="back" href={to(`/blog/category/${categorySlug(post.category)}`)}>← {post.category}</a>
+        <Link className="back" href={`/blog/category/${categorySlug(post.category)}`}>← {post.category}</Link>
         <article>
           <PostMeta post={post} />
           <h1>{post.title}</h1>

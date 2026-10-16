@@ -44,8 +44,8 @@ HTML file per URL into `out/`, so there is no SPA fallback: an unknown URL gets 
 `/work/<id>`.
 
 The build's base path comes from the Pages settings (`/portfolio/` now). In code, write app
-paths (`/blog/x`) and pass internal hrefs through `to()` and public files through `asset()`,
-both from `src/router.ts`, so links keep working under any base path.
+paths (`/blog/x`) and link with `next/link` (or `AppLink` for hrefs that may be external); both
+add the base path. Public files go through `asset()` from `src/router.ts`.
 
 To move to a custom domain later: verify the domain in your GitHub account settings, enter
 it under Settings → Pages → Custom domain, then add the DNS records GitHub shows. The base
@@ -120,7 +120,7 @@ from the body.
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
 | `src/Logo.tsx`, `public/favicon.svg` | The R mark: the top-bar logo (follows the theme) and the browser-tab icon |
 | `app/` | Routes and the root layout (`layout.tsx`); `app/work/layout.tsx` keeps the canvas mounted |
-| `src/router.ts`, `src/RouterBridge.tsx` | Base-path-aware links (`to()`, `asset()`) and a bridge from `<a href>` clicks to the App Router |
+| `src/router.ts`, `src/RouterBridge.tsx` | `asset()`, `to()` and `navigate()` for code outside components; `RouterBridge` connects `navigate()` to the App Router |
 | `src/Topbar.tsx`, `src/WorkStage.tsx` | Top bar and theme toggle; desk/list view, open/flip/close sequencing |
 | `src/styles.css` | Theme tokens and styles |
 | `src/resumeData.ts`, `src/Resume.tsx` | Résumé text and the `/resume` page; edit the text in `src/resumeData.ts` |
