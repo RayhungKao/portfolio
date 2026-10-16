@@ -1,6 +1,6 @@
 import { Home } from '../src/Home';
-import { POSTS } from '../src/postData';
+import { POST_LIST, SERIES } from '../src/postData';
 
 export default function HomePage() {
-  return <Home posts={POSTS} />;
+  return <Home posts={POST_LIST} series={SERIES} />;
 }

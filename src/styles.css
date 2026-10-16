@@ -222,7 +222,6 @@ a { color: var(--tan-ink); }
 .post-body table { border-collapse: collapse; margin: 0 0 1em; display: block; overflow-x: auto; }
 .post-body th, .post-body td { border: 1px solid var(--bg-deep); padding: 6px 10px; text-align: left; }
 .blog article .post-tags { margin-bottom: 24px; }
-.pill.linkedin { display: inline-block; }
 
 .desk {
   position: relative; flex: 1; overflow: hidden; touch-action: none;
@@ -424,3 +423,23 @@ a { color: var(--tan-ink); }
 .not-found p { color: var(--ink-2); line-height: 1.6; }
 .not-found-links { display: flex; justify-content: center; gap: 20px; margin-top: 24px; }
 .not-found-links a { color: var(--slate); font-weight: 600; }
+
+/* Series and social buttons on posts */
+.series-card { box-shadow: 5px 5px 0 -1px var(--surface), 5px 5px 0 0 var(--line); }
+.series-badge { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--tan-ink); text-decoration: none; }
+.series-badge:hover { text-decoration: underline; }
+.post-social { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.post-social .pill { display: inline-block; text-decoration: none; }
+.series-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+.series-nav a { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; color: var(--ink); text-decoration: none; font-weight: 600; line-height: 1.35; }
+.series-nav a span { font-size: 13px; font-weight: 500; color: var(--ink-3); }
+.series-nav a:hover { border-color: var(--tan); }
+.series-next { text-align: right; grid-column: 2; }
+.series-list { list-style: none; counter-reset: s; padding: 0; margin: 0; }
+.series-list li { counter-increment: s; border-bottom: 1px solid var(--line); }
+.series-list a { display: grid; grid-template-columns: 2.2em 1fr; column-gap: 8px; padding: 14px 0; color: inherit; text-decoration: none; }
+.series-list a::before { content: counter(s); grid-row: 1 / span 2; font-family: var(--mono); color: var(--ink-3); padding-top: 3px; }
+.series-list-title { font-size: 17px; font-weight: 600; line-height: 1.35; }
+.series-list a:hover .series-list-title { color: var(--tan-ink); }
+.series-list-meta { font-size: 13px; color: var(--ink-3); }
+@media (max-width: 600px) { .series-nav { grid-template-columns: 1fr; } .series-next { grid-column: 1; } }

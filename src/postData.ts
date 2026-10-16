@@ -8,6 +8,8 @@
  * linkedin: https://www.linkedin.com/feed/update/urn:li:activity:...
  * image: /og/my-post.png     (optional PNG in public/; default is a card drawn from the title)
  * draft: true               (optional; hidden from the production build)
+ * series: web-development    (optional; with order: 3, the post is 3rd in that series)
+ * threads: https://...       (optional; adds a "Discuss on Threads" button; instagram: likewise)
  * summary: Optional one-line teaser for the post list.
  * ---
  * Post body…
@@ -20,7 +22,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
-import { CATEGORY_ORDER, UNCATEGORIZED, categorySlug, type Category, type Post } from './postTypes';
+import { CATEGORY_ORDER, UNCATEGORIZED, categorySlug, type Category, type Post, type Series, type SeriesNav } from './postTypes';
+import { SERIES_INFO } from './series';
 
 /** Server only: reads src/posts/*.md at build time. Client components get posts as props. */
 const POSTS_DIR = path.join(process.cwd(), 'src', 'posts');
@@ -42,6 +45,10 @@ function parse(file: string, raw: string): Post & { draft: boolean } {
     date: str(meta.date),
     linkedin: str(meta.linkedin) || undefined,
     image: str(meta.image) || undefined,
+    threads: str(meta.threads) || undefined,
+    instagram: str(meta.instagram) || undefined,
+    series: str(meta.series) || undefined,
+    order: typeof meta.order === 'number' ? meta.order : undefined,
     summary,
     body,
     category: str(meta.category) || UNCATEGORIZED,
@@ -61,10 +68,36 @@ export const POSTS: Post[] = fs
   .map(({ draft: _draft, ...post }): Post => post)
   .sort((a, b) => b.date.localeCompare(a.date));
 
+/** The same posts without their bodies: what client components receive as props. */
+export const POST_LIST: Post[] = POSTS.map((p) => ({ ...p, body: '' }));
+
+const titleCase = (slug: string) => slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+/** Series, each with its posts in reading order. A post with `series` must also have a unique `order`. */
+export const SERIES: Series[] = [...new Set(POST_LIST.flatMap((p) => (p.series ? [p.series] : [])))].map((slug) => {
+  const posts = POST_LIST.filter((p) => p.series === slug).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  for (const p of posts) {
+    if (p.order === undefined) throw new Error(`${p.slug}.md: "series: ${slug}" needs an "order: <number>"`);
+  }
+  const orders = posts.map((p) => p.order);
+  if (new Set(orders).size !== orders.length) throw new Error(`Series "${slug}" has two posts with the same order`);
+  const info = SERIES_INFO[slug];
+  return { slug, title: info?.title ?? titleCase(slug), description: info?.description, posts };
+});
+
+/** Series header and previous/next links for a post, or undefined if it is not in a series. */
+export function seriesNav(slug: string): SeriesNav | undefined {
+  const series = SERIES.find((s) => s.posts.some((p) => p.slug === slug));
+  if (!series) return undefined;
+  const i = series.posts.findIndex((p) => p.slug === slug);
+  const pick = (p?: Post) => (p ? { slug: p.slug, title: p.title } : undefined);
+  return { slug: series.slug, title: series.title, position: i + 1, total: series.posts.length, prev: pick(series.posts[i - 1]), next: pick(series.posts[i + 1]) };
+}
+
 /** Categories in sidebar order, each with its posts (newest first). Empty categories are left out. */
 export const CATEGORIES: Category[] = (() => {
-  const names = [...CATEGORY_ORDER, ...new Set(POSTS.map((p) => p.category).filter((c) => !CATEGORY_ORDER.includes(c)))];
+  const names = [...CATEGORY_ORDER, ...new Set(POST_LIST.map((p) => p.category).filter((c) => !CATEGORY_ORDER.includes(c)))];
   return names
-    .map((name) => ({ name, slug: categorySlug(name), posts: POSTS.filter((p) => p.category === name) }))
+    .map((name) => ({ name, slug: categorySlug(name), posts: POST_LIST.filter((p) => p.category === name) }))
     .filter((c) => c.posts.length > 0);
 })();

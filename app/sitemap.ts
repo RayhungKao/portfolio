@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { CARDS } from '../src/content';
-import { CATEGORIES, POSTS } from '../src/postData';
+import { CATEGORIES, POSTS, SERIES } from '../src/postData';
 import { SITE_URL } from '../src/site';
 
 export const dynamic = 'force-static'; // required for output: 'export'
@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...CARDS.map((c) => ({ url: abs(`/work/${c.id}`) })),
     { url: abs('/blog') },
     ...CATEGORIES.map((c) => ({ url: abs(`/blog/category/${c.slug}`) })),
+    ...SERIES.map((s) => ({ url: abs(`/series/${s.slug}`) })),
     ...POSTS.map((p) => ({ url: abs(`/blog/${p.slug}`), lastModified: p.date || undefined })),
     { url: abs('/resume') },
   ];

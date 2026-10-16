@@ -17,6 +17,12 @@ export type Post = {
   title: string;
   date: string;
   linkedin?: string;
+  /** Where the post was shared, for the "Discuss on / View on" buttons. */
+  threads?: string;
+  instagram?: string;
+  /** Series slug and the post's place in it (1 = first). Both or neither. */
+  series?: string;
+  order?: number;
   /** Share image in public/, e.g. /og/x.png. Without it a card is drawn from the title. */
   image?: string;
   summary: string;
@@ -26,6 +32,41 @@ export type Post = {
   readingMinutes: number;
   tags: string[];
 };
+
+export type Series = { slug: string; title: string; description?: string; posts: Post[] };
+
+/** What the post page needs to show "Series · 3 / 14" and the previous/next links. */
+export type SeriesNav = {
+  slug: string;
+  title: string;
+  position: number;
+  total: number;
+  prev?: { slug: string; title: string };
+  next?: { slug: string; title: string };
+};
+
+/** A row in a post list: a standalone post, or one collapsed card standing for a whole series. */
+export type ListItem = { kind: 'post'; post: Post } | { kind: 'series'; series: Series };
+
+/**
+ * `posts` is newest first. Each series becomes one card, placed where its newest post in
+ * `posts` would have been, so a 14-part series takes one row instead of fourteen.
+ */
+export function listItems(posts: Post[], allSeries: Series[]): ListItem[] {
+  const seen = new Set<string>();
+  const items: ListItem[] = [];
+  for (const post of posts) {
+    if (!post.series) {
+      items.push({ kind: 'post', post });
+      continue;
+    }
+    if (seen.has(post.series)) continue;
+    seen.add(post.series);
+    const series = allSeries.find((s) => s.slug === post.series);
+    if (series) items.push({ kind: 'series', series });
+  }
+  return items;
+}
 
 export type Category = { name: string; slug: string; posts: Post[] };
 

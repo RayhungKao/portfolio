@@ -87,7 +87,11 @@ The blog lives at `/blog`, and each category has its own page (`/blog/category/a
 Each post is one Markdown file in `src/posts/` (GitHub-flavored: lists, tables, code, links).
 A single line break stays a line break, the way you would write a LinkedIn post, a blank
 line starts a new paragraph, and `#hashtags` are highlighted. The front matter is YAML, so
-quote a value that contains `: ` (`title: "Foo: bar"`). The file name becomes the post URL
+quote a value that contains `: ` (`title: "Foo: bar"`). Optional keys: `summary`, `image`
+(PNG in `public/` for the share preview), `draft: true`, `linkedin` / `threads` / `instagram` (the
+"Discuss on…" buttons), and `series: <slug>` with `order: <n>` to put a post in a series. A series
+shows as one card in the blog list and has a contents page at `/series/<slug>`; give it a title and
+description in `src/series.ts`. The file name becomes the post URL
 (`src/posts/cancel-flow.md` → `/blog/cancel-flow`).
 
 ```text

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARDS, LINKS } from './content';
-import { formatDate, type Post } from './postTypes';
+import { formatDate, listItems, type Post, type Series } from './postTypes';
 import { AppLink } from './AppLink';
 import { asset, isInternal, navigate } from './router';
 import { SocialLinks } from './SocialLinks';
@@ -158,9 +158,9 @@ function Avatar() {
   );
 }
 
-export function Home({ posts }: { posts: Post[] }) {
+export function Home({ posts, series }: { posts: Post[]; series: Series[] }) {
   const work = SELECTED.map((id) => CARDS.find((c) => c.id === id)!).filter(Boolean);
-  const latest = posts.slice(0, 3);
+  const latest = listItems(posts, series).slice(0, 3);
 
   return (
     <main className="home">
@@ -212,16 +212,25 @@ export function Home({ posts }: { posts: Post[] }) {
           <Link href="/blog">All articles →</Link>
         </div>
         <ul className="latest-list">
-          {latest.map((p) => (
-            <li key={p.slug}>
-              <Link href={`/blog/${p.slug}`}>
-                <span className="latest-meta">
-                  {p.category} · {formatDate(p.date)} · {p.readingMinutes} min read
-                </span>
-                <span className="latest-title">{p.title}</span>
-              </Link>
-            </li>
-          ))}
+          {latest.map((item) =>
+            item.kind === 'series' ? (
+              <li key={`series-${item.series.slug}`}>
+                <Link href={`/series/${item.series.slug}`}>
+                  <span className="latest-meta">Series · {item.series.posts.length} articles</span>
+                  <span className="latest-title">{item.series.title}</span>
+                </Link>
+              </li>
+            ) : (
+              <li key={item.post.slug}>
+                <Link href={`/blog/${item.post.slug}`}>
+                  <span className="latest-meta">
+                    {item.post.category} · {formatDate(item.post.date)} · {item.post.readingMinutes} min read
+                  </span>
+                  <span className="latest-title">{item.post.title}</span>
+                </Link>
+              </li>
+            ),
+          )}
         </ul>
       </section>
 

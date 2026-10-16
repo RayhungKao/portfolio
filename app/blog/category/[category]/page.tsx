@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { BlogList } from '../../../../src/Blog';
-import { CATEGORIES, POSTS } from '../../../../src/postData';
+import { CATEGORIES, POST_LIST, SERIES } from '../../../../src/postData';
 
 type Params = { category: string };
 
@@ -20,5 +20,5 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 export default async function CategoryPage({ params }: { params: Promise<Params> }) {
   const { category } = await params;
   if (!CATEGORIES.some((c) => c.slug === category)) notFound();
-  return <BlogList category={category} posts={POSTS} categories={CATEGORIES} />;
+  return <BlogList category={category} posts={POST_LIST} categories={CATEGORIES} series={SERIES} />;
 }
