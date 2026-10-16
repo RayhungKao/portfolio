@@ -79,14 +79,15 @@ link straight to one; the page opens on the desk and flies to that card.
 Light (warm paper) is the default. The ☾ / ☀ button in the top bar switches to the dark
 navy theme, and the choice is remembered in localStorage. All colors are CSS variables in
 `src/styles.css` (`:root` for light, `:root[data-theme="dark"]` for dark). A small script in
-`index.html` applies the saved theme before the page renders, so there is no flash.
+`app/layout.tsx` applies the saved theme before the page renders, so there is no flash.
 
 ## Blog
 
 The blog lives at `/blog`, and each category has its own page (`/blog/category/ai-agent`).
-Each post is one plain-text file in `src/posts/`, written the way you would write a
-LinkedIn post: line breaks are kept, a blank line starts a new paragraph, URLs become
-links, and `#hashtags` are highlighted. The file name becomes the post URL
+Each post is one Markdown file in `src/posts/` (GitHub-flavored: lists, tables, code, links).
+A single line break stays a line break, the way you would write a LinkedIn post, a blank
+line starts a new paragraph, and `#hashtags` are highlighted. The front matter is YAML, so
+quote a value that contains `: ` (`title: "Foo: bar"`). The file name becomes the post URL
 (`src/posts/cancel-flow.md` → `/blog/cancel-flow`).
 
 ```text

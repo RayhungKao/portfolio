@@ -1,5 +1,5 @@
 ---
-title: Building this site with Claude: what I decided, what it built, and which skills I picked
+title: "Building this site with Claude: what I decided, what it built, and which skills I picked"
 date: 2026-10-09
 category: Building with AI
 summary: I set the direction and judged the results; Claude wrote the code and tested it. Here is how that split worked, and where my own judgment changed the site.

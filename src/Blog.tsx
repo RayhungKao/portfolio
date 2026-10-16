@@ -4,49 +4,6 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { categorySlug, formatDate, type Category, type Post } from './postTypes';
 import { to } from './router';
 
-const TOKEN = /(`[^`]+`|https?:\/\/[^\s)]+|#[\p{L}\p{N}_]+)/gu;
-
-/** Turns a line of post text into React nodes: `code`, links, and #hashtags. */
-function renderLine(line: string, key: string): ReactNode[] {
-  const out: ReactNode[] = [];
-  let last = 0;
-  for (const m of line.matchAll(TOKEN)) {
-    const i = m.index ?? 0;
-    if (i > last) out.push(line.slice(last, i));
-    const t = m[0];
-    out.push(
-      t.startsWith('`') ? (
-        <code key={`${key}-${i}`}>{t.slice(1, -1)}</code>
-      ) : t.startsWith('#') ? (
-        <span key={`${key}-${i}`} className="hashtag">{t}</span>
-      ) : (
-        <a key={`${key}-${i}`} href={t} target="_blank" rel="noreferrer">{t}</a>
-      ),
-    );
-    last = i + t.length;
-  }
-  if (last < line.length) out.push(line.slice(last));
-  return out;
-}
-
-function PostBody({ body }: { body: string }) {
-  const paragraphs = body.split(/\n\s*\n/);
-  return (
-    <div className="post-body">
-      {paragraphs.map((p, pi) => (
-        <p key={pi}>
-          {p.split('\n').map((line, li, lines) => (
-            <span key={li}>
-              {renderLine(line, `${pi}-${li}`)}
-              {li < lines.length - 1 && <br />}
-            </span>
-          ))}
-        </p>
-      ))}
-    </div>
-  );
-}
-
 function PostMeta({ post }: { post: Post }) {
   return (
     <div className="post-meta">
@@ -154,7 +111,7 @@ export function BlogList({ category, posts: allPosts, categories }: { category?:
   );
 }
 
-export function BlogPost({ post, posts, categories }: { post: Post; posts: Post[]; categories: Category[] }) {
+export function BlogPost({ post, posts, categories, children }: { post: Post; posts: Post[]; categories: Category[]; children: ReactNode }) {
   const slug = post.slug;
   return (
     <div className="blog-layout">
@@ -164,7 +121,7 @@ export function BlogPost({ post, posts, categories }: { post: Post; posts: Post[
         <article>
           <PostMeta post={post} />
           <h1>{post.title}</h1>
-          <PostBody body={post.body} />
+          {children}
           <Tags tags={post.tags} />
           {post.linkedin && (
             <a className="pill linkedin" href={post.linkedin} target="_blank" rel="noreferrer">
