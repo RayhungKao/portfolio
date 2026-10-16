@@ -17,6 +17,8 @@ export type Post = {
   title: string;
   date: string;
   linkedin?: string;
+  /** Share image in public/, e.g. /og/x.png. Without it a card is drawn from the title. */
+  image?: string;
   summary: string;
   body: string;
   category: string;

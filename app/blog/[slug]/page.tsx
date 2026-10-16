@@ -15,7 +15,14 @@ export function generateStaticParams(): Params[] {
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const post = POSTS.find((p) => p.slug === slug);
-  return post ? { title: post.title, description: post.summary } : {};
+  if (!post) return {};
+  const url = `/blog/${post.slug}`;
+  return {
+    title: post.title,
+    description: post.summary,
+    alternates: { canonical: url },
+    openGraph: { type: 'article', url, title: post.title, description: post.summary, publishedTime: post.date || undefined },
+  };
 }
 
 export default async function PostPage({ params }: { params: Promise<Params> }) {

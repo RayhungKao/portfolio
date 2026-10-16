@@ -4,15 +4,18 @@ import '../src/styles.css';
 import { RouterBridge } from '../src/RouterBridge';
 import { Topbar } from '../src/Topbar';
 import { WorkViewProvider } from '../src/WorkViewContext';
+import { SITE_NAME, SITE_URL } from '../src/site';
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 const DESCRIPTION =
   'Ray Kao, software engineer in Taipei: streaming AI interfaces, asynchronous task systems, and the data layers beneath them.';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://rayhungkao.github.io/portfolio/'),
+  metadataBase: new URL(SITE_URL),
   title: { default: 'Jui-Hung (Ray) Kao · Software Engineer', template: '%s | Ray Kao' },
   description: DESCRIPTION,
+  openGraph: { type: 'website', siteName: SITE_NAME, locale: 'en_US' },
+  twitter: { card: 'summary_large_image' },
   icons: { icon: `${BASE}/favicon.svg`, apple: `${BASE}/apple-touch-icon.png` },
 };
 
