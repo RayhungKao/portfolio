@@ -1,19 +1,23 @@
 {
-  "name": "canvas-desk",
+  "name": "portfolio",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "dev:vite": "vite",
+    "build:vite": "tsc --noEmit && vite build",
+    "preview:vite": "vite preview"
   },
   "dependencies": {
     "fabric": "^7.4.0",
+    "next": "^16.4.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
+    "@types/node": "26.6.5",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.1.1",
