@@ -95,7 +95,8 @@ export const POSTS: Post[] = FILES
   .map((file) => parse(file, fs.readFileSync(file, 'utf8')))
   .filter((p) => SHOW_DRAFTS || !p.draft)
   .map(({ draft: _draft, ...post }): Post => post)
-  .sort((a, b) => b.date.localeCompare(a.date));
+  // Same-day posts fall back to the slug: the order must not depend on the file system's listing order.
+  .sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 
 /** The same posts without their bodies: what client components receive as props. */
 export const POST_LIST: Post[] = POSTS.map((p) => ({ ...p, body: '' }));
