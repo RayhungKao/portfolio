@@ -72,7 +72,7 @@ Each platform has its own convention for where the code lives.
 Many people say Supabase is a sensible default for a first full-stack project. That is a common view as of October 2026, not a measured fact, and it holds when your needs are question 1. If they are not, the matrix lets you mix.
 
 > [!NOTE] Where the rest lives
-> A comparison of platforms, RLS details and framework choices are in the deep dive "Choosing the stack in practice". What a VPS, a container and a PaaS are is in the hosting article.
+> A comparison of platforms, RLS details and framework choices are in the deep dive "Choosing the stack in practice". What a VPS, a container and a PaaS are is in [Where server code runs](/blog/running-server-code).
 
 > [!PRINCIPLE] Core principle
 > The unit of choice is each capability. BaaS, serverless and a full server are only common bundles of those choices.

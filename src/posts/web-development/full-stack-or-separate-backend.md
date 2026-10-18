@@ -45,7 +45,7 @@ Four pieces make shape A possible.
 - **Server Actions** are functions you call from a form or a component. Under the hood, each one is an internal POST endpoint, which means it can be called by anyone who finds it, so each action must check the user for itself.
 - **`proxy.ts`** runs before routes are matched, for coarse gates such as redirecting visitors without a session.
 
-None of these exist in a static export. This portfolio is built with `output: 'export'`, so the result is a folder of files and there is no server at runtime to run a Route Handler. If you need any of the four, you need a host that runs Node.
+In a static export, none of these work at request time. This portfolio is built with `output: 'export'`, so the result is a folder of files and there is no server at runtime. Server Components run once, during the build. A Route Handler can only produce a fixed `GET` response at build time. Server Actions and `proxy.ts` are not supported at all. If you need any of the four to react to a live request, you need a host that runs Node. The full list is in [Static export: server code runs only at build time](/blog/static-export-and-build-time).
 
 ## When one project is enough
 
@@ -67,7 +67,7 @@ Choose B or C when:
 A useful middle path is to start with A and let the code tell you when to split. If your route handlers keep calling one service module, that module is already the future backend.
 
 > [!NOTE] Where the rest lives
-> How Server Actions and Route Handlers differ in detail is covered in Part 5, Next.js in practice.
+> How Server Actions and Route Handlers differ in detail is covered in [Server and client components](/blog/server-and-client-components), in Part 5.
 
 > [!PRINCIPLE] Core principle
 > Rendering answers where the HTML comes from. Deployment answers whether the backend is separate. They are two independent axes.
