@@ -26,5 +26,5 @@ export default async function SeriesRoute({ params }: { params: Promise<Params> 
   const { slug } = await params;
   const series = SERIES.find((s) => s.slug === slug);
   if (!series) notFound();
-  return <SeriesPage series={series} posts={POST_LIST} categories={CATEGORIES} />;
+  return <SeriesPage series={series} allSeries={SERIES} posts={POST_LIST} categories={CATEGORIES} />;
 }

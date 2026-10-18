@@ -25,8 +25,8 @@ function Tags({ tags }: { tags: string[] }) {
   );
 }
 
-/** Two-level directory: All articles, then each category with its posts. */
-function BlogNav({ category, slug, posts, categories }: { category?: string; slug?: string; posts: Post[]; categories: Category[] }) {
+/** Directory: All articles, each category with its posts, then the series (one link each). */
+function BlogNav({ category, slug, activeSeries, posts, categories, allSeries }: { category?: string; slug?: string; activeSeries?: string; posts: Post[]; categories: Category[]; allSeries: Series[] }) {
   const activeCategory = category ?? (slug ? categorySlug(posts.find((p) => p.slug === slug)?.category ?? '') : undefined);
   const [open, setOpen] = useState<Set<string>>(() => new Set(activeCategory ? [activeCategory] : []));
   useEffect(() => {
@@ -42,7 +42,7 @@ function BlogNav({ category, slug, posts, categories }: { category?: string; slu
 
   return (
     <nav className="blog-nav" aria-label="Blog categories">
-      <Link className={!activeCategory && !slug ? 'blog-nav-all active' : 'blog-nav-all'} href="/blog">
+      <Link className={!activeCategory && !slug && !activeSeries ? 'blog-nav-all active' : 'blog-nav-all'} href="/blog">
         All articles <span>{posts.length}</span>
       </Link>
       <ul>
@@ -73,6 +73,22 @@ function BlogNav({ category, slug, posts, categories }: { category?: string; slu
           );
         })}
       </ul>
+      {allSeries.length > 0 && (
+        <>
+          <h2 className="blog-nav-heading">Series</h2>
+          <ul>
+            {allSeries.map((s) => (
+              <li key={s.slug} className={activeSeries === s.slug ? 'active' : undefined}>
+                <div className="blog-nav-row blog-nav-row-plain">
+                  <Link href={`/series/${s.slug}`}>
+                    {s.title} <span>{s.posts.length}</span>
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </nav>
   );
 }
@@ -83,7 +99,7 @@ export function BlogList({ category, posts: allPosts, categories, series }: { ca
   const items = listItems(posts, series);
   return (
     <div className="blog-layout">
-      <BlogNav category={current?.slug} posts={allPosts} categories={categories} />
+      <BlogNav category={current?.slug} posts={allPosts} categories={categories} allSeries={series} />
       <main className="blog">
         <header className="blog-head">
           <h1>Writing</h1>
@@ -124,14 +140,14 @@ export function BlogList({ category, posts: allPosts, categories, series }: { ca
   );
 }
 
-export function BlogPost({ post, posts, categories, series, children }: { post: Post; posts: Post[]; categories: Category[]; series?: SeriesNav; children: ReactNode }) {
+export function BlogPost({ post, posts, categories, allSeries, series, children }: { post: Post; posts: Post[]; categories: Category[]; allSeries: Series[]; series?: SeriesNav; children: ReactNode }) {
   const slug = post.slug;
   // A post in a series goes back to its series; any other post goes back to its category.
   const category = post.category ?? UNCATEGORIZED;
   const back = series ? { href: `/series/${series.slug}`, label: series.title } : { href: `/blog/category/${categorySlug(category)}`, label: category };
   return (
     <div className="blog-layout">
-      <BlogNav slug={slug} posts={posts} categories={categories} />
+      <BlogNav slug={slug} activeSeries={series?.slug} posts={posts} categories={categories} allSeries={allSeries} />
       <main className="blog">
         <Link className="back" href={back.href}>← {back.label}</Link>
         <article>
@@ -172,10 +188,10 @@ export function BlogPost({ post, posts, categories, series, children }: { post: 
 }
 
 /** /series/<slug>: the table of contents of one series, in reading order. */
-export function SeriesPage({ series, posts, categories }: { series: Series; posts: Post[]; categories: Category[] }) {
+export function SeriesPage({ series, allSeries, posts, categories }: { series: Series; allSeries: Series[]; posts: Post[]; categories: Category[] }) {
   return (
     <div className="blog-layout">
-      <BlogNav posts={posts} categories={categories} />
+      <BlogNav activeSeries={series.slug} posts={posts} categories={categories} allSeries={allSeries} />
       <main className="blog">
         <Link className="back" href="/blog">← All articles</Link>
         <header className="blog-head">

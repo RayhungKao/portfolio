@@ -179,6 +179,8 @@ a { color: var(--tan-ink); }
 .blog-nav-all.active, .blog-nav li.active > .blog-nav-row a { color: var(--ink); }
 .blog-nav-row { display: flex; align-items: center; justify-content: space-between; border-radius: 8px; padding: 2px 4px 2px 10px; }
 .blog-nav-row a { flex: 1; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 6px 0; font-weight: 600; }
+.blog-nav-row-plain { padding-right: 32px; } /* a series row has no expand button, so keep its count in line with the categories' */
+.blog-nav-heading { margin: 22px 0 6px 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
 .blog-nav-row button { border: 0; background: transparent; color: var(--ink-3); width: 28px; height: 28px; border-radius: 6px; }
 .blog-nav-row button:hover { background: var(--bg-deep); color: var(--ink); }
 .blog-nav-posts { margin: 2px 0 8px 10px !important; border-left: 1px solid var(--line); }
