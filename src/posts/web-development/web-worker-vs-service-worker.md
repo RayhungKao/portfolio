@@ -3,8 +3,8 @@ title: Web Worker vs Service Worker
 date: 2026-10-18
 summary: "Two browser features with similar names and different jobs: one keeps the page from freezing, the other sits between the page and the network."
 series: web-development
-order: 399
-part: Toolchain
+order: 306
+part: The toolchain
 draft: true
 ---
 
