@@ -8,7 +8,9 @@ type Params = { slug: string };
 export const dynamicParams = false;
 
 export function generateStaticParams(): Params[] {
-  return SERIES.map((s) => ({ slug: s.slug }));
+  // `output: 'export'` fails on an empty list, and there are no series until a post sets `series:`.
+  // Until then build one placeholder URL; the page below answers it with notFound(). It is not linked.
+  return SERIES.length ? SERIES.map((s) => ({ slug: s.slug })) : [{ slug: 'none' }];
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {

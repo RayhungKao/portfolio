@@ -39,8 +39,8 @@ set Source to "GitHub Actions". The repository is `portfolio`, so the site is se
 https://rayhungkao.github.io/portfolio/.
 
 Pages are Next.js App Router routes under `app/`, and the build (`output: 'export'`) writes one
-HTML file per URL into `out/`, so there is no SPA fallback: an unknown URL gets GitHub Pages' own
-404. The Work page's canvas lives in `app/work/layout.tsx` so it stays mounted between `/work` and
+HTML file per URL into `out/`, so there is no SPA fallback: an unknown URL gets `404.html`, built
+from `app/not-found.tsx`. The Work page's canvas lives in `app/work/layout.tsx` so it stays mounted between `/work` and
 `/work/<id>`.
 
 The build's base path comes from the Pages settings (`/portfolio/` now). In code, write app
@@ -50,6 +50,8 @@ add the base path. Public files go through `asset()` from `src/router.ts`.
 To move to a custom domain later: verify the domain in your GitHub account settings, enter
 it under Settings → Pages → Custom domain, then add the DNS records GitHub shows. The base
 path then becomes `/` automatically, and no `CNAME` file is needed with an Actions deployment.
+The workflow also passes the site's origin (`SITE_ORIGIN`), so the sitemap, canonical URLs and
+share previews switch to the new domain along with it.
 
 ## Controls
 
@@ -106,7 +108,7 @@ Post body…
 ```
 
 `title` and `date` (YYYY-MM-DD) are needed for a tidy list; `category` places the post in
-the sidebar directory (the order of categories is `CATEGORY_ORDER` in `src/postData.ts`;
+the sidebar directory (the order of categories is `CATEGORY_ORDER` in `src/postTypes.ts`;
 posts without one go under "Notes"); `linkedin` adds a "Discuss on LinkedIn" button;
 `summary` defaults to the first line of the post. Reading time and tags are computed
 from the body.
