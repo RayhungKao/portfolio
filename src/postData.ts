@@ -1,5 +1,6 @@
 /**
- * Blog posts live as Markdown files in src/posts/*.md. A YAML header sets the metadata:
+ * Blog posts live as Markdown files in src/posts/, directly or in subfolders (a folder only groups files,
+ * for example src/posts/web-development/). A YAML header sets the metadata:
  *
  * ---
  * title: What I learned building an AI agent's cancel flow   (quote it if it contains ": ")
@@ -15,7 +16,8 @@
  * ---
  * Post body…
  *
- * The file name (without .md) becomes the URL: /blog/<file-name>.
+ * The file name (without .md and without the folder) becomes the URL: /blog/<file-name>, so it must be
+ * unique across all folders; the build fails on a duplicate.
  * Reading time and tags (the post's #hashtags) are derived from the body.
  * The body is rendered to HTML by src/PostMarkdown.tsx. Two additions to plain Markdown:
  *   ![alt](diagram:name)         inlines src/diagrams/name.svg (follows the light/dark theme)
@@ -28,11 +30,20 @@ import matter from 'gray-matter';
 import { CATEGORY_ORDER, UNCATEGORIZED, categorySlug, groupByPart, type Category, type Post, type Series, type SeriesNav } from './postTypes';
 import { SERIES_INFO } from './series';
 
-/** Server only: reads src/posts/*.md at build time. Client components get posts as props. */
+/** Server only: reads the .md files under src/posts (any subfolder) at build time. Client components get posts as props. */
 const POSTS_DIR = path.join(process.cwd(), 'src', 'posts');
 
+/** Every .md file under `dir`, at any depth. */
+function postFiles(dir: string): string[] {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) return postFiles(full);
+    return entry.name.endsWith('.md') ? [full] : [];
+  });
+}
+
 function parse(file: string, raw: string): Post & { draft: boolean } {
-  const slug = file.replace(/\.md$/, '');
+  const slug = path.basename(file, '.md');
   const { data: meta, content } = matter(raw);
   const str = (v: unknown) => (v instanceof Date ? v.toISOString().slice(0, 10) : typeof v === 'string' ? v : '');
   const body = content.trim();
@@ -64,10 +75,22 @@ function parse(file: string, raw: string): Post & { draft: boolean } {
 /** `draft: true` posts show up in `npm run dev` but are left out of the production build. */
 const SHOW_DRAFTS = process.env.NODE_ENV !== 'production';
 
-export const POSTS: Post[] = fs
-  .readdirSync(POSTS_DIR)
-  .filter((f) => f.endsWith('.md'))
-  .map((f) => parse(f, fs.readFileSync(path.join(POSTS_DIR, f), 'utf8')))
+/** The URL is the file name alone, so two files with one name (in different folders) would collide. */
+function assertUniqueSlugs(files: string[]) {
+  const seen = new Map<string, string>();
+  for (const file of files) {
+    const slug = path.basename(file, '.md');
+    const first = seen.get(slug);
+    if (first) throw new Error(`Two posts share the URL /blog/${slug}: ${path.relative(POSTS_DIR, first)} and ${path.relative(POSTS_DIR, file)}`);
+    seen.set(slug, file);
+  }
+}
+
+const FILES = postFiles(POSTS_DIR);
+assertUniqueSlugs(FILES);
+
+export const POSTS: Post[] = FILES
+  .map((file) => parse(file, fs.readFileSync(file, 'utf8')))
   .filter((p) => SHOW_DRAFTS || !p.draft)
   .map(({ draft: _draft, ...post }): Post => post)
   .sort((a, b) => b.date.localeCompare(a.date));
