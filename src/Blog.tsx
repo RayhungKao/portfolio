@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState, type ReactNode } from 'react';
-import { categorySlug, formatDate, listItems, type Category, type Post, type Series, type SeriesNav } from './postTypes';
+import { categorySlug, formatDate, groupByPart, listItems, type Category, type Post, type Series, type SeriesNav } from './postTypes';
 
 function PostMeta({ post }: { post: Post }) {
   return (
@@ -182,18 +182,30 @@ export function SeriesPage({ series, posts, categories }: { series: Series; post
         <h2 className="blog-section">
           Contents <span>{series.posts.length} articles</span>
         </h2>
-        <ol className="series-list">
-          {series.posts.map((p) => (
-            <li key={p.slug}>
-              <Link href={`/blog/${p.slug}`}>
-                <span className="series-list-title">{p.title}</span>
-                <span className="series-list-meta">
-                  {p.date && formatDate(p.date)} · {p.readingMinutes} min read
-                </span>
-              </Link>
-            </li>
+        {/* One counter runs through every part, so the numbers match "3 / 14" on the post page. */}
+        <div className="series-parts">
+          {groupByPart(series.posts).map((group, i, groups) => (
+            <section key={group.part ?? i}>
+              {group.part && (
+                <h3 className="series-part">
+                  Part {groups.slice(0, i + 1).filter((g) => g.part).length} · {group.part}
+                </h3>
+              )}
+              <ol className="series-list">
+                {group.posts.map((p) => (
+                  <li key={p.slug}>
+                    <Link href={`/blog/${p.slug}`}>
+                      <span className="series-list-title">{p.title}</span>
+                      <span className="series-list-meta">
+                        {p.date && formatDate(p.date)} · {p.readingMinutes} min read
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </section>
           ))}
-        </ol>
+        </div>
       </main>
     </div>
   );

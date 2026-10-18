@@ -23,6 +23,8 @@ export type Post = {
   /** Series slug and the post's place in it (1 = first). Both or neither. */
   series?: string;
   order?: number;
+  /** Optional group inside a series, e.g. "Backend". The series page numbers the groups "Part 1", "Part 2", … */
+  part?: string;
   /** Share image in public/, e.g. /og/x.png. Without it a card is drawn from the title. */
   image?: string;
   summary: string;
@@ -44,6 +46,23 @@ export type SeriesNav = {
   prev?: { slug: string; title: string };
   next?: { slug: string; title: string };
 };
+
+/**
+ * A series' posts (already in reading order) cut into runs that share a `part`. Posts without a part form
+ * a run with no heading. The same part appearing in two separate runs is an ordering mistake, so it throws.
+ */
+export function groupByPart(posts: Post[]): { part?: string; posts: Post[] }[] {
+  const groups: { part?: string; posts: Post[] }[] = [];
+  for (const post of posts) {
+    const last = groups[groups.length - 1];
+    if (last && last.part === post.part) last.posts.push(post);
+    else groups.push({ part: post.part, posts: [post] });
+  }
+  const named = groups.flatMap((g) => (g.part ? [g.part] : []));
+  const repeated = named.find((part, i) => named.indexOf(part) !== i);
+  if (repeated) throw new Error(`Part "${repeated}" is split by posts from another part: check the order numbers`);
+  return groups;
+}
 
 /** A row in a post list: a standalone post, or one collapsed card standing for a whole series. */
 export type ListItem = { kind: 'post'; post: Post } | { kind: 'series'; series: Series };

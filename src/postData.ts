@@ -9,6 +9,7 @@
  * image: /og/my-post.png     (optional PNG in public/; default is a card drawn from the title)
  * draft: true               (optional; hidden from the production build)
  * series: web-development    (optional; with order: 3, the post is 3rd in that series)
+ * part: Backend              (optional; groups a series under "Part N · Backend", numbered in reading order)
  * threads: https://...       (optional; adds a "Discuss on Threads" button; instagram: likewise)
  * summary: Optional one-line teaser for the post list.
  * ---
@@ -22,7 +23,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
-import { CATEGORY_ORDER, UNCATEGORIZED, categorySlug, type Category, type Post, type Series, type SeriesNav } from './postTypes';
+import { CATEGORY_ORDER, UNCATEGORIZED, categorySlug, groupByPart, type Category, type Post, type Series, type SeriesNav } from './postTypes';
 import { SERIES_INFO } from './series';
 
 /** Server only: reads src/posts/*.md at build time. Client components get posts as props. */
@@ -49,6 +50,7 @@ function parse(file: string, raw: string): Post & { draft: boolean } {
     instagram: str(meta.instagram) || undefined,
     series: str(meta.series) || undefined,
     order: typeof meta.order === 'number' ? meta.order : undefined,
+    part: str(meta.part) || undefined,
     summary,
     body,
     category: str(meta.category) || UNCATEGORIZED,
@@ -81,6 +83,7 @@ export const SERIES: Series[] = [...new Set(POST_LIST.flatMap((p) => (p.series ?
   }
   const orders = posts.map((p) => p.order);
   if (new Set(orders).size !== orders.length) throw new Error(`Series "${slug}" has two posts with the same order`);
+  groupByPart(posts); // fail the build now if a part is split, not when the series page is rendered
   const info = SERIES_INFO[slug];
   return { slug, title: info?.title ?? titleCase(slug), description: info?.description, posts };
 });
