@@ -33,11 +33,14 @@ Fabric.js desk on /work. Deployed to GitHub Pages by `.github/workflows/deploy.y
 - `src/remarkHashtags.ts` must return an `emphasis` node; a `text` node makes findAndReplace drop
   the text after the first match.
 
-## Posts (src/posts/*.md)
-- Markdown (GFM). Single newlines render as line breaks (remark-breaks). File name = URL slug.
+## Posts (src/posts/**/*.md)
+- Markdown (GFM). Single newlines render as line breaks (remark-breaks). File name = URL slug; subfolders
+  (for example `src/posts/web-development/`) only group files, and a duplicate file name fails the build.
 - Front matter is YAML: quote values containing `: ` (`title: "Foo: bar"`).
 - Keys: title, date, category, summary, linkedin, threads, instagram, image (PNG in public/),
-  draft, series + order (a series post needs a unique `order`; the build fails otherwise).
+  draft, series + order (a series post needs a unique `order`; the build fails otherwise), part.
+- A post in a series has no `category`: it is listed under its series (`/series/<slug>`), not in the
+  sidebar categories. Setting both fails the build.
 - Series titles/descriptions live in `src/series.ts`. A series is one card in the list.
 - Share images are generated per post at build time; `image:` overrides.
 

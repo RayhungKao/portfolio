@@ -93,8 +93,10 @@ quote a value that contains `: ` (`title: "Foo: bar"`). Optional keys: `summary`
 (PNG in `public/` for the share preview), `draft: true`, `linkedin` / `threads` / `instagram` (the
 "Discuss on…" buttons), and `series: <slug>` with `order: <n>` to put a post in a series. A series
 shows as one card in the blog list and has a contents page at `/series/<slug>`; give it a title and
-description in `src/series.ts`. The file name becomes the post URL
-(`src/posts/cancel-flow.md` → `/blog/cancel-flow`).
+description in `src/series.ts`. A post in a series has no `category` (the build fails if it sets one):
+the series is where it is listed. The file name becomes the post URL (`src/posts/cancel-flow.md` →
+`/blog/cancel-flow`). Files can sit in subfolders such as `src/posts/web-development/`, which only
+group them: the URL is still the file name alone, so a name must be unique across all folders.
 
 ```text
 ---
@@ -118,7 +120,7 @@ from the body.
 | File | What it holds |
 | --- | --- |
 | `src/content.ts` | Card text, colors, and links — edit content here; the desk card and the slide both update |
-| `src/posts/*.md` | Blog posts |
+| `src/posts/**/*.md` | Blog posts (subfolders group a series) |
 | `src/Home.tsx` | Home page: intro, prompt box, avatar, selected work, latest posts |
 | `src/postData.ts`, `src/Blog.tsx` | Loads posts, categories, reading time; renders the sidebar directory, lists, and post pages |
 | `src/desk.ts` | Fabric.js desk: draws cards from measured layouts, snapping guides, zoom/pan, camera flights, persistence |
