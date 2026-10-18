@@ -68,7 +68,7 @@ With SSR, the backend produces the finished HTML itself, reading the database on
 
 ![SSR: the backend returns finished HTML](diagram:ssr-request-flow)
 
-So "SSR" is one way of having a backend, not the only one. [Full stack or separate backend](/blog/full-stack-or-separate-backend) covers how to choose between the shapes.
+So "SSR" is one way of having a backend, not the only one. [Full-stack framework or a separate backend](/blog/full-stack-or-separate-backend) covers how to choose between the shapes.
 
 > [!PRINCIPLE] Core principle
 > Choosing a rendering mode means choosing at which moment the page HTML is produced: build time, request time or in the browser.
