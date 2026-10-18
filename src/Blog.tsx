@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import { useEffect, useState, type ReactNode } from 'react';
-import { categorySlug, formatDate, groupByPart, listItems, type Category, type Post, type Series, type SeriesNav } from './postTypes';
+import { UNCATEGORIZED, categorySlug, formatDate, groupByPart, listItems, type Category, type Post, type Series, type SeriesNav } from './postTypes';
 
 function PostMeta({ post }: { post: Post }) {
   return (
     <div className="post-meta">
-      <Link href={`/blog/category/${categorySlug(post.category)}`}>{post.category}</Link>
+      {post.category && <Link href={`/blog/category/${categorySlug(post.category)}`}>{post.category}</Link>}
       {post.date && <time dateTime={post.date}>{formatDate(post.date)}</time>}
       <span>{post.readingMinutes} min read</span>
     </div>
@@ -126,11 +126,14 @@ export function BlogList({ category, posts: allPosts, categories, series }: { ca
 
 export function BlogPost({ post, posts, categories, series, children }: { post: Post; posts: Post[]; categories: Category[]; series?: SeriesNav; children: ReactNode }) {
   const slug = post.slug;
+  // A post in a series goes back to its series; any other post goes back to its category.
+  const category = post.category ?? UNCATEGORIZED;
+  const back = series ? { href: `/series/${series.slug}`, label: series.title } : { href: `/blog/category/${categorySlug(category)}`, label: category };
   return (
     <div className="blog-layout">
       <BlogNav slug={slug} posts={posts} categories={categories} />
       <main className="blog">
-        <Link className="back" href={`/blog/category/${categorySlug(post.category)}`}>← {post.category}</Link>
+        <Link className="back" href={back.href}>← {back.label}</Link>
         <article>
           <PostMeta post={post} />
           {series && (

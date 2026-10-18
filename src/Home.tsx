@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARDS, LINKS } from './content';
-import { formatDate, listItems, type Post, type Series } from './postTypes';
+import { UNCATEGORIZED, formatDate, listItems, type Post, type Series } from './postTypes';
 import { AppLink } from './AppLink';
 import { asset, isInternal, navigate } from './router';
 import { SocialLinks } from './SocialLinks';
@@ -224,7 +224,7 @@ export function Home({ posts, series }: { posts: Post[]; series: Series[] }) {
               <li key={item.post.slug}>
                 <Link href={`/blog/${item.post.slug}`}>
                   <span className="latest-meta">
-                    {item.post.category} · {formatDate(item.post.date)} · {item.post.readingMinutes} min read
+                    {item.post.category ?? UNCATEGORIZED} · {formatDate(item.post.date)} · {item.post.readingMinutes} min read
                   </span>
                   <span className="latest-title">{item.post.title}</span>
                 </Link>

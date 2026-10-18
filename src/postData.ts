@@ -5,7 +5,7 @@
  * ---
  * title: What I learned building an AI agent's cancel flow   (quote it if it contains ": ")
  * date: 2026-10-09
- * category: AI Agent
+ * category: AI Agent        (not for a post in a series: a series post is listed under its series)
  * linkedin: https://www.linkedin.com/feed/update/urn:li:activity:...
  * image: /og/my-post.png     (optional PNG in public/; default is a card drawn from the title)
  * draft: true               (optional; hidden from the production build)
@@ -46,6 +46,8 @@ function parse(file: string, raw: string): Post & { draft: boolean } {
   const slug = path.basename(file, '.md');
   const { data: meta, content } = matter(raw);
   const str = (v: unknown) => (v instanceof Date ? v.toISOString().slice(0, 10) : typeof v === 'string' ? v : '');
+  const series = str(meta.series) || undefined;
+  if (series && meta.category) throw new Error(`${slug}.md: a post in a series is listed under its series, so remove "category"`);
   const body = content.trim();
   const firstLine = body.split('\n').find((l) => l.trim()) ?? '';
   const summary = str(meta.summary) || (firstLine.length > 180 ? `${firstLine.slice(0, 177)}…` : firstLine);
@@ -61,12 +63,12 @@ function parse(file: string, raw: string): Post & { draft: boolean } {
     image: str(meta.image) || undefined,
     threads: str(meta.threads) || undefined,
     instagram: str(meta.instagram) || undefined,
-    series: str(meta.series) || undefined,
+    series,
     order: typeof meta.order === 'number' ? meta.order : undefined,
     part: str(meta.part) || undefined,
     summary,
     body,
-    category: str(meta.category) || UNCATEGORIZED,
+    category: series ? undefined : str(meta.category) || UNCATEGORIZED,
     readingMinutes: Math.max(1, Math.ceil((words + cjk / 2) / 230)),
     tags,
   };
@@ -122,9 +124,10 @@ export function seriesNav(slug: string): SeriesNav | undefined {
   return { slug: series.slug, title: series.title, position: i + 1, total: series.posts.length, prev: pick(series.posts[i - 1]), next: pick(series.posts[i + 1]) };
 }
 
-/** Categories in sidebar order, each with its posts (newest first). Empty categories are left out. */
+/** Categories in sidebar order, each with its posts (newest first). Empty categories are left out. Posts in a series have no category. */
 export const CATEGORIES: Category[] = (() => {
-  const names = [...CATEGORY_ORDER, ...new Set(POST_LIST.map((p) => p.category).filter((c) => !CATEGORY_ORDER.includes(c)))];
+  const used = POST_LIST.flatMap((p) => (p.category ? [p.category] : []));
+  const names = [...CATEGORY_ORDER, ...new Set(used.filter((c) => !CATEGORY_ORDER.includes(c)))];
   return names
     .map((name) => ({ name, slug: categorySlug(name), posts: POST_LIST.filter((p) => p.category === name) }))
     .filter((c) => c.posts.length > 0);

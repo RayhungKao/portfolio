@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ImageResponse } from 'next/og';
-import { POSTS } from '../../../src/postData';
+import { POSTS, SERIES } from '../../../src/postData';
 import { SITE_NAME } from '../../../src/site';
 
 export const dynamic = 'force-static';
@@ -15,7 +15,7 @@ export function generateStaticParams() {
 
 /**
  * The share image for /blog/<slug>. A post's front matter `image: /og/x.png` (a PNG in public/)
- * wins; otherwise a card is drawn from the title and category.
+ * wins; otherwise a card is drawn from the title and the category (or the series, for a series post).
  */
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -26,6 +26,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     return new Response(fs.readFileSync(file), { headers: { 'Content-Type': contentType } });
   }
 
+  const label = post.category ?? SERIES.find((s) => s.slug === post.series)?.title ?? '';
   const title = post.title.length > 110 ? `${post.title.slice(0, 107)}…` : post.title;
   return new ImageResponse(
     (
@@ -35,7 +36,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           background: '#f4ede2', color: '#232c2b', padding: '72px 80px',
         }}
       >
-        <div style={{ display: 'flex', fontSize: 30, color: '#7c5c46', letterSpacing: 1 }}>{post.category.toUpperCase()}</div>
+        <div style={{ display: 'flex', fontSize: 30, color: '#7c5c46', letterSpacing: 1 }}>{label.toUpperCase()}</div>
         <div style={{ display: 'flex', fontSize: title.length > 70 ? 56 : 68, fontWeight: 700, lineHeight: 1.15 }}>{title}</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 30, color: '#4c524f' }}>
           <span>{SITE_NAME}</span>
