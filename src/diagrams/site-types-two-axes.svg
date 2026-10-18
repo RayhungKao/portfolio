@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 380" role="img"><title>Seven site types spread across two axes of need</title><desc>A chart with content on the horizontal axis, from the same for everyone to different per visitor, and interaction after load on the vertical axis, from low to high. Content sites and portfolios sit at lower left. Creator tools sit at upper left. E-commerce sits in the lower middle. Social and media sit at the right. SaaS apps sit upper middle and dashboards upper right.</desc><defs><marker id="arrow-site-types-two-axes" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<line x1="90" y1="50" x2="90" y2="320" class="arr"/>
+<line x1="90" y1="320" x2="660" y2="320" class="arr"/>
+<line x1="375" y1="50" x2="375" y2="320" class="leader"/><line x1="90" y1="185" x2="660" y2="185" class="leader"/>
+<text class="ts" x="84" y="58" text-anchor="end">High</text>
+<text class="ts" x="84" y="320" text-anchor="end">Low</text>
+<text class="ts" x="24" y="28">Interaction after load</text>
+<text class="ts" x="90" y="344">Same for everyone</text>
+<text class="ts" x="375" y="344" text-anchor="middle">Content</text>
+<text class="ts" x="660" y="344" text-anchor="end">Different per visitor</text>
+<g class="c-gray"><rect x="100" y="262" width="130" height="48" rx="8" stroke-width="0.5"/><text class="th" x="165" y="277" text-anchor="middle" dominant-baseline="central">Content site</text><text class="ts" x="165" y="295" text-anchor="middle" dominant-baseline="central">Wikipedia</text></g>
+<g class="c-gray"><rect x="100" y="205" width="190" height="48" rx="8" stroke-width="0.5"/><text class="th" x="195" y="220" text-anchor="middle" dominant-baseline="central">Portfolio / marketing</text><text class="ts" x="195" y="238" text-anchor="middle" dominant-baseline="central">Apple's product pages</text></g>
+<g class="c-gray"><rect x="100" y="66" width="130" height="48" rx="8" stroke-width="0.5"/><text class="th" x="165" y="81" text-anchor="middle" dominant-baseline="central">Creator tool</text><text class="ts" x="165" y="99" text-anchor="middle" dominant-baseline="central">Figma</text></g>
+<g class="c-gray"><rect x="330" y="215" width="130" height="48" rx="8" stroke-width="0.5"/><text class="th" x="395" y="230" text-anchor="middle" dominant-baseline="central">E-commerce</text><text class="ts" x="395" y="248" text-anchor="middle" dominant-baseline="central">Amazon</text></g>
+<g class="c-gray"><rect x="500" y="150" width="150" height="48" rx="8" stroke-width="0.5"/><text class="th" x="575" y="165" text-anchor="middle" dominant-baseline="central">Social / media</text><text class="ts" x="575" y="183" text-anchor="middle" dominant-baseline="central">Instagram</text></g>
+<g class="c-gray"><rect x="300" y="100" width="130" height="48" rx="8" stroke-width="0.5"/><text class="th" x="365" y="115" text-anchor="middle" dominant-baseline="central">SaaS app</text><text class="ts" x="365" y="133" text-anchor="middle" dominant-baseline="central">Notion</text></g>
+<g class="c-gray"><rect x="470" y="66" width="180" height="48" rx="8" stroke-width="0.5"/><text class="th" x="560" y="81" text-anchor="middle" dominant-baseline="central">Dashboard / admin</text><text class="ts" x="560" y="99" text-anchor="middle" dominant-baseline="central">Google Analytics</text></g>
+<text class="ts" x="660" y="372" text-anchor="end">Positions are typical, not strict.</text></svg>
