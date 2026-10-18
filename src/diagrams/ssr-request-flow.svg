@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 270" role="img"><title>SSR request flow</title><desc>The browser gets finished HTML from the backend, which reads the database, and gets JS and CSS from a CDN.</desc>
+<defs><marker id="arrow-ssr-request-flow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g class="c-gray"><rect x="40" y="110" width="140" height="56" rx="8" stroke-width="0.5"/><text class="th" x="110" y="128" text-anchor="middle" dominant-baseline="central">Browser</text><text class="ts" x="110" y="148" text-anchor="middle" dominant-baseline="central">Client</text></g>
+<g class="c-purple"><rect x="300" y="30" width="160" height="56" rx="8" stroke-width="0.5"/><text class="th" x="380" y="48" text-anchor="middle" dominant-baseline="central">Backend</text><text class="ts" x="380" y="68" text-anchor="middle" dominant-baseline="central">Renders HTML</text></g>
+<g class="c-teal"><rect x="540" y="30" width="110" height="56" rx="8" stroke-width="0.5"/><text class="th" x="595" y="48" text-anchor="middle" dominant-baseline="central">Database</text><text class="ts" x="595" y="68" text-anchor="middle" dominant-baseline="central">Stored data</text></g>
+<g class="c-gray"><rect x="300" y="170" width="160" height="56" rx="8" stroke-width="0.5"/><text class="th" x="380" y="188" text-anchor="middle" dominant-baseline="central">CDN</text><text class="ts" x="380" y="208" text-anchor="middle" dominant-baseline="central">JS, CSS, images</text></g>
+<line x1="180" y1="122" x2="298" y2="70" class="arr" marker-end="url(#arrow-ssr-request-flow)"/>
+<line x1="460" y1="58" x2="538" y2="58" class="arr" marker-end="url(#arrow-ssr-request-flow)"/>
+<line x1="180" y1="154" x2="298" y2="198" class="arr" marker-end="url(#arrow-ssr-request-flow)"/>
+<circle cx="239" cy="96" r="10" class="box" stroke-width="0.5"/><text class="ts" x="239" y="96" text-anchor="middle" dominant-baseline="central">1</text>
+<circle cx="499" cy="58" r="10" class="box" stroke-width="0.5"/><text class="ts" x="499" y="58" text-anchor="middle" dominant-baseline="central">2</text>
+<circle cx="239" cy="176" r="10" class="box" stroke-width="0.5"/><text class="ts" x="239" y="176" text-anchor="middle" dominant-baseline="central">3</text>
+</svg>

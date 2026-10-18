@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 352" role="img"><title>Decision flow: two questions pick the route, a third adds a backend</title><desc>Question one asks whether you need search visibility or link previews. If no, the answer is a SPA. If yes, question two asks whether the content is known at build time. If yes, use SSG or pre-rendering, if no, use an SSR framework. A separate dashed branch asks whether you need a backend such as an API, login or database. If yes, add a backend, which can sit beside any of the three routes.</desc>
+<defs><marker id="ah9-decision-flow-with-backend-branch" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="20" y="120" width="190" height="56" rx="8" fill="none" stroke="var(--b)" stroke-width="1"/>
+<text class="ts" x="115" y="140" text-anchor="middle" dominant-baseline="central">Need search visibility</text><text class="ts" x="115" y="158" text-anchor="middle" dominant-baseline="central">or link previews?</text>
+<rect x="250" y="120" width="190" height="56" rx="8" fill="none" stroke="var(--b)" stroke-width="1"/>
+<text class="ts" x="345" y="140" text-anchor="middle" dominant-baseline="central">Content known</text><text class="ts" x="345" y="158" text-anchor="middle" dominant-baseline="central">at build time?</text>
+<g class="c-purple"><rect x="490" y="40" width="160" height="52" rx="8" stroke-width="0.5"/><text class="th" x="570" y="56" text-anchor="middle" dominant-baseline="central">SPA (CSR)</text><text class="ts" x="570" y="74" text-anchor="middle" dominant-baseline="central">static files, no server</text></g>
+<g class="c-purple"><rect x="490" y="122" width="160" height="52" rx="8" stroke-width="0.5"/><text class="th" x="570" y="138" text-anchor="middle" dominant-baseline="central">SSG / pre-rendering</text><text class="ts" x="570" y="156" text-anchor="middle" dominant-baseline="central">static HTML per route</text></g>
+<g class="c-purple"><rect x="490" y="204" width="160" height="52" rx="8" stroke-width="0.5"/><text class="th" x="570" y="220" text-anchor="middle" dominant-baseline="central">SSR framework</text><text class="ts" x="570" y="238" text-anchor="middle" dominant-baseline="central">e.g. Next.js, Nuxt</text></g>
+<path d="M115 118 V66 H488" fill="none" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
+<text class="ts" x="125" y="96" dominant-baseline="central">no</text>
+<line x1="212" y1="148" x2="248" y2="148" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
+<text class="ts" x="230" y="136" text-anchor="middle">yes</text>
+<line x1="442" y1="148" x2="488" y2="148" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
+<text class="ts" x="465" y="136" text-anchor="middle">yes</text>
+<path d="M345 178 V230 H488" fill="none" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
+<text class="ts" x="355" y="206" dominant-baseline="central">no</text>
+<rect x="20" y="270" width="190" height="48" rx="8" fill="none" stroke="var(--b)" stroke-width="1"/>
+<text class="ts" x="115" y="286" text-anchor="middle" dominant-baseline="central">Need a backend?</text><text class="ts" x="115" y="303" text-anchor="middle" dominant-baseline="central">API, login, database</text>
+<line x1="212" y1="294" x2="248" y2="294" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
+<text class="ts" x="230" y="282" text-anchor="middle">yes</text>
+<rect x="250" y="270" width="190" height="48" rx="8" fill="none" stroke="var(--b)" stroke-width="1" stroke-dasharray="4 3"/>
+<text class="th" x="345" y="286" text-anchor="middle" dominant-baseline="central">Add a backend</text><text class="ts" x="345" y="303" text-anchor="middle" dominant-baseline="central">functions, BaaS or server</text>
+<path d="M442 294 H668 V66 H652" fill="none" stroke="var(--b)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
+<path d="M668 148 H652" fill="none" stroke="var(--b)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
+<path d="M668 230 H652" fill="none" stroke="var(--b)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
+<text class="ts" x="556" y="310" text-anchor="middle">beside any of the three (Part 6)</text>
+<text class="ts" x="20" y="342">Purple: what you build. Dashed: an add-on that sits beside any route.</text></svg>

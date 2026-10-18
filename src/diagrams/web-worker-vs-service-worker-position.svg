@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 372" role="img"><title>Where a Web Worker and a Service Worker sit in the browser</title><desc>Inside the browser, the page runs on the main thread and talks to a Web Worker with postMessage so that heavy computation does not freeze the page. Separately, every request from the page passes through the Service Worker, which can read and write Cache Storage and only sends the request to the network if needed.</desc>
+<defs><marker id="ah5-web-worker-vs-service-worker-position" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="10" y="30" width="460" height="270" rx="10" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text class="th" x="22" y="46" dominant-baseline="central">Browser</text>
+<g class="c-purple"><rect x="30" y="130" width="150" height="60" rx="6" stroke-width="0.5"/><text class="th" x="105" y="150" text-anchor="middle" dominant-baseline="central">Page</text><text class="ts" x="105" y="170" text-anchor="middle" dominant-baseline="central">main thread: UI + DOM</text></g>
+<g class="c-purple"><rect x="30" y="240" width="150" height="44" rx="6" stroke-width="0.5"/><text class="th" x="105" y="254" text-anchor="middle" dominant-baseline="central">Web Worker</text><text class="ts" x="105" y="270" text-anchor="middle" dominant-baseline="central">heavy computation</text></g>
+<line x1="105" y1="192" x2="105" y2="238" stroke="var(--b)" stroke-width="1.5" marker-start="url(#ah5-web-worker-vs-service-worker-position)" marker-end="url(#ah5-web-worker-vs-service-worker-position)"/>
+<text class="ts" x="116" y="215" dominant-baseline="central">postMessage</text>
+<g class="c-purple"><rect x="300" y="130" width="140" height="60" rx="6" stroke-width="0.5"/><text class="th" x="370" y="150" text-anchor="middle" dominant-baseline="central">Service Worker</text><text class="ts" x="370" y="170" text-anchor="middle" dominant-baseline="central">proxy in the browser</text></g>
+<g class="c-teal"><rect x="300" y="240" width="140" height="44" rx="6" stroke-width="0.5"/><text class="th" x="370" y="254" text-anchor="middle" dominant-baseline="central">Cache Storage</text><text class="ts" x="370" y="270" text-anchor="middle" dominant-baseline="central">saved responses</text></g>
+<text class="ts" x="240" y="146" text-anchor="middle">every request</text>
+<line x1="182" y1="160" x2="298" y2="160" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah5-web-worker-vs-service-worker-position)"/>
+<line x1="370" y1="192" x2="370" y2="238" stroke="var(--b)" stroke-width="1.5" marker-start="url(#ah5-web-worker-vs-service-worker-position)" marker-end="url(#ah5-web-worker-vs-service-worker-position)"/>
+<text class="ts" x="381" y="215" dominant-baseline="central">read / write</text>
+<g class="c-gray"><rect x="560" y="130" width="110" height="60" rx="6" stroke-width="0.5"/><text class="th" x="615" y="150" text-anchor="middle" dominant-baseline="central">Network</text><text class="ts" x="615" y="170" text-anchor="middle" dominant-baseline="central">servers, APIs</text></g>
+<text class="ts" x="500" y="146" text-anchor="middle">only if needed</text>
+<line x1="442" y1="160" x2="558" y2="160" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah5-web-worker-vs-service-worker-position)"/>
+<text class="ts" x="10" y="322">Web Worker: heavy work runs off the UI thread, so the page does not freeze.</text>
+<text class="ts" x="10" y="340">Service Worker: every request from the page passes through it first.</text>
+<text class="ts" x="10" y="362">Purple: you write it. Gray: outside your control. Teal: where your data lives.</text></svg>

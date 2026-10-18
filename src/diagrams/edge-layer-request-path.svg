@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 220" role="img"><title>Request path through the edge layer</title><desc>A request goes from the browser to Cloudflare, then to Nginx and the app on your own server. Attack traffic is absorbed at Cloudflare. A cache hit is answered by Cloudflare without reaching your server.</desc><defs><marker id="arrow-edge-layer-request-path" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="335" y="64" width="310" height="148" rx="12" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 4"/>
+<text class="ts" x="350" y="82">Your server (VPS)</text>
+<g class="c-coral"><rect x="185" y="10" width="130" height="44" rx="8" stroke-width="0.5"/><text class="th" x="250" y="25" text-anchor="middle" dominant-baseline="central">Attack traffic</text><text class="ts" x="250" y="42" text-anchor="middle" dominant-baseline="central">Absorbed here</text></g>
+<line x1="250" y1="58" x2="250" y2="86" class="arr" stroke="#D85A30" marker-end="url(#arrow-edge-layer-request-path)"/>
+<g class="c-gray"><rect x="30" y="90" width="120" height="56" rx="8" stroke-width="0.5"/><text class="th" x="90" y="110" text-anchor="middle" dominant-baseline="central">Browser</text><text class="ts" x="90" y="128" text-anchor="middle" dominant-baseline="central">User's device</text></g>
+<g class="c-gray"><rect x="190" y="90" width="120" height="56" rx="8" stroke-width="0.5"/><text class="th" x="250" y="110" text-anchor="middle" dominant-baseline="central">Cloudflare</text><text class="ts" x="250" y="128" text-anchor="middle" dominant-baseline="central">Internet edge</text></g>
+<g class="c-purple"><rect x="350" y="90" width="120" height="56" rx="8" stroke-width="0.5"/><text class="th" x="410" y="110" text-anchor="middle" dominant-baseline="central">Nginx</text><text class="ts" x="410" y="128" text-anchor="middle" dominant-baseline="central">Reverse proxy</text></g>
+<g class="c-purple"><rect x="510" y="90" width="120" height="56" rx="8" stroke-width="0.5"/><text class="th" x="570" y="110" text-anchor="middle" dominant-baseline="central">Your app</text><text class="ts" x="570" y="128" text-anchor="middle" dominant-baseline="central">Node, Next.js</text></g>
+<line x1="154" y1="118" x2="186" y2="118" class="arr" marker-end="url(#arrow-edge-layer-request-path)"/>
+<line x1="314" y1="118" x2="346" y2="118" class="arr" marker-end="url(#arrow-edge-layer-request-path)"/>
+<line x1="474" y1="118" x2="506" y2="118" class="arr" marker-end="url(#arrow-edge-layer-request-path)"/>
+<path d="M250 150 L250 172 L90 172 L90 150" fill="none" class="arr" stroke="#1D9E75" marker-end="url(#arrow-edge-layer-request-path)"/>
+<text class="ts" x="170" y="194" text-anchor="middle">Cache hit: answered at the edge</text>
+<text class="ts" x="410" y="170" text-anchor="middle">TLS, routing by path,</text><text class="ts" x="410" y="188" text-anchor="middle">compression</text>
+<text class="ts" x="570" y="170" text-anchor="middle">Business logic</text></svg>

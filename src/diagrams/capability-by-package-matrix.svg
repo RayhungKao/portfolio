@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 400" role="img"><title>Three packages and a mixed setup, capability by capability</title><desc>A matrix with six capabilities as rows. The first three columns are the three common packages: BaaS with Supabase, serverless functions with Vercel, and a full server. The fourth column, set apart by a dashed line, is a mixed setup using Firebase only for login. The database row is PostgreSQL in every column, with a second line showing who runs it. The realtime row shows managed realtime for BaaS, a third-party service for serverless because functions cannot hold connections open, your own WebSocket server for the full server, and not used for the mixed setup.</desc>
+<text class="th" x="150" y="20">BaaS</text><text class="ts" x="150" y="38">e.g. Supabase</text>
+<text class="th" x="276" y="20">Serverless</text><text class="ts" x="276" y="38">e.g. Vercel</text>
+<text class="th" x="402" y="20">Full server</text><text class="ts" x="402" y="38">e.g. Node on Render</text>
+<text class="th" x="540" y="20">Mixed</text><text class="ts" x="540" y="38">Firebase + own API</text>
+<line x1="528" y1="8" x2="528" y2="320" class="leader"/>
+<text class="th" x="40" y="80" dominant-baseline="central">Auth</text>
+<text class="th" x="40" y="122" dominant-baseline="central">Database</text>
+<text class="th" x="40" y="164" dominant-baseline="central">Files</text>
+<text class="th" x="40" y="206" dominant-baseline="central">Logic</text>
+<text class="th" x="40" y="248" dominant-baseline="central">Realtime</text>
+<text class="th" x="40" y="290" dominant-baseline="central">Hosting</text>
+<g class="c-gray"><rect x="150" y="62" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="210" y="80" text-anchor="middle" dominant-baseline="central">Supabase Auth</text></g>
+<g class="c-purple"><rect x="276" y="62" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="336" y="80" text-anchor="middle" dominant-baseline="central">Better Auth</text></g>
+<g class="c-purple"><rect x="402" y="62" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="462" y="80" text-anchor="middle" dominant-baseline="central">Auth library</text></g>
+<g class="c-gray"><rect x="540" y="62" width="100" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="590" y="80" text-anchor="middle" dominant-baseline="central">Firebase Auth</text></g>
+<g class="c-teal"><rect x="150" y="102" width="120" height="40" rx="6" stroke-width="0.5"/><text class="th" x="210" y="115" text-anchor="middle" dominant-baseline="central">PostgreSQL</text><text class="ts" x="210" y="131" text-anchor="middle" dominant-baseline="central">run by Supabase</text></g>
+<g class="c-teal"><rect x="276" y="102" width="120" height="40" rx="6" stroke-width="0.5"/><text class="th" x="336" y="115" text-anchor="middle" dominant-baseline="central">PostgreSQL</text><text class="ts" x="336" y="131" text-anchor="middle" dominant-baseline="central">run by Neon</text></g>
+<g class="c-teal"><rect x="402" y="102" width="120" height="40" rx="6" stroke-width="0.5"/><text class="th" x="462" y="115" text-anchor="middle" dominant-baseline="central">PostgreSQL</text><text class="ts" x="462" y="131" text-anchor="middle" dominant-baseline="central">run by you</text></g>
+<g class="c-teal"><rect x="540" y="102" width="100" height="40" rx="6" stroke-width="0.5"/><text class="th" x="590" y="115" text-anchor="middle" dominant-baseline="central">PostgreSQL</text><text class="ts" x="590" y="131" text-anchor="middle" dominant-baseline="central">run by you</text></g>
+<g class="c-teal"><rect x="150" y="146" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="210" y="164" text-anchor="middle" dominant-baseline="central">Supabase Storage</text></g>
+<g class="c-teal"><rect x="276" y="146" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="336" y="164" text-anchor="middle" dominant-baseline="central">S3</text></g>
+<g class="c-teal"><rect x="402" y="146" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="462" y="164" text-anchor="middle" dominant-baseline="central">Disk or S3</text></g>
+<g class="c-teal"><rect x="540" y="146" width="100" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="590" y="164" text-anchor="middle" dominant-baseline="central">S3</text></g>
+<g class="c-purple"><rect x="150" y="188" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="210" y="206" text-anchor="middle" dominant-baseline="central">RLS + 1 function</text></g>
+<g class="c-purple"><rect x="276" y="188" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="336" y="206" text-anchor="middle" dominant-baseline="central">Functions</text></g>
+<g class="c-purple"><rect x="402" y="188" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="462" y="206" text-anchor="middle" dominant-baseline="central">Your server</text></g>
+<g class="c-purple"><rect x="540" y="188" width="100" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="590" y="206" text-anchor="middle" dominant-baseline="central">Your own API</text></g>
+<g class="c-gray"><rect x="150" y="230" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="210" y="248" text-anchor="middle" dominant-baseline="central">Supabase Realtime</text></g>
+<g class="c-gray"><rect x="276" y="230" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="336" y="248" text-anchor="middle" dominant-baseline="central">Ably or Pusher</text></g>
+<g class="c-purple"><rect x="402" y="230" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="462" y="248" text-anchor="middle" dominant-baseline="central">Own WebSocket</text></g>
+<rect x="540" y="230" width="100" height="36" rx="6" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 3"/><text class="ts" x="590" y="248" text-anchor="middle" dominant-baseline="central">Not used</text>
+<g class="c-gray"><rect x="150" y="272" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="210" y="290" text-anchor="middle" dominant-baseline="central">Supabase hosted</text></g>
+<g class="c-gray"><rect x="276" y="272" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="336" y="290" text-anchor="middle" dominant-baseline="central">Vercel</text></g>
+<g class="c-gray"><rect x="402" y="272" width="120" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="462" y="290" text-anchor="middle" dominant-baseline="central">PaaS or VPS</text></g>
+<g class="c-gray"><rect x="540" y="272" width="100" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="590" y="290" text-anchor="middle" dominant-baseline="central">PaaS container</text></g>
+<text class="ts" x="40" y="344">Purple: you write or run it. Gray: a provider runs it. Teal: where your data lives.</text>
+<text class="ts" x="40" y="362">Left of the dashed line: the three packages. Right: any cell can be swapped on its own.</text>
+<text class="ts" x="40" y="380">Functions can't hold a connection open, so serverless gets realtime from a third party.</text></svg>
