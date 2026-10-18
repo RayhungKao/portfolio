@@ -17,7 +17,9 @@
  *
  * The file name (without .md) becomes the URL: /blog/<file-name>.
  * Reading time and tags (the post's #hashtags) are derived from the body.
- * The body is rendered to HTML by src/PostMarkdown.tsx.
+ * The body is rendered to HTML by src/PostMarkdown.tsx. Two additions to plain Markdown:
+ *   ![alt](diagram:name)         inlines src/diagrams/name.svg (follows the light/dark theme)
+ *   > [!WARNING] Title           a highlighted callout; also [!PRINCIPLE] and [!NOTE] (src/remarkCallouts.ts)
  */
 
 import fs from 'node:fs';

@@ -220,7 +220,7 @@ a { color: var(--tan-ink); }
 .post-body pre code { background: none; padding: 0; }
 .post-body img { max-width: 100%; height: auto; }
 .post-body table { border-collapse: collapse; margin: 0 0 1em; display: block; overflow-x: auto; }
-.post-body th, .post-body td { border: 1px solid var(--bg-deep); padding: 6px 10px; text-align: left; }
+.post-body th, .post-body td { border: 1px solid var(--bg-deep); padding: 6px 10px; text-align: left; overflow-wrap: normal; } /* keep words whole; a wide table scrolls */
 .blog article .post-tags { margin-bottom: 24px; }
 
 .desk {
@@ -445,3 +445,51 @@ a { color: var(--tan-ink); }
 .series-list a:hover .series-list-title { color: var(--tan-ink); }
 .series-list-meta { font-size: 13px; color: var(--ink-3); }
 @media (max-width: 600px) { .series-nav { grid-template-columns: 1fr; } .series-next { grid-column: 1; } }
+
+/* Callouts in posts (> [!WARNING] Title): a highlighted block with an accent bar. See src/remarkCallouts.ts. */
+.post-body .callout { --callout: var(--tan); margin: 1.4em 0; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--callout); border-radius: 10px; }
+.post-body .callout-principle { --callout: var(--slate); }
+.post-body .callout-warning { --callout: #993c1d; }
+:root[data-theme="dark"] .post-body .callout-warning { --callout: #f0997b; }
+.post-body .callout > :last-child { margin-bottom: 0; }
+.post-body .callout-title { margin: 0 0 0.35em; font-weight: 700; }
+
+/* Diagrams in posts (![alt](diagram:name) inlines src/diagrams/name.svg), so they follow the manual light/dark switch.
+   Colours mean the same in every article: purple = code you write or run, teal = data you keep,
+   gray = outside your control, coral = errors or attacks.
+   Light: 50 fill, 600 stroke, 800 title, 600 subtitle. Dark: 800 fill, 200 stroke, 100 title, 200 subtitle. */
+.diagram {
+  --d-purple-fill: #eeedfe; --d-purple-stroke: #534ab7; --d-purple-title: #3c3489; --d-purple-sub: #534ab7;
+  --d-teal-fill: #e1f5ee;   --d-teal-stroke: #0f6e56;   --d-teal-title: #085041;   --d-teal-sub: #0f6e56;
+  --d-gray-fill: #f1efe8;   --d-gray-stroke: #5f5e5a;   --d-gray-title: #444441;   --d-gray-sub: #5f5e5a;
+  --d-coral-fill: #faece7;  --d-coral-stroke: #993c1d;  --d-coral-title: #712b13;  --d-coral-sub: #993c1d;
+  --b: var(--ink-3); --border-strong: var(--ink-3); /* names some of the SVG sources use for line colours */
+  margin: 1.4em 0 1.6em; padding: 2px;
+  overflow-x: auto; /* on a phone the diagram keeps a readable size and scrolls sideways instead of shrinking */
+}
+:root[data-theme="dark"] .diagram {
+  --d-purple-fill: #3c3489; --d-purple-stroke: #afa9ec; --d-purple-title: #cecbf6; --d-purple-sub: #afa9ec;
+  --d-teal-fill: #085041;   --d-teal-stroke: #5dcaa5;   --d-teal-title: #9fe1cb;   --d-teal-sub: #5dcaa5;
+  --d-gray-fill: #444441;   --d-gray-stroke: #b4b2a9;   --d-gray-title: #d3d1c7;   --d-gray-sub: #b4b2a9;
+  --d-coral-fill: #712b13;  --d-coral-stroke: #f0997b;  --d-coral-title: #f5c4b3;  --d-coral-sub: #f0997b;
+}
+.diagram svg { display: block; width: 100%; min-width: 560px; height: auto; margin: 0 auto; }
+.diagram svg[data-narrow] { min-width: 0; max-width: 380px; } /* drawn on a 380-wide canvas: keep its real size */
+.diagram svg text { font-family: var(--sans); }
+.diagram .t  { font-size: 14px; fill: var(--ink); }
+.diagram .th { font-size: 14px; font-weight: 500; fill: var(--ink); }
+.diagram .ts { font-size: 12px; fill: var(--ink-2); }
+.diagram .arr { fill: none; stroke: var(--ink-3); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.diagram .leader { fill: none; stroke: var(--ink-3); stroke-width: 0.5; stroke-dasharray: 3 3; }
+.diagram .box { fill: var(--surface); stroke: var(--ink-3); stroke-width: 0.5; }
+/* c-<colour> on a <g> colours its shapes and text; on a shape it colours just that shape. */
+.diagram .c-purple { --f: var(--d-purple-fill); --s: var(--d-purple-stroke); --h: var(--d-purple-title); --u: var(--d-purple-sub); }
+.diagram .c-teal   { --f: var(--d-teal-fill);   --s: var(--d-teal-stroke);   --h: var(--d-teal-title);   --u: var(--d-teal-sub); }
+.diagram .c-gray   { --f: var(--d-gray-fill);   --s: var(--d-gray-stroke);   --h: var(--d-gray-title);   --u: var(--d-gray-sub); }
+.diagram .c-coral  { --f: var(--d-coral-fill);  --s: var(--d-coral-stroke);  --h: var(--d-coral-title);  --u: var(--d-coral-sub); }
+.diagram rect.c-purple, .diagram rect.c-teal, .diagram rect.c-gray, .diagram rect.c-coral,
+.diagram circle.c-purple, .diagram circle.c-teal, .diagram circle.c-gray, .diagram circle.c-coral,
+.diagram ellipse.c-purple, .diagram ellipse.c-teal, .diagram ellipse.c-gray, .diagram ellipse.c-coral,
+.diagram g[class*="c-"] > rect, .diagram g[class*="c-"] > circle, .diagram g[class*="c-"] > ellipse { fill: var(--f); stroke: var(--s); }
+.diagram g[class*="c-"] > .t, .diagram g[class*="c-"] > .th { fill: var(--h); }
+.diagram g[class*="c-"] > .ts { fill: var(--u); }
