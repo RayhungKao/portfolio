@@ -5,7 +5,7 @@ summary: "How a middleware chain stops a request early, how three entry points s
 series: web-development
 order: 703
 part: Deep dives
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how a middleware chain short-circuits, how one service serves several entry points, and how to validate input with Zod.

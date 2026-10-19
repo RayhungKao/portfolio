@@ -5,7 +5,7 @@ summary: How to stop overselling, lost updates and duplicate submissions with th
 series: web-development
 order: 607
 part: Backend in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** what a transaction guarantees, how overselling and lost updates happen, and the smallest fix for each, including duplicate submissions.

@@ -5,7 +5,7 @@ summary: Two ways for a server to remember who you are, how cookies and headers 
 series: web-development
 order: 604
 part: Backend in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** the two ways a server can remember a logged-in user, how each one behaves when you log out or add servers, and what the attributes on a login cookie protect against.

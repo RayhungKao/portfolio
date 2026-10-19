@@ -5,7 +5,7 @@ summary: "Routing maps a URL to a screen. A router is four jobs, and there are t
 series: web-development
 order: 302
 part: The toolchain
-draft: true
+draft: false
 ---
 
 **What you'll learn:** the four jobs of a router, what they look like in code, the three ways to get them, and when to move up from hand-written routing.

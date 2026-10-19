@@ -5,7 +5,7 @@ summary: "A queue lets a request finish quickly while a worker does the slow job
 series: web-development
 order: 701
 part: Deep dives
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how a queue and a worker split slow work from the request, what happens when a job fails, and how this differs from a Web Worker in the browser.

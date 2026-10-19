@@ -5,7 +5,7 @@ summary: "The three rendering modes differ in one thing, the moment the page HTM
 series: web-development
 order: 202
 part: Needs to architecture
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how the three rendering modes differ, what each one costs, and what hydration is.

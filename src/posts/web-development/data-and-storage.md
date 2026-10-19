@@ -5,7 +5,7 @@ summary: Database, cache and object storage, the seven kinds of database, and th
 series: web-development
 order: 606
 part: Backend in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** the three kinds of storage a backend uses, a map of seven database types, and enough relational vocabulary to read a table design.

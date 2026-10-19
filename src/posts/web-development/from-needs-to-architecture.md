@@ -5,7 +5,7 @@ summary: "Two questions pick a route, a third adds a backend, and the simplest a
 series: web-development
 order: 203
 part: Needs to architecture
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how to turn needs into an architecture with three questions, which common choices match each result, and why you start with the simplest one.

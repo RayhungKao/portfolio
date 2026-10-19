@@ -5,7 +5,7 @@ summary: The five layers a request passes through, what each one is responsible 
 series: web-development
 order: 603
 part: Backend in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** the five layers a request passes through inside a backend, what each layer is responsible for, and which status code each one is allowed to return.

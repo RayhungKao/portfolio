@@ -5,7 +5,7 @@ summary: "How a transaction callback commits or rolls back, when to use a row lo
 series: web-development
 order: 705
 part: Deep dives
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how a transaction callback works and its one rule, when `SELECT … FOR UPDATE` is the right tool, what isolation levels and deadlocks mean, and how to code an idempotency key.

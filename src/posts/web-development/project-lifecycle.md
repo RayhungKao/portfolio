@@ -5,7 +5,7 @@ summary: "A project passes through install, development, build and deployment, a
 series: web-development
 order: 401
 part: Ship it
-draft: true
+draft: false
 ---
 
 **What you'll learn:** what the four stages of a project are, what each one optimizes for, and the blind spot that makes "it works on my machine" a bug report.

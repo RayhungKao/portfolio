@@ -5,7 +5,7 @@ summary: "All three read package.json, download dependencies and write a lockfil
 series: web-development
 order: 305
 part: The toolchain
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how dependencies end up on disk, what a lockfile does, and the safety defaults that have converged.

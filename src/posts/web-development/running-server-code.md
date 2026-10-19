@@ -5,7 +5,7 @@ summary: "Four ways to run code on every request, and what you manage in each."
 series: web-development
 order: 403
 part: Ship it
-draft: true
+draft: false
 ---
 
 **What you'll learn:** what a VPS, a container, a PaaS and serverless each are, who manages what in each, and how real projects mix them.

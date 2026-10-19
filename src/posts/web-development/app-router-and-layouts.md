@@ -5,7 +5,7 @@ summary: "In the Next.js App Router the URL comes from folders, and nested layou
 series: web-development
 order: 501
 part: Next.js in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how folders become routes, why layouts are not unmounted on navigation, and how to keep a screen alive while the URL changes.

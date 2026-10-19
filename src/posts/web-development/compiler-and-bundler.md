@@ -5,7 +5,7 @@ summary: "A compiler rewrites one file at a time, a bundler reorganises the whol
 series: web-development
 order: 304
 part: The toolchain
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how the per-file compiler and the whole-project bundler divide the work, and which jobs belong to which.

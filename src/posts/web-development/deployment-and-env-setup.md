@@ -5,7 +5,7 @@ summary: "Static hosting needs a fallback, cache headers and a base path; enviro
 series: web-development
 order: 402
 part: Ship it
-draft: true
+draft: false
 ---
 
 **What you'll learn:** the three settings static hosting needs, how environment variables work in Vite and Next.js, what a CI pipeline should contain, and a pre-release checklist.

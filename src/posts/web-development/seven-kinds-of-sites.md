@@ -5,7 +5,7 @@ summary: "Content sites, portfolios, shops, social apps, dashboards, SaaS and cr
 series: web-development
 order: 201
 part: Needs to architecture
-draft: true
+draft: false
 ---
 
 **What you'll learn:** what content sites, portfolios, shops, social apps, dashboards, SaaS tools and creator tools each need, and the four questions whose answers change the architecture.

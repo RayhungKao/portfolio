@@ -5,7 +5,7 @@ summary: "With output: 'export', the server in server components shrinks to the 
 series: web-development
 order: 503
 part: Next.js in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** when server components actually run in a static export, what the build produces, which server features disappear, and how `basePath` works for a sub-path deployment.

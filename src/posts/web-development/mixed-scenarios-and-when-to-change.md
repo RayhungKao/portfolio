@@ -5,7 +5,7 @@ summary: Five real setups with a reason for every choice, and the signals that t
 series: web-development
 order: 610
 part: Backend in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how real projects combine services, why each cell in five example setups was chosen, and which signals tell you to change a choice.

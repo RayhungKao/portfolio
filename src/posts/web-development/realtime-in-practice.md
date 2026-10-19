@@ -5,7 +5,7 @@ summary: "Three ways to push updates to a browser, and three ways to decide who 
 series: web-development
 order: 707
 part: Deep dives
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how polling, Server-Sent Events and WebSockets differ, and three ways to run the part that keeps connections open.

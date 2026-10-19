@@ -5,7 +5,7 @@ summary: Choose per capability, not per brand. Backend-as-a-service, serverless 
 series: web-development
 order: 609
 part: Backend in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how to choose a stack capability by capability, what the three common bundles are, and three questions that point to one of them.

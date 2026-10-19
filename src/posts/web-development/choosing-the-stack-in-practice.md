@@ -5,7 +5,7 @@ summary: "A comparison of six backend platforms, how row-level security is writt
 series: web-development
 order: 706
 part: Deep dives
-draft: true
+draft: false
 ---
 
 **What you'll learn:** what six platforms offer, how row-level security policies are written and what can go wrong, and how code looks in a Pages Router API and in Hono.

@@ -5,7 +5,7 @@ summary: What Cloudflare, CloudFront, Nginx and Caddy each do, and how they stac
 series: web-development
 order: 602
 part: Backend in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** what a CDN and a reverse proxy are, how Cloudflare, CloudFront, Nginx and Caddy fit together, and why a proxy on your own machine cannot stop a flood of traffic.

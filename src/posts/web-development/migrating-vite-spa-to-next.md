@@ -5,7 +5,7 @@ summary: "Most components move unchanged. What changes is routing, where data co
 series: web-development
 order: 504
 part: Next.js in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** what changes when a Vite single-page app moves to Next.js, what to decide before you start, and how to check that behaviour did not change.

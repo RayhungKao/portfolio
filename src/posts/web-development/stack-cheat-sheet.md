@@ -5,7 +5,7 @@ summary: "A quick reference that condenses the series into three typical stacks,
 series: web-development
 order: 404
 part: Ship it
-draft: true
+draft: false
 ---
 
 **What you'll learn:** three typical stacks layer by layer, how to pick a starting point, and a settings table you can return to.

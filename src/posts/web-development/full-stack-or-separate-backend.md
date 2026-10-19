@@ -5,7 +5,7 @@ summary: Two independent questions, where the HTML comes from and whether the ba
 series: web-development
 order: 605
 part: Backend in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how to describe an application with two independent questions, the three shapes that result, and when a Next.js project can be your whole backend.

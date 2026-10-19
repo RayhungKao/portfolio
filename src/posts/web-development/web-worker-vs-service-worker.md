@@ -5,7 +5,7 @@ summary: "Two browser features with similar names and different jobs: one keeps 
 series: web-development
 order: 306
 part: The toolchain
-draft: true
+draft: false
 ---
 
 **What you'll learn:** what a Web Worker and a Service Worker each solve, how to use each in a React or Next.js project, and the three pitfalls that catch most people with Service Workers.

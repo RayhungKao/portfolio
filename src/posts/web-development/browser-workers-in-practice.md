@@ -5,7 +5,7 @@ summary: "How to talk to a Web Worker without writing message plumbing, what a t
 series: web-development
 order: 708
 part: Deep dives
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how to call a Web Worker like a function, when to transfer data instead of copying it, which tools set up a Service Worker, and the rules that trip people up.

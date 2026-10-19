@@ -5,7 +5,7 @@ summary: "A build tool is what shows you results while you code and produces fil
 series: web-development
 order: 303
 part: The toolchain
-draft: true
+draft: false
 ---
 
 **What you'll learn:** what the dev server and the build each do, why they behave differently, and what HMR is.

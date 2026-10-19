@@ -5,7 +5,7 @@ summary: "Every technical choice decides whether code runs at build time, on a s
 series: web-development
 order: 102
 part: The map
-draft: true
+draft: false
 ---
 
 **What you'll learn:** the three places code can run, what each one can and cannot do, and why this question sits underneath almost every choice in web development.

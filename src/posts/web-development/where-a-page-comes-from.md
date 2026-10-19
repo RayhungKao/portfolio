@@ -5,7 +5,7 @@ summary: "The path of one request from typing a URL to seeing a page: browser, s
 series: web-development
 order: 101
 part: The map
-draft: true
+draft: false
 ---
 
 **What you'll learn:** the path one request takes from a URL to the screen, what the three languages of a page each do, and why development and production behave differently.

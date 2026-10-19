@@ -5,7 +5,7 @@ summary: "A full Nginx config behind Cloudflare, the Caddy equivalent, and four 
 series: web-development
 order: 702
 part: Deep dives
-draft: true
+draft: false
 ---
 
 **What you'll learn:** a working Nginx configuration behind Cloudflare, the same job in Caddy, and four real setups to compare.

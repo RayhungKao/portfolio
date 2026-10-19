@@ -5,7 +5,7 @@ summary: "Files are server components by default; add 'use client' only for the 
 series: web-development
 order: 502
 part: Next.js in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how server and client components differ, why a client component runs twice, and which other server entry points Next.js has besides components.

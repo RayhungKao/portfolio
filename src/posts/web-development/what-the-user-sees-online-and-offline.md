@@ -5,7 +5,7 @@ summary: How status codes turn into screens, how an offline action moves through
 series: web-development
 order: 608
 part: Backend in practice
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how each status code maps to what the user sees, the five states of an action made while offline, and which actions should not be queued at all.
