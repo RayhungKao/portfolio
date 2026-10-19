@@ -34,8 +34,13 @@ In a BaaS, the rules live in the database. With Supabase, **row-level security**
 
 ```sql
 create policy "users manage their own notes" on notes
-  for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+  for all
+  to authenticated
+  using ((select auth.uid()) = user_id)
+  with check ((select auth.uid()) = user_id);
 ```
+
+`to authenticated` limits the rule to signed-in users, and wrapping `auth.uid()` in `select` lets Postgres evaluate it once per statement instead of once per row. Both follow Supabase's own examples.
 
 ## What serverless means in practice
 
