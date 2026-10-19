@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: Choose per capability, not per brand. Backend-as-a-service, serverless and a full server are the three common bundles.
 series: web-development
 order: 609
-part: Backend
+part: Backend in practice
 draft: true
 ---
 
@@ -47,7 +47,7 @@ Serverless functions have five traits worth knowing:
 - **Time limit.** A call has a maximum duration, so long jobs do not fit.
 - **Connection pooling.** Many short-lived functions can exhaust a database's connections, so they connect through a pooler.
 
-Functions also cannot keep a connection open for a chat, which is why serverless pairs with hosted realtime: Supabase Realtime, Ably or Pusher, or Cloudflare Durable Objects. Between a page that polls and a full WebSocket server there is a range of options, and the deep dive on realtime walks through it.
+Functions also cannot keep a connection open for a chat, which is why serverless pairs with hosted realtime: Supabase Realtime, Ably or Pusher, or Cloudflare Durable Objects. Between a page that polls and a full WebSocket server there is a range of options, and the deep dive [Realtime in practice](/blog/realtime-in-practice) walks through it.
 
 ## Where function files go
 
@@ -72,7 +72,7 @@ Each platform has its own convention for where the code lives.
 Many people say Supabase is a sensible default for a first full-stack project. That is a common view as of October 2026, not a measured fact, and it holds when your needs are question 1. If they are not, the matrix lets you mix.
 
 > [!NOTE] Where the rest lives
-> A comparison of platforms, RLS details and framework choices are in the deep dive "Choosing the stack in practice". What a VPS, a container and a PaaS are is in [Where server code runs](/blog/running-server-code).
+> A comparison of platforms, RLS details and framework choices are in the deep dive [Choosing the stack in practice](/blog/choosing-the-stack-in-practice). What a VPS, a container and a PaaS are is in [Where server code runs](/blog/running-server-code).
 
 > [!PRINCIPLE] Core principle
 > The unit of choice is each capability. BaaS, serverless and a full server are only common bundles of those choices.

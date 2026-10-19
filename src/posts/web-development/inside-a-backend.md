@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: The five layers a request passes through, what each one is responsible for, and which error status each can return.
 series: web-development
 order: 603
-part: Backend
+part: Backend in practice
 draft: true
 ---
 
@@ -87,6 +87,9 @@ Next.js 16 renamed its middleware file. As of October 2026, `proxy.ts` replaces 
 For a small app, a handler that validates and calls the ORM directly is fine. Add a service when the same rule is needed from a second place, or when a handler grows beyond what you can read at a glance. Layers are a cost, so pay for them when they start to save you something.
 
 One rule holds at every size. Never build SQL by gluing strings from user input, because that is how SQL injection happens. Pass values as parameters and let the driver or ORM handle them; the examples above do this without any extra effort.
+
+> [!NOTE] Where the rest lives
+> Middleware chains that stop early, one service reused by several callers and validation details are in the deep dive [The request lifecycle in practice](/blog/request-lifecycle-in-practice).
 
 > [!PRINCIPLE] Core principle
 > Each layer does one thing. Validation checks the shape of the data; business rules check the state of the world.

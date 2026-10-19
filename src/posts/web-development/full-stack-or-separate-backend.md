@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: Two independent questions, where the HTML comes from and whether the backend is separate, and what Next.js gives you on the server.
 series: web-development
 order: 605
-part: Backend
+part: Backend in practice
 draft: true
 ---
 

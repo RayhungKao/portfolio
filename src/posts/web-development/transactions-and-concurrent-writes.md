@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: How to stop overselling, lost updates and duplicate submissions with the smallest tool that works.
 series: web-development
 order: 607
-part: Backend
+part: Backend in practice
 draft: true
 ---
 
@@ -83,7 +83,7 @@ Start with the smallest tool and move up only when you must:
 Each step costs more speed and more care than the one before it.
 
 > [!NOTE] Where the rest lives
-> Transaction callbacks, row-lock SQL, isolation levels, deadlocks and idempotency code are in the deep dive "Consistency in practice".
+> Transaction callbacks, row-lock SQL, isolation levels, deadlocks and idempotency code are in the deep dive [Consistency in practice](/blog/consistency-in-practice).
 
 > [!PRINCIPLE] Core principle
 > Whatever a single statement or a constraint can solve, do not introduce locks.

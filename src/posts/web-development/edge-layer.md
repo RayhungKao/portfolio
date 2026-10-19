@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: What Cloudflare, CloudFront, Nginx and Caddy each do, and how they stack in front of your app.
 series: web-development
 order: 602
-part: Backend
+part: Backend in practice
 draft: true
 ---
 
@@ -57,7 +57,7 @@ limit_req_status 429;   # the default rejection is 503
 **The firewall.** Cloudflare only helps if attackers cannot walk around it. If your server's IP address leaks, they send traffic straight to it. Configure the VPS firewall to accept ports 80 and 443 only from Cloudflare's IP ranges.
 
 > [!NOTE] Where the rest lives
-> Caddy's configuration, a full Nginx config and four more real-world setups are in the deep dive "The edge layer in practice".
+> Caddy's configuration, a full Nginx config and four more real-world setups are in the deep dive [The edge layer in practice](/blog/edge-layer-in-practice).
 
 > [!PRINCIPLE] Core principle
 > A CDN is one thing a reverse proxy does. Cloudflare sits at the internet edge and absorbs traffic; Nginx sits on your own machine and routes it.

@@ -93,7 +93,7 @@ if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js')
 To debug, open Chrome DevTools, go to the Application panel and choose Service Workers. You can see the active and waiting versions, force an update and clear the cache. Lighthouse runs a PWA check that reports what is missing.
 
 > [!NOTE] Where the rest lives
-> Comlink, transferable objects, tools such as Serwist and Workbox, scope rules, and how a Web Worker differs from a backend worker are in the deep dives "Browser workers in practice" and "Queues and workers".
+> Comlink, transferable objects, tools such as Serwist and Workbox, scope rules, and how a Web Worker differs from a backend worker are in the deep dives [Browser workers in practice](/blog/browser-workers-in-practice) and [Queues and workers](/blog/queues-and-workers).
 
 > [!PRINCIPLE] Core principle
 > A Web Worker solves a page that freezes. A Service Worker solves a page that depends on the network. They run in different places for different reasons.

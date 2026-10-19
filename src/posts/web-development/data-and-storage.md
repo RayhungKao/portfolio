@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: Database, cache and object storage, the seven kinds of database, and the relational basics that PostgreSQL gives you by default.
 series: web-development
 order: 606
-part: Backend
+part: Backend in practice
 draft: true
 ---
 
