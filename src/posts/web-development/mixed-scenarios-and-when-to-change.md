@@ -61,7 +61,7 @@ A choice is right for now. These signals say it has stopped being right.
 | Traffic is high and steady | Move to an always-on service. | Pay-per-call functions now cost more than a small container. |
 | Vendor lock-in worries you | Move the data to PostgreSQL and keep the login. | Export Firestore data to PostgreSQL, and keep Firebase Auth. |
 
-As of October 2026, services such as Inngest and Trigger.dev are common ways to run long jobs without operating a queue yourself. Check them against your own limits and prices before you commit.
+Hosted job services such as Inngest and Trigger.dev can run long jobs without a queue of your own, but each has limits of its own: an Inngest step still runs as a request to your app, so it must fit your host's time limit, while a Trigger.dev task has a `maxDuration` that counts compute time. [Queues and workers](/blog/queues-and-workers) compares them with the other options (checked in October 2026). Check prices and limits against your own needs before you commit.
 
 None of these changes means the first choice was wrong. A cheap start that you can replace cell by cell is usually better than a perfect design for traffic you do not have yet.
 

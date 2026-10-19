@@ -49,7 +49,7 @@ The colours mean the same thing in every diagram of this series. Purple is code 
 | Queue and worker | Does work after the request has already returned. | A queue such as BullMQ or SQS holds a "send confirmation email" job, and a worker process picks it up. |
 | Third-party services | Systems you call but do not run. | Stripe for payments, SendGrid for email. |
 
-The queue and the worker get a full article of their own later in the series. For now it is enough to know where they sit.
+The queue and the worker get a full article of their own: [Queues and workers](/blog/queues-and-workers). For now it is enough to know where they sit.
 
 ## Follow one request
 
