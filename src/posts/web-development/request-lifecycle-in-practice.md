@@ -97,7 +97,7 @@ Three details are worth knowing:
 - **Shape errors are not business errors.** A quantity of `-3` is a 400 from validation. "Out of stock" is a 409 from the service. See "Two kinds of invalid" in [Inside a backend](/blog/inside-a-backend).
 - **Format errors for the reader.** `z.flattenError` suits a flat form. For nested data, `z.treeifyError` mirrors the schema's structure, and `z.prettifyError` produces a readable string for logs.
 
-The ORM, query patterns and the N+1 problem are covered in the Database series, not here.
+The ORM, query patterns and the N+1 problem are not covered here.
 
 > [!PRINCIPLE] Core principle
 > Middleware answers "may this request continue?", a service answers "do the rules allow it?", and validation answers "is the input shaped right?" Keep the three apart.

@@ -68,8 +68,8 @@ JOIN products p ON p.id = i.product_id WHERE i.order_id = $1;
 
 `JOIN` stitches rows from two tables together through the key. `REFERENCES` makes the database reject an order item that points to a product that does not exist. `CHECK` is a constraint, a rule the database enforces for you: a quantity must be positive, and on the products table `CHECK (stock >= 0)` means stock can never go negative, whatever your code does. Constraints are the last line of defence when a bug slips past the layers above.
 
-> [!NOTE] Where the rest lives
-> The full four-table schema, normalization, indexes and migrations are the first articles of the Database series.
+> [!NOTE] Not covered here
+> The full four-table schema, normalization, indexes and migrations are beyond this series. Your database's own documentation is the place to go next.
 
 > [!PRINCIPLE] Core principle
 > Data goes into different stores by its shape and access pattern. Without a special need, PostgreSQL is the common default.

@@ -48,7 +48,7 @@ Caching logic is where most bugs come from, so most projects use a library. Work
 
 ## Background Sync
 
-Background Sync lets a Service Worker retry a failed request later, when the connection returns, even if the page is closed. As of October 2026, MDN lists it as limited availability: it works in Chromium-based browsers, and Firefox and Safari do not support it. So never make it the only way a change gets sent. Keep a fallback that retries when the app is open. How a retry queue is built is covered in the offline-sync series.
+Background Sync lets a Service Worker retry a failed request later, when the connection returns, even if the page is closed. As of October 2026, MDN lists it as limited availability: it works in Chromium-based browsers, and Firefox and Safari do not support it. So never make it the only way a change gets sent. Keep a fallback that retries when the app is open. How a retry queue is built is beyond this series.
 
 > [!PRINCIPLE] Core principle
 > Data crossing to a worker is copied unless you transfer it, a Service Worker's reach is set by where it is served from, and its caching should only be trusted after testing a production build.

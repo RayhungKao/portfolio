@@ -68,8 +68,8 @@ WHERE id = $1 AND version = $2 AND deleted_at IS NULL;
 
 Zero rows changed has two meanings that the handler tells apart: the file is already deleted, which counts as done, or the version differs, which is a 409.
 
-> [!NOTE] Where the rest lives
-> The outbox, ordering of actions per object, the reconnect response table, background sync and retry backoff belong to the offline-sync topic series.
+> [!NOTE] Not covered here
+> The outbox, ordering of actions per object, the reconnect response table, background sync and retry backoff are beyond this series.
 
 > [!PRINCIPLE] Core principle
 > The mechanism works only when the client and the server follow the same agreement about what each response means.
