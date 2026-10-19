@@ -88,8 +88,5 @@ For a small app, a handler that validates and calls the ORM directly is fine. Ad
 
 One rule holds at every size. Never build SQL by gluing strings from user input, because that is how SQL injection happens. Pass values as parameters and let the driver or ORM handle them; the examples above do this without any extra effort.
 
-> [!NOTE] Where the rest lives
-> Middleware chains that stop early, one service reused by several callers and validation details are in the deep dive [The request lifecycle in practice](/blog/request-lifecycle-in-practice).
-
 > [!PRINCIPLE] Core principle
 > Each layer does one thing. Validation checks the shape of the data; business rules check the state of the world.

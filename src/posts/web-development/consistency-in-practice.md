@@ -3,9 +3,9 @@ title: "Consistency in practice: transactions, row locks, isolation levels and i
 date: 2026-10-18
 summary: "How a transaction callback commits or rolls back, when to use a row lock, what isolation levels change, and how an idempotency key survives a lost response."
 series: web-development
-order: 705
-part: Deep dives
-draft: false
+order: 904
+part: Parked for a later series
+draft: true
 ---
 
 **What you'll learn:** how a transaction callback works and its one rule, when `SELECT … FOR UPDATE` is the right tool, what isolation levels and deadlocks mean, and how to code an idempotency key.

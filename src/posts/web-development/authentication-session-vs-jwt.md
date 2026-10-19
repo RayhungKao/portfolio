@@ -68,8 +68,5 @@ Writing your own login is a classic way to introduce security bugs. As of Octobe
 - **Supabase Auth** and **Firebase Auth**, which come with their platform.
 - **Auth.js** (formerly NextAuth), whose maintenance moved to the Better Auth team. It still gets security patches, and the team recommends Better Auth for new projects.
 
-> [!NOTE] Where the rest lives
-> Verifying a Firebase token in your own API, the internal-JWT gateway and refresh tokens are in the deep dive [Authentication in practice](/blog/authentication-in-practice).
-
 > [!PRINCIPLE] Core principle
 > A session is an opaque token and the data stays with the server; a JWT is a self-contained token. Cookie versus header is a separate choice, made by the kind of client.

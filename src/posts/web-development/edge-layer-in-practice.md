@@ -3,9 +3,9 @@ title: "The edge layer in practice: Nginx, Caddy and four real setups"
 date: 2026-10-18
 summary: "A full Nginx config behind Cloudflare, the Caddy equivalent, and four setups from a static site to a managed platform."
 series: web-development
-order: 702
-part: Deep dives
-draft: false
+order: 901
+part: Parked for a later series
+draft: true
 ---
 
 **What you'll learn:** a working Nginx configuration behind Cloudflare, the same job in Caddy, and four real setups to compare.
