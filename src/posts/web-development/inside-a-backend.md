@@ -80,7 +80,7 @@ These two get confused constantly. **401** means the server does not know who yo
 
 ## Middleware in Next.js 16
 
-Next.js 16 renamed its middleware file. As of October 2026, `proxy.ts` replaces `middleware.ts`, which is deprecated. A project has one `proxy.ts`, and it runs before routes are matched, which makes it a good coarse gate: redirect anyone without a session cookie away from `/dashboard`. Do not treat it as the only check. Route handlers and Server Actions can be reached by other means, so each one still verifies the user itself, as the inline check above does.
+Next.js 16 renamed its middleware file. As of October 2026, `proxy.ts` replaces `middleware.ts`, which is deprecated (a proxy runs on the Node.js runtime, not the edge runtime). A project has one `proxy.ts`, and it runs before routes are matched, which makes it a good coarse gate: redirect anyone without a session cookie away from `/dashboard`. Do not treat it as the only check. Route handlers and Server Actions can be reached by other means, so each one still verifies the user itself, as the inline check above does.
 
 ## When you do not need a service layer
 

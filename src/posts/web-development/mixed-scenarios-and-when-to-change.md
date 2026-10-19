@@ -16,7 +16,7 @@ Real projects rarely match one bundle. A subscription app might use a hosted log
 
 ![A subscription SaaS built from mixed parts](diagram:saas-hub-diagram)
 
-Next.js on Vercel sits in the centre. Clerk handles sign-in, and Next.js verifies the session it issues. Data goes to a PostgreSQL database on Neon. Stripe reports payments by calling a webhook on the Next.js side. A long report is too slow for a function, so Next.js hands it to Inngest, which runs it on a worker at Fly.io, and the worker saves the finished report to the database.
+Next.js on Vercel sits in the centre. Clerk handles sign-in, and Next.js verifies the session it issues. Data goes to a PostgreSQL database on Neon. Stripe reports payments by calling a webhook on the Next.js side. A long report is too slow for a function, so Next.js sends it to Inngest as an event. Inngest then calls a job endpoint in your own worker app on Fly.io, step by step, and the worker saves the finished report to the database.
 
 The Stripe webhook shows why the pieces need care. Stripe calls your URL when a payment succeeds, and it will call again if your answer is slow or fails. The same event can therefore arrive twice, and the handler must not mark the subscription paid twice.
 

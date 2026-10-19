@@ -121,7 +121,7 @@ import Link from 'next/link'
 <Link href="/blog/hello">Hello</Link>
 ```
 
-Since Next.js 15, `params` is a Promise, so it has to be awaited. For static pages (SSG), a dynamic route also needs `generateStaticParams()`.
+Since Next.js 15, `params` is a Promise, so it has to be awaited (Next.js 16 removed the temporary synchronous access). For static pages (SSG), a dynamic route also needs `generateStaticParams()`.
 
 ## Pitfalls when you write it yourself
 

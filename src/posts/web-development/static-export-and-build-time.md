@@ -45,6 +45,7 @@ Features that need a Node.js server, or that depend on the live request, are not
 | ISR (incremental static regeneration) | Not supported | It regenerates pages on a server |
 | Image optimization with the default loader | Not supported (a custom loader works) | The default one resizes images on a server |
 | Draft Mode | Not supported | It switches rendering per request |
+| Intercepting Routes | Not supported | The guide lists them as unsupported without giving a reason |
 
 Other consequences: content only updates by building and deploying again, and a URL that does not exist gets a real 404 page instead of falling back to the home page.
 

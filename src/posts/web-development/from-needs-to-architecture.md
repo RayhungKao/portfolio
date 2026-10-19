@@ -33,7 +33,7 @@ The interaction question from the previous article does not change the route. It
 | Publishing a library | Library mode | Vite library mode (`build.lib`) |
 | Several apps sharing code | Monorepo | pnpm workspaces |
 
-A Vite-based framework is one built on top of Vite: React Router in framework mode, TanStack Start, Astro, Nuxt and SvelteKit. Most offer SSR or pre-rendering, but check each one's own documentation before you adopt it.
+A Vite-based framework is one built on top of Vite: React Router in framework mode, TanStack Start (which can also use Rsbuild), Astro, Nuxt and SvelteKit. Most offer SSR or pre-rendering, but check each one's own documentation before you adopt it.
 
 ## Start with the simplest architecture, then add
 

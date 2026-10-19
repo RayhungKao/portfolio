@@ -47,7 +47,7 @@ Team familiarity, ecosystem (packages and people) and which framework you want t
 
 ## Reading the market numbers
 
-State of JavaScript 2025 (about 12,000 respondents, skewed toward active developers) shows Next.js used by about 59% and Vite by about 84%. They are not competitors. Vite is a build tool, and also sits underneath frameworks such as Nuxt, SvelteKit and Astro. Next.js is a framework. In the same survey about 17% of Next.js users were negative about it, and the usual complaints were complexity and a feeling of dependence on Vercel.
+State of JavaScript 2025 (about 13,000 respondents, skewed toward active developers) shows Next.js used by about 59% and Vite by about 84%. They are not competitors. Vite is a build tool, and also sits underneath frameworks such as Nuxt, SvelteKit and Astro. Next.js is a framework. In the same survey about 17% of Next.js users were negative about it.
 
 > [!PRINCIPLE] Core principle
 > Let rendering needs decide whether you need a framework, then pick the UI library by team and ecosystem.
