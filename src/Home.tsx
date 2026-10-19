@@ -1,7 +1,11 @@
+'use client';
+
+import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARDS, LINKS } from './content';
-import { POSTS, formatDate } from './postData';
-import { asset, isInternal, navigate, to } from './router';
+import { UNCATEGORIZED, formatDate, listItems, type Post, type Series } from './postTypes';
+import { AppLink } from './AppLink';
+import { asset, isInternal, navigate } from './router';
 import { SocialLinks } from './SocialLinks';
 
 /**
@@ -64,7 +68,7 @@ function AskBox() {
         {matches.length ? (
           matches.map((s) => (
             <li key={s.href}>
-              <a href={to(s.href)} {...(isInternal(s.href) ? {} : { target: '_blank', rel: 'noreferrer' })}>{s.label}</a>
+              <AppLink href={s.href}>{s.label}</AppLink>
             </li>
           ))
         ) : (
@@ -154,9 +158,9 @@ function Avatar() {
   );
 }
 
-export function Home() {
+export function Home({ posts, series }: { posts: Post[]; series: Series[] }) {
   const work = SELECTED.map((id) => CARDS.find((c) => c.id === id)!).filter(Boolean);
-  const latest = POSTS.slice(0, 3);
+  const latest = listItems(posts, series).slice(0, 3);
 
   return (
     <main className="home">
@@ -176,7 +180,7 @@ export function Home() {
           </p>
           <AskBox />
           <div className="hero-links">
-            <a href={to('/work')}>Explore the interactive canvas →</a>
+            <Link href="/work">Explore the interactive canvas →</Link>
             <SocialLinks />
           </div>
         </div>
@@ -186,17 +190,17 @@ export function Home() {
       <section className="home-section">
         <div className="home-section-head">
           <h2>Selected work</h2>
-          <a href={to('/work')}>See everything on the canvas →</a>
+          <Link href="/work">See everything on the canvas →</Link>
         </div>
         <ul className="work-list">
           {work.map((c) => (
             <li key={c.id}>
-              <a href={to(`/work/${c.id}`)}>
+              <Link href={`/work/${c.id}`}>
                 <span className="work-kicker">{c.kicker}</span>
                 <span className="work-title">{c.title}</span>
                 <span className="work-sub">{c.subtitle}</span>
                 <span className="work-metric">{c.metric}</span>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -205,19 +209,28 @@ export function Home() {
       <section className="home-section">
         <div className="home-section-head">
           <h2>Latest writing</h2>
-          <a href={to('/blog')}>All articles →</a>
+          <Link href="/blog">All articles →</Link>
         </div>
         <ul className="latest-list">
-          {latest.map((p) => (
-            <li key={p.slug}>
-              <a href={to(`/blog/${p.slug}`)}>
-                <span className="latest-meta">
-                  {p.category} · {formatDate(p.date)} · {p.readingMinutes} min read
-                </span>
-                <span className="latest-title">{p.title}</span>
-              </a>
-            </li>
-          ))}
+          {latest.map((item) =>
+            item.kind === 'series' ? (
+              <li key={`series-${item.series.slug}`}>
+                <Link href={`/series/${item.series.slug}`}>
+                  <span className="latest-meta">Series · {item.series.posts.length} articles</span>
+                  <span className="latest-title">{item.series.title}</span>
+                </Link>
+              </li>
+            ) : (
+              <li key={item.post.slug}>
+                <Link href={`/blog/${item.post.slug}`}>
+                  <span className="latest-meta">
+                    {item.post.category ?? UNCATEGORIZED} · {formatDate(item.post.date)} · {item.post.readingMinutes} min read
+                  </span>
+                  <span className="latest-title">{item.post.title}</span>
+                </Link>
+              </li>
+            ),
+          )}
         </ul>
       </section>
 

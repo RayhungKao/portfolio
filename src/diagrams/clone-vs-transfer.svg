@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 260" role="img"><title>Sending data to a Web Worker either copies it or moves it</title><desc>Two rows. With structured clone the main thread keeps its 8 MB buffer and the worker receives a full copy, so both hold 8 MB and the copy takes time. With a transfer the buffer is moved to the worker without copying, and on the main thread the buffer becomes empty with a length of zero.</desc><defs><marker id="arrow-clone-vs-transfer" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text class="th" x="20" y="22">Structured clone (the default): copy</text>
+<g class="c-gray"><rect x="20" y="36" width="200" height="56" rx="8" stroke-width="0.5"/><text class="th" x="120" y="55" text-anchor="middle" dominant-baseline="central">Main thread</text><text class="ts" x="120" y="73" text-anchor="middle" dominant-baseline="central">buffer: 8 MB</text></g>
+<g class="c-gray"><rect x="460" y="36" width="200" height="56" rx="8" stroke-width="0.5"/><text class="th" x="560" y="55" text-anchor="middle" dominant-baseline="central">Worker</text><text class="ts" x="560" y="73" text-anchor="middle" dominant-baseline="central">buffer: 8 MB (a copy)</text></g>
+<line x1="224" y1="64" x2="456" y2="64" class="arr" marker-end="url(#arrow-clone-vs-transfer)"/>
+<text class="ts" x="340" y="56" text-anchor="middle">postMessage(buffer)</text>
+<text class="ts" x="20" y="122">Both sides hold 8 MB, and making the copy takes time.</text>
+<text class="th" x="20" y="152">Transfer: move</text>
+<g class="c-coral"><rect x="20" y="166" width="200" height="56" rx="8" stroke-width="0.5"/><text class="th" x="120" y="185" text-anchor="middle" dominant-baseline="central">Main thread</text><text class="ts" x="120" y="203" text-anchor="middle" dominant-baseline="central">buffer: 0 bytes (detached)</text></g>
+<g class="c-purple"><rect x="460" y="166" width="200" height="56" rx="8" stroke-width="0.5"/><text class="th" x="560" y="185" text-anchor="middle" dominant-baseline="central">Worker</text><text class="ts" x="560" y="203" text-anchor="middle" dominant-baseline="central">the same 8 MB of memory</text></g>
+<line x1="224" y1="194" x2="456" y2="194" class="arr" marker-end="url(#arrow-clone-vs-transfer)"/>
+<text class="ts" x="340" y="186" text-anchor="middle">postMessage(buffer, [buffer])</text>
+<text class="ts" x="20" y="248">No copy is made. The sender can no longer use the buffer.</text></svg>

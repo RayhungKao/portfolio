@@ -1,5 +1,5 @@
 ---
-title: How I made every long-running task in YCO non-blocking: fire it, keep working, never lose it
+title: "How I made every long-running task in YCO non-blocking: fire it, keep working, never lose it"
 date: 2026-08-15
 category: Frontend Architecture
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7494301875429593088/

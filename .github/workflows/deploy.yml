@@ -29,13 +29,17 @@ jobs:
           node-version: lts/*
           cache: npm
       - run: npm ci
-      # base_path is '/portfolio' on rayhungkao.github.io/portfolio and '' once a custom domain is set,
-      # so the build follows the Pages settings with no code change.
+      # base_path is '/portfolio' on rayhungkao.github.io/portfolio and '' once a custom domain is set;
+      # origin is the site's scheme and host (https://rayhungkao.github.io now). The build reads both,
+      # so URLs, sitemap and share previews follow the Pages settings with no code change.
       - id: pages
         uses: actions/configure-pages@v6
-      - run: npm run build -- --base="${{ steps.pages.outputs.base_path }}/"
+      - run: npm run build
+        env:
+          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          SITE_ORIGIN: ${{ steps.pages.outputs.origin }}
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: ./dist
+          path: ./out
       - id: deployment
         uses: actions/deploy-pages@v5

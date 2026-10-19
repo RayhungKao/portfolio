@@ -1,5 +1,5 @@
 ---
-title: How I built YCO's AI Agent: a streaming, multimodal chat that runs the whole platform from a single prompt
+title: "How I built YCO's AI Agent: a streaming, multimodal chat that runs the whole platform from a single prompt"
 date: 2026-07-25
 category: AI Agent
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7486691736392585217/

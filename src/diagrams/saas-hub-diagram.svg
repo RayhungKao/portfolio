@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 416" role="img"><title>A subscription SaaS built from mixed parts</title><desc>A hub diagram. The browser talks to Next.js on Vercel, which is the centre. Clerk handles sign-in and Next.js verifies the session. Next.js reads and writes a Neon PostgreSQL database. Stripe sends payment webhooks to Next.js. Next.js sends long report jobs to Inngest, which calls a job endpoint in your own worker app on Fly.io, and the worker saves the finished report to the database.</desc>
+<defs><marker id="ah4-saas-hub-diagram" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g class="c-gray"><rect x="30" y="148" width="110" height="44" rx="6" stroke-width="0.5"/><text class="th" x="85" y="162" text-anchor="middle" dominant-baseline="central">Browser</text><text class="ts" x="85" y="178" text-anchor="middle" dominant-baseline="central">the user</text></g>
+<g class="c-gray"><rect x="30" y="288" width="110" height="44" rx="6" stroke-width="0.5"/><text class="th" x="85" y="302" text-anchor="middle" dominant-baseline="central">Clerk</text><text class="ts" x="85" y="318" text-anchor="middle" dominant-baseline="central">sign-in</text></g>
+<g class="c-purple"><rect x="230" y="148" width="150" height="44" rx="6" stroke-width="0.5"/><text class="th" x="305" y="162" text-anchor="middle" dominant-baseline="central">Next.js on Vercel</text><text class="ts" x="305" y="178" text-anchor="middle" dominant-baseline="central">pages, API, webhook</text></g>
+<g class="c-teal"><rect x="520" y="48" width="120" height="44" rx="6" stroke-width="0.5"/><text class="th" x="580" y="62" text-anchor="middle" dominant-baseline="central">Neon</text><text class="ts" x="580" y="78" text-anchor="middle" dominant-baseline="central">PostgreSQL</text></g>
+<g class="c-gray"><rect x="520" y="148" width="120" height="44" rx="6" stroke-width="0.5"/><text class="th" x="580" y="162" text-anchor="middle" dominant-baseline="central">Stripe</text><text class="ts" x="580" y="178" text-anchor="middle" dominant-baseline="central">payments</text></g>
+<g class="c-gray"><rect x="520" y="248" width="120" height="44" rx="6" stroke-width="0.5"/><text class="th" x="580" y="262" text-anchor="middle" dominant-baseline="central">Inngest</text><text class="ts" x="580" y="278" text-anchor="middle" dominant-baseline="central">job service</text></g>
+<g class="c-purple"><rect x="520" y="338" width="120" height="44" rx="6" stroke-width="0.5"/><text class="th" x="580" y="352" text-anchor="middle" dominant-baseline="central">Fly.io worker</text><text class="ts" x="580" y="368" text-anchor="middle" dominant-baseline="central">long jobs</text></g>
+<text class="ts" x="185" y="140" text-anchor="middle">pages + API</text>
+<line x1="142" y1="170" x2="228" y2="170" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah4-saas-hub-diagram)"/>
+<text class="ts" x="95" y="244" text-anchor="start">sign in</text>
+<line x1="85" y1="194" x2="85" y2="286" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah4-saas-hub-diagram)"/>
+<text class="ts" x="210" y="262" text-anchor="start">verify session</text>
+<line x1="142" y1="298" x2="252" y2="194" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah4-saas-hub-diagram)"/>
+<text class="ts" x="422" y="102" text-anchor="middle">read / write</text>
+<line x1="345" y1="146" x2="518" y2="74" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah4-saas-hub-diagram)"/>
+<text class="ts" x="451" y="140" text-anchor="middle">payment webhook</text>
+<line x1="518" y1="170" x2="382" y2="170" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah4-saas-hub-diagram)"/>
+<text class="ts" x="440" y="258" text-anchor="middle">send job</text>
+<line x1="350" y1="194" x2="518" y2="264" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah4-saas-hub-diagram)"/>
+<text class="ts" x="592" y="320" text-anchor="start">run job</text>
+<line x1="580" y1="294" x2="580" y2="336" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah4-saas-hub-diagram)"/>
+<path d="M642 360 H664 V70 H643" fill="none" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah4-saas-hub-diagram)"/>
+<text class="ts" x="656" y="122" text-anchor="end">save report</text>
+<text class="ts" x="30" y="408">Purple: you write or run it. Gray: a provider runs it. Teal: where your data lives.</text></svg>

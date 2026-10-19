@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 316" role="img"><title>How a new Service Worker version takes over</title><desc>A timeline with two lanes. Version one is active and controls the open tabs. When version two is deployed and the user visits, version two installs but waits, because version one still controls open tabs, so users keep seeing old code. Once all old tabs are closed, version two becomes active and controls new page loads. skipWaiting skips the wait.</desc>
+<defs><marker id="ah8-service-worker-update-timeline" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text class="ts" x="290" y="26" text-anchor="middle">Deploy v2,</text><text class="ts" x="290" y="42" text-anchor="middle">user visits the site</text>
+<text class="ts" x="470" y="26" text-anchor="middle">All old tabs</text><text class="ts" x="470" y="42" text-anchor="middle">are closed</text>
+<line x1="150" y1="64" x2="640" y2="64" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah8-service-worker-update-timeline)"/>
+<text class="ts" x="646" y="64" dominant-baseline="central">time</text>
+<line x1="290" y1="64" x2="290" y2="192" class="leader"/>
+<line x1="470" y1="64" x2="470" y2="192" class="leader"/>
+<text class="th" x="10" y="98" dominant-baseline="central">v1 (old)</text>
+<g class="c-purple"><rect x="150" y="80" width="320" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="310" y="98" text-anchor="middle" dominant-baseline="central">active: controls the open tabs</text></g>
+<text class="th" x="10" y="158" dominant-baseline="central">v2 (new)</text>
+<rect x="290" y="140" width="180" height="36" rx="6" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 3"/><text class="ts" x="380" y="158" text-anchor="middle" dominant-baseline="central">installed, waiting</text>
+<g class="c-purple"><rect x="470" y="140" width="180" height="36" rx="6" stroke-width="0.5"/><text class="ts" x="560" y="158" text-anchor="middle" dominant-baseline="central">active: controls new loads</text></g>
+<g class="c-coral"><rect x="290" y="200" width="180" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="380" y="213" text-anchor="middle" dominant-baseline="central">Old code still runs:</text><text class="ts" x="380" y="229" text-anchor="middle" dominant-baseline="central">"my change did not ship"</text></g>
+<text class="ts" x="10" y="266">Why the wait: v1 may still be serving open tabs, so v2 cannot swap in mid-session.</text>
+<text class="ts" x="10" y="284">skipWaiting() skips the wait; clients.claim() also takes over the tabs already open.</text>
+<text class="ts" x="10" y="306">Purple: running. Dashed: waiting. Coral: the surprise.</text></svg>

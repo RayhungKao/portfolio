@@ -179,6 +179,8 @@ a { color: var(--tan-ink); }
 .blog-nav-all.active, .blog-nav li.active > .blog-nav-row a { color: var(--ink); }
 .blog-nav-row { display: flex; align-items: center; justify-content: space-between; border-radius: 8px; padding: 2px 4px 2px 10px; }
 .blog-nav-row a { flex: 1; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 6px 0; font-weight: 600; }
+.blog-nav-row-plain { padding-right: 32px; } /* a series row has no expand button, so keep its count in line with the categories' */
+.blog-nav-heading { margin: 22px 0 6px 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
 .blog-nav-row button { border: 0; background: transparent; color: var(--ink-3); width: 28px; height: 28px; border-radius: 6px; }
 .blog-nav-row button:hover { background: var(--bg-deep); color: var(--ink); }
 .blog-nav-posts { margin: 2px 0 8px 10px !important; border-left: 1px solid var(--line); }
@@ -209,8 +211,19 @@ a { color: var(--tan-ink); }
 .post-body a { color: var(--slate); }
 .hashtag { color: var(--slate); font-weight: 500; }
 .post-body code { font-family: var(--mono); font-size: 0.88em; background: var(--bg-deep); border-radius: 5px; padding: 1px 5px; }
+/* Elements that standard Markdown can produce */
+.post-body ul, .post-body ol { margin: 0 0 1em; padding-left: 1.5em; }
+.post-body li { margin: 0.3em 0; }
+.post-body h2, .post-body h3 { line-height: 1.3; margin: 1.6em 0 0.5em; }
+.post-body h2 { font-size: 1.35em; }
+.post-body h3 { font-size: 1.1em; }
+.post-body blockquote { margin: 0 0 1em; padding-left: 1em; border-left: 3px solid var(--bg-deep); color: var(--slate); }
+.post-body pre { margin: 0 0 1em; padding: 12px 14px; overflow-x: auto; background: var(--bg-deep); border-radius: 8px; line-height: 1.5; }
+.post-body pre code { background: none; padding: 0; }
+.post-body img { max-width: 100%; height: auto; }
+.post-body table { border-collapse: collapse; margin: 0 0 1em; display: block; overflow-x: auto; }
+.post-body th, .post-body td { border: 1px solid var(--bg-deep); padding: 6px 10px; text-align: left; overflow-wrap: normal; } /* keep words whole; a wide table scrolls */
 .blog article .post-tags { margin-bottom: 24px; }
-.pill.linkedin { display: inline-block; }
 
 .desk {
   position: relative; flex: 1; overflow: hidden; touch-action: none;
@@ -404,3 +417,81 @@ a { color: var(--tan-ink); }
   .cv-hero { padding-top: 36px; }
   .cv-skills > div { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* 404 */
+.not-found { max-width: 560px; margin: 0 auto; padding: 96px 24px; text-align: center; }
+.not-found-code { margin: 0; font-family: var(--mono); font-size: 14px; letter-spacing: 0.12em; color: var(--tan-ink); }
+.not-found h1 { margin: 8px 0 12px; font-size: 32px; line-height: 1.2; }
+.not-found p { color: var(--ink-2); line-height: 1.6; }
+.not-found-links { display: flex; justify-content: center; gap: 20px; margin-top: 24px; }
+.not-found-links a { color: var(--slate); font-weight: 600; }
+
+/* Series and social buttons on posts */
+.series-card { box-shadow: 5px 5px 0 -1px var(--surface), 5px 5px 0 0 var(--line); }
+.series-badge { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--tan-ink); text-decoration: none; }
+.series-badge:hover { text-decoration: underline; }
+.post-social { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.post-social .pill { display: inline-block; text-decoration: none; }
+.series-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+.series-nav a { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; color: var(--ink); text-decoration: none; font-weight: 600; line-height: 1.35; }
+.series-nav a span { font-size: 13px; font-weight: 500; color: var(--ink-3); }
+.series-nav a:hover { border-color: var(--tan); }
+.series-next { text-align: right; grid-column: 2; }
+.series-list { list-style: none; padding: 0; margin: 0; }
+.series-parts { counter-reset: s; }
+.series-part { margin: 28px 0 2px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+.series-list li { counter-increment: s; border-bottom: 1px solid var(--line); }
+.series-list a { display: grid; grid-template-columns: 2.2em 1fr; column-gap: 8px; padding: 14px 0; color: inherit; text-decoration: none; }
+.series-list a::before { content: counter(s); grid-row: 1 / span 2; font-family: var(--mono); color: var(--ink-3); padding-top: 3px; }
+.series-list-title { font-size: 17px; font-weight: 600; line-height: 1.35; }
+.series-list a:hover .series-list-title { color: var(--tan-ink); }
+.series-list-meta { font-size: 13px; color: var(--ink-3); }
+@media (max-width: 600px) { .series-nav { grid-template-columns: 1fr; } .series-next { grid-column: 1; } }
+
+/* Callouts in posts (> [!WARNING] Title): a highlighted block with an accent bar. See src/remarkCallouts.ts. */
+.post-body .callout { --callout: var(--tan); margin: 1.4em 0; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--callout); border-radius: 10px; }
+.post-body .callout-principle { --callout: var(--slate); }
+.post-body .callout-warning { --callout: #993c1d; }
+:root[data-theme="dark"] .post-body .callout-warning { --callout: #f0997b; }
+.post-body .callout > :last-child { margin-bottom: 0; }
+.post-body .callout-title { margin: 0 0 0.35em; font-weight: 700; }
+
+/* Diagrams in posts (![alt](diagram:name) inlines src/diagrams/name.svg), so they follow the manual light/dark switch.
+   Colours mean the same in every article: purple = code you write or run, teal = data you keep,
+   gray = outside your control, coral = errors or attacks.
+   Light: 50 fill, 600 stroke, 800 title, 600 subtitle. Dark: 800 fill, 200 stroke, 100 title, 200 subtitle. */
+.diagram {
+  --d-purple-fill: #eeedfe; --d-purple-stroke: #534ab7; --d-purple-title: #3c3489; --d-purple-sub: #534ab7;
+  --d-teal-fill: #e1f5ee;   --d-teal-stroke: #0f6e56;   --d-teal-title: #085041;   --d-teal-sub: #0f6e56;
+  --d-gray-fill: #f1efe8;   --d-gray-stroke: #5f5e5a;   --d-gray-title: #444441;   --d-gray-sub: #5f5e5a;
+  --d-coral-fill: #faece7;  --d-coral-stroke: #993c1d;  --d-coral-title: #712b13;  --d-coral-sub: #993c1d;
+  --b: var(--ink-3); --border-strong: var(--ink-3); /* names some of the SVG sources use for line colours */
+  margin: 1.4em 0 1.6em; padding: 2px;
+  overflow-x: auto; /* on a phone the diagram keeps a readable size and scrolls sideways instead of shrinking */
+}
+:root[data-theme="dark"] .diagram {
+  --d-purple-fill: #3c3489; --d-purple-stroke: #afa9ec; --d-purple-title: #cecbf6; --d-purple-sub: #afa9ec;
+  --d-teal-fill: #085041;   --d-teal-stroke: #5dcaa5;   --d-teal-title: #9fe1cb;   --d-teal-sub: #5dcaa5;
+  --d-gray-fill: #444441;   --d-gray-stroke: #b4b2a9;   --d-gray-title: #d3d1c7;   --d-gray-sub: #b4b2a9;
+  --d-coral-fill: #712b13;  --d-coral-stroke: #f0997b;  --d-coral-title: #f5c4b3;  --d-coral-sub: #f0997b;
+}
+.diagram svg { display: block; width: 100%; min-width: 560px; height: auto; margin: 0 auto; }
+.diagram svg[data-narrow] { min-width: 0; max-width: 380px; } /* drawn on a 380-wide canvas: keep its real size */
+.diagram svg text { font-family: var(--sans); }
+.diagram .t  { font-size: 14px; fill: var(--ink); }
+.diagram .th { font-size: 14px; font-weight: 500; fill: var(--ink); }
+.diagram .ts { font-size: 12px; fill: var(--ink-2); }
+.diagram .arr { fill: none; stroke: var(--ink-3); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.diagram .leader { fill: none; stroke: var(--ink-3); stroke-width: 0.5; stroke-dasharray: 3 3; }
+.diagram .box { fill: var(--surface); stroke: var(--ink-3); stroke-width: 0.5; }
+/* c-<colour> on a <g> colours its shapes and text; on a shape it colours just that shape. */
+.diagram .c-purple { --f: var(--d-purple-fill); --s: var(--d-purple-stroke); --h: var(--d-purple-title); --u: var(--d-purple-sub); }
+.diagram .c-teal   { --f: var(--d-teal-fill);   --s: var(--d-teal-stroke);   --h: var(--d-teal-title);   --u: var(--d-teal-sub); }
+.diagram .c-gray   { --f: var(--d-gray-fill);   --s: var(--d-gray-stroke);   --h: var(--d-gray-title);   --u: var(--d-gray-sub); }
+.diagram .c-coral  { --f: var(--d-coral-fill);  --s: var(--d-coral-stroke);  --h: var(--d-coral-title);  --u: var(--d-coral-sub); }
+.diagram rect.c-purple, .diagram rect.c-teal, .diagram rect.c-gray, .diagram rect.c-coral,
+.diagram circle.c-purple, .diagram circle.c-teal, .diagram circle.c-gray, .diagram circle.c-coral,
+.diagram ellipse.c-purple, .diagram ellipse.c-teal, .diagram ellipse.c-gray, .diagram ellipse.c-coral,
+.diagram g[class*="c-"] > rect, .diagram g[class*="c-"] > circle, .diagram g[class*="c-"] > ellipse { fill: var(--f); stroke: var(--s); }
+.diagram g[class*="c-"] > .t, .diagram g[class*="c-"] > .th { fill: var(--h); }
+.diagram g[class*="c-"] > .ts { fill: var(--u); }

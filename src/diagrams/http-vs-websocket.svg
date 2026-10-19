@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 290" role="img"><title>Normal HTTP versus WebSocket</title><desc>Two side-by-side sequence diagrams. On the left, with normal HTTP the browser has to keep asking the server whether there is a new message, and the server only ever answers. On the right, with a WebSocket the browser opens one connection and then the server pushes new messages whenever it has them.</desc>
+<defs><marker id="ah-http-vs-websocket" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text class="th" x="175" y="22" text-anchor="middle">Normal HTTP</text>
+<text class="ts" x="175" y="40" text-anchor="middle">The browser asks, the server answers</text>
+<text class="th" x="505" y="22" text-anchor="middle">WebSocket</text>
+<text class="ts" x="505" y="40" text-anchor="middle">The connection stays open</text>
+<line x1="340" y1="10" x2="340" y2="240" class="leader"/>
+<g class="c-gray"><rect x="30" y="54" width="70" height="30" rx="6" stroke-width="0.5"/><text class="ts" x="65" y="69" text-anchor="middle" dominant-baseline="central">Browser</text></g>
+<g class="c-purple"><rect x="250" y="54" width="70" height="30" rx="6" stroke-width="0.5"/><text class="ts" x="285" y="69" text-anchor="middle" dominant-baseline="central">Server</text></g>
+<line x1="65" y1="84" x2="65" y2="230" class="leader"/>
+<line x1="285" y1="84" x2="285" y2="230" class="leader"/>
+<text class="ts" x="175" y="112" text-anchor="middle">Any new message?</text>
+<line x1="68" y1="118" x2="282" y2="118" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah-http-vs-websocket)"/>
+<text class="ts" x="175" y="140" text-anchor="middle">No.</text>
+<line x1="282" y1="146" x2="68" y2="146" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah-http-vs-websocket)"/>
+<text class="ts" x="175" y="176" text-anchor="middle">Any new message?</text>
+<line x1="68" y1="182" x2="282" y2="182" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah-http-vs-websocket)"/>
+<text class="ts" x="175" y="204" text-anchor="middle">Yes, one.</text>
+<line x1="282" y1="210" x2="68" y2="210" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah-http-vs-websocket)"/>
+<g class="c-gray"><rect x="360" y="54" width="70" height="30" rx="6" stroke-width="0.5"/><text class="ts" x="395" y="69" text-anchor="middle" dominant-baseline="central">Browser</text></g>
+<g class="c-purple"><rect x="580" y="54" width="70" height="30" rx="6" stroke-width="0.5"/><text class="ts" x="615" y="69" text-anchor="middle" dominant-baseline="central">Server</text></g>
+<line x1="395" y1="84" x2="395" y2="230" class="leader"/>
+<line x1="615" y1="84" x2="615" y2="230" class="leader"/>
+<text class="ts" x="505" y="112" text-anchor="middle">Open a connection (once)</text>
+<line x1="398" y1="118" x2="612" y2="118" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah-http-vs-websocket)"/>
+<text class="ts" x="505" y="158" text-anchor="middle">New message!</text>
+<line x1="612" y1="164" x2="398" y2="164" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah-http-vs-websocket)"/>
+<text class="ts" x="505" y="196" text-anchor="middle">Another one!</text>
+<line x1="612" y1="202" x2="398" y2="202" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah-http-vs-websocket)"/>
+<text class="ts" x="175" y="264" text-anchor="middle">To get news, the browser must keep asking.</text>
+<text class="ts" x="505" y="264" text-anchor="middle">The server speaks first, whenever it has news.</text></svg>

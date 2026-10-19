@@ -14,22 +14,21 @@ drag, resize, and rotate. Cards snap to each other with alignment guides, and th
 desk zooms and pans like a design tool. Click a card and the camera flies to it and
 it opens into a full slide; flip between cards like a deck, and go back to the desk anytime.
 
-Built with React, TypeScript, Vite, and Fabric.js 7.
+Built with Next.js (App Router, static export), React, TypeScript, and Fabric.js 7.
 
 ## Run it
 
-Requires Node.js 20.19+ or 22.12+ (`node -v` to check; on a Mac, `brew install node` works).
+Requires Node.js 20.9+ (`.nvmrc` pins 22) (`node -v` to check; on a Mac, `brew install node` works).
 
 ```bash
 npm install
 npm run dev
 ```
 
-Then open http://localhost:5173.
+Then open http://localhost:3000.
 
 ```bash
-npm run build     # type-check and build to dist/
-npm run preview   # serve the production build
+npm run build     # type-check and build the static site to out/
 ```
 
 ## Deploy
@@ -39,19 +38,20 @@ Every push to `main` builds the site and publishes it to GitHub Pages
 set Source to "GitHub Actions". The repository is `portfolio`, so the site is served at
 https://rayhungkao.github.io/portfolio/.
 
-URLs are ordinary paths (`/blog/<slug>`), handled in the browser by `src/router.ts`. GitHub
-Pages has no rewrites, so the build also writes `404.html` as a copy of `index.html`: a deep
-link that matches no file loads the app, which then shows the right page. Such a deep link is
-answered with HTTP status 404 even though the page renders. Old `#/…` links are redirected to
-their path.
+Pages are Next.js App Router routes under `app/`, and the build (`output: 'export'`) writes one
+HTML file per URL into `out/`, so there is no SPA fallback: an unknown URL gets `404.html`, built
+from `app/not-found.tsx`. The Work page's canvas lives in `app/work/layout.tsx` so it stays mounted between `/work` and
+`/work/<id>`.
 
 The build's base path comes from the Pages settings (`/portfolio/` now). In code, write app
-paths (`/blog/x`) and pass internal hrefs through `to()` and public files through `asset()`,
-both from `src/router.ts`, so links keep working under any base path.
+paths (`/blog/x`) and link with `next/link` (or `AppLink` for hrefs that may be external); both
+add the base path. Public files go through `asset()` from `src/router.ts`.
 
 To move to a custom domain later: verify the domain in your GitHub account settings, enter
 it under Settings → Pages → Custom domain, then add the DNS records GitHub shows. The base
 path then becomes `/` automatically, and no `CNAME` file is needed with an Actions deployment.
+The workflow also passes the site's origin (`SITE_ORIGIN`), so the sitemap, canonical URLs and
+share previews switch to the new domain along with it.
 
 ## Controls
 
@@ -81,15 +81,22 @@ link straight to one; the page opens on the desk and flies to that card.
 Light (warm paper) is the default. The ☾ / ☀ button in the top bar switches to the dark
 navy theme, and the choice is remembered in localStorage. All colors are CSS variables in
 `src/styles.css` (`:root` for light, `:root[data-theme="dark"]` for dark). A small script in
-`index.html` applies the saved theme before the page renders, so there is no flash.
+`app/layout.tsx` applies the saved theme before the page renders, so there is no flash.
 
 ## Blog
 
 The blog lives at `/blog`, and each category has its own page (`/blog/category/ai-agent`).
-Each post is one plain-text file in `src/posts/`, written the way you would write a
-LinkedIn post: line breaks are kept, a blank line starts a new paragraph, URLs become
-links, and `#hashtags` are highlighted. The file name becomes the post URL
-(`src/posts/cancel-flow.md` → `/blog/cancel-flow`).
+Each post is one Markdown file in `src/posts/` (GitHub-flavored: lists, tables, code, links).
+A single line break stays a line break, the way you would write a LinkedIn post, a blank
+line starts a new paragraph, and `#hashtags` are highlighted. The front matter is YAML, so
+quote a value that contains `: ` (`title: "Foo: bar"`). Optional keys: `summary`, `image`
+(PNG in `public/` for the share preview), `draft: true`, `linkedin` / `threads` / `instagram` (the
+"Discuss on…" buttons), and `series: <slug>` with `order: <n>` to put a post in a series. A series
+shows as one card in the blog list and has a contents page at `/series/<slug>`; give it a title and
+description in `src/series.ts`. A post in a series has no `category` (the build fails if it sets one):
+the series is where it is listed. The file name becomes the post URL (`src/posts/cancel-flow.md` →
+`/blog/cancel-flow`). Files can sit in subfolders such as `src/posts/web-development/`, which only
+group them: the URL is still the file name alone, so a name must be unique across all folders.
 
 ```text
 ---
@@ -103,7 +110,7 @@ Post body…
 ```
 
 `title` and `date` (YYYY-MM-DD) are needed for a tidy list; `category` places the post in
-the sidebar directory (the order of categories is `CATEGORY_ORDER` in `src/postData.ts`;
+the sidebar directory (the order of categories is `CATEGORY_ORDER` in `src/postTypes.ts`;
 posts without one go under "Notes"); `linkedin` adds a "Discuss on LinkedIn" button;
 `summary` defaults to the first line of the post. Reading time and tags are computed
 from the body.
@@ -113,14 +120,15 @@ from the body.
 | File | What it holds |
 | --- | --- |
 | `src/content.ts` | Card text, colors, and links — edit content here; the desk card and the slide both update |
-| `src/posts/*.md` | Blog posts |
+| `src/posts/**/*.md` | Blog posts (subfolders group a series) |
 | `src/Home.tsx` | Home page: intro, prompt box, avatar, selected work, latest posts |
 | `src/postData.ts`, `src/Blog.tsx` | Loads posts, categories, reading time; renders the sidebar directory, lists, and post pages |
 | `src/desk.ts` | Fabric.js desk: draws cards from measured layouts, snapping guides, zoom/pan, camera flights, persistence |
 | `src/DeckContent.tsx` | The slide layout, plus the measuring that turns it into a desk card |
 | `src/Slide.tsx` | The opened card: laid exactly over the zoomed card, cross-fades in and out |
 | `src/Logo.tsx`, `public/favicon.svg` | The R mark: the top-bar logo (follows the theme) and the browser-tab icon |
-| `src/router.ts` | Path routing: reads the URL, base-path-aware links (`to()`, `asset()`), in-app navigation |
-| `src/App.tsx` | Page shell: top bar, theme toggle, routes, desk/list toggle, open/flip/close sequencing |
+| `app/` | Routes and the root layout (`layout.tsx`); `app/work/layout.tsx` keeps the canvas mounted |
+| `src/router.ts`, `src/RouterBridge.tsx` | `asset()`, `to()` and `navigate()` for code outside components; `RouterBridge` connects `navigate()` to the App Router |
+| `src/Topbar.tsx`, `src/WorkStage.tsx` | Top bar and theme toggle; desk/list view, open/flip/close sequencing |
 | `src/styles.css` | Theme tokens and styles |
 | `src/resumeData.ts`, `src/Resume.tsx` | Résumé text and the `/resume` page; edit the text in `src/resumeData.ts` |

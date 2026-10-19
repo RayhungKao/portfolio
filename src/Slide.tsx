@@ -1,9 +1,11 @@
+'use client';
+
 import { useLayoutEffect, useRef } from 'react';
 import type { Card } from './content';
 import { LINKS } from './content';
 import type { Rect2D } from './desk';
 import { DeckContent, SLIDE_W } from './DeckContent';
-import { isInternal, to } from './router';
+import { AppLink } from './AppLink';
 
 export type SlidePhase = 'enter' | 'open' | 'exit';
 
@@ -151,9 +153,9 @@ export function Slide({ card, index, total, origin, phase, onCoverCard, onEntere
           {card.links && (
             <div className="links">
               {card.links.map((l) => (
-                <a key={l.href} href={to(l.href)} {...(isInternal(l.href) ? {} : { target: '_blank', rel: 'noreferrer' })}>
+                <AppLink key={l.href} href={l.href}>
                   {l.label} →
-                </a>
+                </AppLink>
               ))}
             </div>
           )}

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 410" role="img"><title>Three typical stacks, layer by layer, with the backend layers</title><desc>A matrix with three columns, A SPA, B Static content and C Full-stack SSR, and six rows: framework, build tool, package manager, backend, data and login, and hosting. Backend and data and login are shown as optional dashed cells for A and B, and as built-in solid cells for C. A uses a router library with Vite and a static host. B uses Astro or Next.js export, built into the framework, on a static host. C uses Next.js, Nuxt or SvelteKit with route handlers and PostgreSQL with an auth service, hosted on Node, serverless or edge.</desc>
+<text class="th" x="220" y="22" text-anchor="middle">A · SPA</text>
+<text class="th" x="390" y="22" text-anchor="middle">B · Static content</text>
+<text class="th" x="560" y="22" text-anchor="middle">C · Full-stack SSR</text>
+<line x1="10" y1="38" x2="640" y2="38" class="leader"/>
+<text class="ts" x="10" y="70" dominant-baseline="central">Framework</text>
+<g class="c-purple"><rect x="140" y="50" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="220" y="70" text-anchor="middle" dominant-baseline="central">none, add a router</text></g>
+<g class="c-purple"><rect x="310" y="50" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="390" y="70" text-anchor="middle" dominant-baseline="central">Astro / Next.js export</text></g>
+<g class="c-purple"><rect x="480" y="50" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="560" y="70" text-anchor="middle" dominant-baseline="central">Next.js / Nuxt / SvelteKit</text></g>
+<text class="ts" x="10" y="122" dominant-baseline="central">Build tool</text>
+<g class="c-purple"><rect x="140" y="102" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="220" y="122" text-anchor="middle" dominant-baseline="central">Vite</text></g>
+<g class="c-purple"><rect x="310" y="102" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="390" y="122" text-anchor="middle" dominant-baseline="central">built into the framework</text></g>
+<g class="c-purple"><rect x="480" y="102" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="560" y="122" text-anchor="middle" dominant-baseline="central">built into the framework</text></g>
+<text class="ts" x="10" y="174" dominant-baseline="central">Package manager</text>
+<g class="c-purple"><rect x="140" y="154" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="220" y="174" text-anchor="middle" dominant-baseline="central">pnpm or npm</text></g>
+<g class="c-purple"><rect x="310" y="154" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="390" y="174" text-anchor="middle" dominant-baseline="central">pnpm or npm</text></g>
+<g class="c-purple"><rect x="480" y="154" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="560" y="174" text-anchor="middle" dominant-baseline="central">pnpm or npm</text></g>
+<text class="ts" x="10" y="226" dominant-baseline="central">Backend</text>
+<rect x="140" y="206" width="160" height="40" rx="6" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 3"/><text class="ts" x="220" y="226" text-anchor="middle" dominant-baseline="central">functions, BaaS or API</text>
+<rect x="310" y="206" width="160" height="40" rx="6" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 3"/><text class="ts" x="390" y="226" text-anchor="middle" dominant-baseline="central">none, or one function</text>
+<g class="c-purple"><rect x="480" y="206" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="560" y="226" text-anchor="middle" dominant-baseline="central">route handlers or API</text></g>
+<text class="ts" x="10" y="278" dominant-baseline="central">Data and login</text>
+<rect x="140" y="258" width="160" height="40" rx="6" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 3"/><text class="ts" x="220" y="278" text-anchor="middle" dominant-baseline="central">BaaS, e.g. Supabase</text>
+<rect x="310" y="258" width="160" height="40" rx="6" fill="none" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 3"/><text class="ts" x="390" y="278" text-anchor="middle" dominant-baseline="central">none</text>
+<g class="c-teal"><rect x="480" y="258" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="560" y="278" text-anchor="middle" dominant-baseline="central">PostgreSQL + auth</text></g>
+<text class="ts" x="10" y="330" dominant-baseline="central">Hosting</text>
+<g class="c-gray"><rect x="140" y="310" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="220" y="330" text-anchor="middle" dominant-baseline="central">static host / CDN</text></g>
+<g class="c-gray"><rect x="310" y="310" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="390" y="330" text-anchor="middle" dominant-baseline="central">static host / CDN</text></g>
+<g class="c-gray"><rect x="480" y="310" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="560" y="330" text-anchor="middle" dominant-baseline="central">Node, serverless, or edge</text></g>
+<text class="ts" x="10" y="378">Purple: you write or run it. Gray: a provider runs it. Teal: where your data lives.</text>
+<text class="ts" x="10" y="396">Dashed: optional. Add it when a need from Part 6 appears.</text></svg>
