@@ -136,11 +136,16 @@ A single-page app has one HTML file, but its URLs can look like many pages. Ther
 
 ## Server-side routing also exists
 
-Everything above is about the browser deciding which screen to show. A backend has its own router, with the same idea: a URL and an HTTP method map to a handler. `GET /orders/42` runs the function that returns order 42. The difference is what gets chosen. A frontend router decides **which component** to render; a backend router decides **which function** runs. Frameworks that do both, like Next.js, use the same folder-based idea for each. How the server side works is in [Inside a backend](/blog/inside-a-backend).
+A backend has a router too. It maps a URL and an HTTP method to a function: `GET /orders/42` runs the function that returns order 42. A frontend router picks which component to show, and a backend router picks which function to run. Next.js uses folders for both: `app/blog/[slug]/page.tsx` is a page, and `app/api/orders/[id]/route.ts` is a backend function. How the server side works is in [Inside a backend](/blog/inside-a-backend).
 
 ## When to move up
 
-Move to a router library or framework when you need nested layouts, per-route code splitting, per-route data loading, or per-route error boundaries.
+Move to a router library or framework when hand-written routing starts to strain. For example, when you need:
+
+- **Nested layouts**: a sidebar that stays on screen while only the inner page changes.
+- **Code splitting per route**: each page's code downloads only when someone visits it.
+- **Data loading per route**: a page's data starts loading as soon as its route matches.
+- **Error handling per route**: an error on one page shows an error screen without breaking the whole app.
 
 > [!PRINCIPLE] Core principle
 > Routing looks like one `switch` but is four jobs. Write it yourself while routes are few, and move to a library or framework when the needs grow.
