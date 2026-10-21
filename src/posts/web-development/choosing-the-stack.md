@@ -71,7 +71,7 @@ Each platform has its own convention for where the code lives.
 ## Three questions
 
 1. **Does the app only need data access plus permissions?** Choose a BaaS. RLS covers the rules, and you write no backend.
-2. **Is there custom logic, but small, short and triggered by events?** Choose serverless functions. A webhook, a form handler or an image resize fits.
+2. **Is there custom logic, but small, short and triggered by events?** Choose serverless functions. A webhook, a form handler, a call to an API that needs a secret key, or an image resize fits.
 3. **Do you need long-lived connections, long tasks, heavy computing, or many clients that share one set of rules?** Choose a full server.
 
 Many people say Supabase is a sensible default for a first full-stack project. That is a common view as of October 2026, not a measured fact, and it holds when your needs are question 1. If they are not, the matrix lets you mix.

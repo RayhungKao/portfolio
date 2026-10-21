@@ -33,11 +33,11 @@ A content site is not the same as a CMS. A headless CMS such as Sanity is a back
 ## Four questions that change the architecture
 
 1. **Does it need to be found by search engines, or show a preview when a link is shared?** A blog post does. A page behind a login does not.
-2. **Is the content known at build time, or decided on every request?** A documentation page is known in advance. A product page showing today's stock is not.
+2. **Is the content known at build time, or only known when a request arrives?** A documentation page is known in advance. A product page showing today's stock is not.
 3. **How heavy is the interaction after load?** A form is light. A canvas editor with live updates is heavy.
 4. **Does anything need to happen on a server?** A database, a login or a payment API does. A portfolio that only shows pictures does not.
 
-The answers decide the rendering mode, which the next article covers. The first two choose the route, the third decides how much work stays in the browser, and the fourth decides whether you need a backend at all. [From needs to architecture](/blog/from-needs-to-architecture) puts them in one flow.
+Together, the answers decide the rendering mode, which the next article covers. The first two decide when and where the HTML is produced: at build time, on a server, or in the browser. The third decides how much work stays in the browser, and the fourth decides whether you need a backend at all. [From needs to architecture](/blog/from-needs-to-architecture) puts them in one flow.
 
 > [!PRINCIPLE] Core principle
 > State the need first. Only then does a tool choice have something to be judged against.
