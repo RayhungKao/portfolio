@@ -32,25 +32,25 @@ Typical use: blogs, documentation and portfolios. Example: this blog, where each
 
 The server generates the HTML on every request. Content is always current, can differ for each visitor, and is good for SEO. The cost is a server runtime that has to stay available, which means more money and more operations, and response time now depends on the server.
 
-Typical use: product pages and social feeds. Example: a product page that shows today's stock and the logged-in user's name.
+Typical use: product pages and social feeds. Example: a product page that must show up in search results and show today's stock. The server looks up the stock when a request arrives and sends back finished HTML.
 
 ## Hydration
 
-The HTML from SSG and SSR is static. For the page to react to clicks, JavaScript has to take over. That takeover is **hydration**.
+The HTML from SSG and SSR arrives as plain markup: it shows the content, but nothing reacts to clicks yet. For the page to react, JavaScript has to take over. That takeover is **hydration**.
 
 | Term | Meaning | Where it happens |
 | --- | --- | --- |
-| Rendering | Turning a component into HTML or a visible screen. The general word. | Any of the three places |
+| Rendering | Turning a component (a reusable piece of the page, such as a button) into HTML or a visible screen. The general word. | Any of the three places |
 | Pre-rendering | Producing the HTML before the user receives the page. SSG and SSR both do this. | Build time or server |
 | Hydration | After the HTML is already on screen, JavaScript downloads, attaches to it, binds events and creates state, so the page can respond | Browser |
 
-Rendering is the action, pre-rendering means doing it early, and hydration is the second step after doing it early.
+So SSG and SSR pre-render the HTML, and hydration is what makes that HTML interactive. CSR does not pre-render, so it has nothing to hydrate.
 
 ![What the page looks like at each step, pre-rendered versus CSR](diagram:hydration-steps)
 
 In the top row (SSG or SSR) the HTML arrives first, so content is visible quickly, but buttons do nothing until JavaScript has taken over. The CSR row has no hydration: the HTML is an empty shell and JavaScript builds the screen from nothing.
 
-Concretely, the HTML already contains a button, but the button has no click handler. React runs the components again in the browser, compares them with the existing DOM and attaches events and state, instead of throwing the HTML away and drawing it again. The cost is downloading and running the JavaScript, which is why some frameworks only hydrate the parts that need interaction. Astro's islands are an example.
+Concretely, the HTML already contains a button, but the button has no click handler. In the browser, React runs your components once more, since they already ran once to produce the HTML. It matches them to the HTML already on the page and attaches the click handlers, instead of throwing the HTML away and drawing it again. The price is that the JavaScript still has to download and run before anything responds. React reduces this in two ways. Selective hydration makes parts of the page interactive one by one, starting with the part the user touches first. Server Components run only on the server, so their code is never sent to the browser and never needs hydrating.
 
 ## Modes can be mixed
 
