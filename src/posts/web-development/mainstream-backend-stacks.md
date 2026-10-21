@@ -36,7 +36,7 @@ For databases, the same survey put PostgreSQL first at 55.6%, then MySQL 40.5%, 
 
 ## The same layers, different names
 
-The layers in [Inside a backend](/blog/inside-a-backend) exist in every framework. Only the names change.
+The layers in [Inside a backend](/blog/inside-a-backend) exist in every framework. Only the names change. Each cell shows one common way to do it, not the only one.
 
 | Layer | Express (Node.js) | Spring Boot | Django | ASP.NET Core |
 | --- | --- | --- | --- | --- |
@@ -53,7 +53,7 @@ Use this table when an example in this series is written in Express: the idea ca
 - **Start with what your team already knows.** A team fluent in Spring ships faster with Spring than with a framework it has to learn first.
 - **Check who you can hire and what already exists.** A new service usually joins an existing system, and matching it is cheaper than being different.
 - **One language on both sides is a real convenience.** With TypeScript on the server, the browser and the backend can share types and validation rules.
-- **Do not start from speed.** Any family on the list can serve ordinary traffic. What changes the outcome is the architecture around it, which the next articles cover.
+- **Raw speed rarely decides it.** Any family on the list can serve ordinary traffic. What changes the outcome is the architecture around it, which the next articles cover.
 
 > [!PRINCIPLE] Core principle
 > Pick the stack your team can run and hire for. The architecture you choose next matters more than the language.
