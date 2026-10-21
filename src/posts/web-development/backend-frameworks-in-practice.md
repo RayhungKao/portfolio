@@ -74,8 +74,12 @@ A large company almost always uses several stacks. "Company X uses framework Y" 
 - **E-commerce:** Rails (Shopify), Spring Boot (large retailers), and Node.js for the backend behind the storefront.
 - **Cloud and infrastructure:** Go.
 - **Frontend-led startups and SaaS:** Next.js with Express or NestJS, with TypeScript on both sides.
+- **Crypto:** Go and Rust for blockchain nodes and exchange backends, C++, Rust or Java where latency decides the outcome, TypeScript around the apps that talk to wallets, and Python for research and on-chain data. Geth, the most widely used Ethereum client, is written in Go, and Solana is written in Rust. Coinbase started on Rails and moved much of its backend to Go.
+- **Semiconductors:** Here the backend is mostly the factory's own systems. The manufacturing execution system (MES), which tracks each wafer through each step, is usually Java or C#. Equipment integration leans on C# and C++, because many libraries for the equipment protocol SECS/GEM target .NET or C++. Yield analysis and defect detection with machine learning are Python. Chip design is a different world again: C++, Python and Tcl scripts around design tools, not web frameworks.
 
-Notice what decides most of these choices: the team and the system that already exists. The industry matters less than it first appears.
+Rust is not one of the seven families in [The mainstream backend stacks](/blog/mainstream-backend-stacks), because it is still rare in ordinary web backends. In crypto it is one of the main languages.
+
+Notice what decides most of these choices: the kind of work, the team, and the system that already exists. The same industry can need three different stacks for its nodes, its trading and its apps.
 
 ## Stacks change
 
