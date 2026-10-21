@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LINKS } from './content';
 import { Logo } from './Logo';
-import { useWorkView } from './WorkViewContext';
 
 type Theme = 'light' | 'dark';
 const THEME_KEY = 'theme';
@@ -48,7 +47,6 @@ const inSection = (pathname: string, section: string) => pathname === section ||
 
 export function Topbar() {
   const pathname = usePathname();
-  const { view, setView } = useWorkView();
   const isHome = pathname === '/';
   const onDeskPage = inSection(pathname, '/work');
   const onBlog = inSection(pathname, '/blog');
@@ -57,17 +55,12 @@ export function Topbar() {
 
   return (
     <header className="topbar">
-      <Link className="brand" href="/">
+      <Link className="brand" href="/" aria-label="Ray Kao, home">
         <Logo />
         <strong>Ray Kao</strong>
         <span>Software Engineer</span>
       </Link>
       <nav className="actions">
-        {onDeskPage && (
-          <button className="pill subtle" onClick={() => setView(view === 'desk' ? 'list' : 'desk')}>
-            {view === 'desk' ? 'List view' : 'Canvas view'}
-          </button>
-        )}
         <Link className={isHome ? 'nav-link active' : 'nav-link'} href="/" aria-current={cur(isHome)}>
           Home
         </Link>

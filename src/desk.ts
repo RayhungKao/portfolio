@@ -13,11 +13,11 @@ import { CARDS, type Card } from './content';
 import { CARD_RADIUS, CARD_W, FEATURED_W, cardScale, cardWidth, type CardLayout } from './DeckContent';
 
 const SNAP_PX = 8; // snapping distance in screen pixels
-const MIN_ZOOM = 0.3;
+const MIN_ZOOM = 0.15; // low enough that Fit can show the whole desk on a phone
 const MAX_ZOOM = 2.5;
 const STORAGE_KEY = 'canvas-desk-layout-v3'; // bumped when card sizes or default positions change
 const COL_GAP = 56;
-const ROW_GAP = 44;
+const ROW_GAP = 96; // name labels keep a constant screen size (~21px above each card), so at a phone's fit zoom (~0.25) the gap must be ~90 scene units
 /** Gap between the top of the screen and a focused card, leaving room for the slide controls. */
 const FOCUS_TOP = 60;
 
@@ -250,7 +250,10 @@ export function createDesk(
   };
 
   // ---------- fit / tidy / zoom ----------
+  // Until the visitor pans, zooms or drags, the desk re-fits when its size changes (rotation, resizing).
+  let userMoved = false;
   const fit = () => {
+    userMoved = false;
     const boxes = [...cardById.values()].map((g) => g.getBoundingRect());
     const minX = Math.min(...boxes.map((b) => b.left));
     const minY = Math.min(...boxes.map((b) => b.top));
@@ -259,7 +262,7 @@ export function createDesk(
     const pad = 80;
     const w = canvas.getWidth();
     const h = canvas.getHeight();
-    const top = 44; // room for the hint bar and the name labels above the top row
+    const top = 52; // room for the view switch / hint bar and the name labels above the top row
     const z = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.min(w / (maxX - minX + pad * 2), (h - top) / (maxY - minY + pad * 2))));
     const cx = (minX + maxX) / 2;
     const cy = (minY + maxY) / 2;
@@ -280,6 +283,7 @@ export function createDesk(
   };
 
   const zoomBy = (factor: number) => {
+    userMoved = true;
     const z = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, canvas.getZoom() * factor));
     canvas.zoomToPoint(new Point(canvas.getWidth() / 2, canvas.getHeight() / 2), z);
     syncGrid();
@@ -287,6 +291,7 @@ export function createDesk(
 
   // ---------- zoom & pan with wheel / trackpad ----------
   canvas.on('mouse:wheel', (opt) => {
+    userMoved = true;
     const e = opt.e;
     e.preventDefault();
     e.stopPropagation();
@@ -313,6 +318,7 @@ export function createDesk(
 
   canvas.on('mouse:down', (opt) => {
     if (focusedId) return;
+    userMoved = true;
     const p = clientPoint(opt.e);
     downAt = p;
     downTarget = opt.target;
@@ -626,6 +632,7 @@ export function createDesk(
       const g = cardById.get(focusedId)!;
       canvas.setViewportTransform(focusView(g, Math.min(lastScreenWidth, host.clientWidth - 64)));
     }
+    if (!userMoved && !focusedId) fit();
     syncGrid();
   });
   ro.observe(host);

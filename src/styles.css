@@ -41,6 +41,7 @@
 
 * { box-sizing: border-box; }
 html, body, #root { margin: 0; height: 100%; }
+html, body { overflow: hidden; overscroll-behavior: none; } /* each page scrolls inside .app; the document itself never does, so there is only one scrollbar */
 body {
   font-family: var(--sans);
   color: var(--ink);
@@ -52,6 +53,7 @@ a { color: var(--tan-ink); }
 :focus-visible { outline: 2px solid var(--slate); outline-offset: 2px; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .app { height: 100%; display: flex; flex-direction: column; }
+@supports (height: 100dvh) { .app { height: 100dvh; } } /* phone browsers: exclude the collapsing address bar */
 
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
@@ -70,12 +72,11 @@ a { color: var(--tan-ink); }
   border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px;
   padding: 7px 14px; font-size: 14px; text-decoration: none;
 }
-.pill.subtle { background: transparent; color: var(--ink-2); font-size: 13px; }
 .theme-toggle { border: 1px solid var(--line); background: transparent; color: var(--ink-2); width: 34px; height: 34px; border-radius: 999px; font-size: 15px; line-height: 1; }
 .theme-toggle:hover { color: var(--ink); background: var(--bg-deep); }
 
 /* ---------- home ---------- */
-.home { flex: 1; overflow: auto; }
+.home { position: relative; flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; } /* position: relative so the absolutely placed .visually-hidden label is clipped here instead of stretching the document */
 .hero {
   max-width: 1080px; margin: 0 auto; padding: 72px 24px 56px;
   display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 56px; align-items: center;
@@ -169,7 +170,7 @@ a { color: var(--tan-ink); }
 .home-footer { max-width: 1080px; margin: 0 auto; padding: 24px 24px 48px; color: var(--ink-3); font-size: 13px; }
 
 /* ---------- blog ---------- */
-.blog-layout { flex: 1; overflow: auto; display: grid; grid-template-columns: 290px minmax(0, 1fr); max-width: 1160px; width: 100%; margin: 0 auto; }
+.blog-layout { position: relative; flex: 1; overflow: auto; display: grid; grid-template-columns: 290px minmax(0, 1fr); max-width: 1160px; width: 100%; margin: 0 auto; }
 .blog-nav { position: sticky; top: 0; align-self: start; max-height: 100%; overflow: auto; padding: 40px 16px 40px 24px; font-size: 14.5px; }
 .blog-nav ul { list-style: none; padding: 0; margin: 0; }
 .blog-nav a { color: var(--ink-2); text-decoration: none; }
@@ -237,8 +238,19 @@ a { color: var(--tan-ink); }
   position: absolute; left: 50%; top: 14px; transform: translateX(-50%);
   font-size: 12.5px; color: var(--ink-3); background: var(--chrome);
   border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; pointer-events: none;
-  white-space: nowrap; max-width: calc(100% - 32px); overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; max-width: calc(100% - 420px); overflow: hidden; text-overflow: ellipsis; /* leaves room for the view switch on the left */
 }
+.view-switch {
+  display: inline-flex; gap: 2px; padding: 3px; background: var(--chrome); border: 1px solid var(--line); border-radius: 999px;
+}
+.view-switch button {
+  display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: var(--ink-3);
+  border-radius: 999px; padding: 6px 14px 6px 11px; font-size: 13px; font-weight: 500; line-height: 1;
+}
+.view-switch button:hover { color: var(--ink); }
+.view-switch button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.stage-host > .view-switch { position: absolute; top: 12px; left: 16px; z-index: 3; transition: opacity 200ms; }
+.view-switch.is-hidden { opacity: 0; pointer-events: none; }
 .toolbar {
   position: absolute; right: 16px; bottom: 16px; display: flex; align-items: center; gap: 4px;
   background: var(--chrome); border: 1px solid var(--line); border-radius: 12px; padding: 4px;
@@ -249,7 +261,7 @@ a { color: var(--tan-ink); }
 .toolbar span { font-size: 12px; color: var(--ink-3); min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }
 
 .list {
-  flex: 1; overflow: auto; padding: 24px 16px 48px;
+  flex: 1; overflow: auto; padding: 64px 16px 48px; /* top padding clears the view switch */
   display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   max-width: 1100px; width: 100%; margin: 0 auto; align-content: start;
 }
@@ -288,12 +300,12 @@ a { color: var(--tan-ink); }
 .stage-host > .slide-controls { animation: backdrop-in 200ms ease-out; }
 .slide-back {
   border: 1px solid var(--line); background: var(--chrome); border-radius: 999px;
-  padding: 6px 14px; color: var(--ink-2); font-size: 13px;
+  padding: 6px 14px; color: var(--ink-2); font-size: 13px; white-space: nowrap;
 }
 .slide-back:hover { color: var(--ink); border-color: var(--ink); }
 .slide-nav {
   display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums;
-  background: var(--chrome); border: 1px solid var(--line); border-radius: 999px; padding: 3px;
+  background: var(--chrome); border: 1px solid var(--line); border-radius: 999px; padding: 3px; white-space: nowrap;
 }
 .slide-nav span { padding: 0 4px; }
 .slide-nav button {
@@ -339,40 +351,12 @@ a { color: var(--tan-ink); }
 .slide li { margin-bottom: 8px; }
 .desk .hint, .desk .toolbar { transition: opacity 200ms; }
 .desk.focused .hint, .desk.focused .toolbar { opacity: 0; pointer-events: none; }
-@media (max-width: 767px) {
-  .stage.page { padding: 12px; }
-  .slide-body { padding: 18px 20px 24px; }
-  .slide h2 { font-size: 30px; }
-  .slide .lead { font-size: 17px; }
-}
 
 .pill { white-space: nowrap; }
-@media (max-width: 520px) {
-  .topbar { padding: 12px 16px; }
-  .actions { gap: 0; }
-  .nav-link { padding: 6px 7px; font-size: 14px; }
-  .pill { padding: 6px 12px; font-size: 13px; }
-  .theme-toggle { width: 30px; height: 30px; margin-left: 4px; }
-  .brand strong, .brand span { display: none; } /* the logo alone carries the name on phones */
-}
 
-@media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 40px; }
-  .avatar { width: 220px; height: 220px; order: -1; }
-  .work-list { grid-template-columns: 1fr; }
-  .blog-layout { display: block; }
-  .blog-nav { position: static; padding: 20px 16px 0; max-height: none; overflow: visible; }
-  .blog-nav > ul { display: flex; flex-wrap: wrap; gap: 6px; }
-  .blog-nav > ul > li { border: 1px solid var(--line); border-radius: 999px; }
-  .blog-nav-row { padding: 0 2px 0 10px; }
-  .blog-nav-row a { padding: 4px 0; font-weight: 500; justify-content: flex-start; }
-  .blog-nav-all { padding-right: 10px; }
-  .blog-nav-posts, .blog-nav-row button { display: none; }
-  .blog { padding: 24px 16px 64px; }
-}
 
 /* ---------- résumé ---------- */
-.cv { flex: 1; overflow: auto; }
+.cv { position: relative; flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; }
 .cv > * { max-width: 880px; margin-left: auto; margin-right: auto; padding-left: 24px; padding-right: 24px; }
 .cv-hero { padding-top: 64px; padding-bottom: 16px; }
 .cv-hero h1 { font-size: clamp(36px, 5vw, 56px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; margin: 0; }
@@ -413,13 +397,9 @@ a { color: var(--tan-ink); }
 .cv-pub-venue { font-size: 14.5px; color: var(--ink-2); margin-top: 4px !important; line-height: 1.5; }
 .cv-pub-when { font-size: 13.5px; color: var(--ink-3); margin-top: 2px !important; }
 .cv-footer { margin-top: 48px; }
-@media (max-width: 640px) {
-  .cv-hero { padding-top: 36px; }
-  .cv-skills > div { grid-template-columns: 1fr; gap: 2px; }
-}
 
 /* 404 */
-.not-found { max-width: 560px; margin: 0 auto; padding: 96px 24px; text-align: center; }
+.not-found { flex: 1; min-height: 0; overflow-y: auto; width: 100%; max-width: 560px; margin: 0 auto; padding: 96px 24px; text-align: center; }
 .not-found-code { margin: 0; font-family: var(--mono); font-size: 14px; letter-spacing: 0.12em; color: var(--tan-ink); }
 .not-found h1 { margin: 8px 0 12px; font-size: 32px; line-height: 1.2; }
 .not-found p { color: var(--ink-2); line-height: 1.6; }
@@ -446,7 +426,63 @@ a { color: var(--tan-ink); }
 .series-list-title { font-size: 17px; font-weight: 600; line-height: 1.35; }
 .series-list a:hover .series-list-title { color: var(--tan-ink); }
 .series-list-meta { font-size: 13px; color: var(--ink-3); }
-@media (max-width: 600px) { .series-nav { grid-template-columns: 1fr; } .series-next { grid-column: 1; } }
+/* ---------- responsive tiers ----------
+   Only two width breakpoints, so a rule has one obvious home:
+   767px  below tablet: columns stack, side panels become strips, the Work page opens on the list
+          (keep in sync with the matchMedia in WorkViewContext.tsx)
+   520px  small phones: tighter chrome and spacing
+   Wider than the content, pages stay centred (max-width on each container); 1600px+ widens them. */
+@media (max-width: 767px) {
+  .hint { display: none; } /* its ⌘/Ctrl wording is desktop-only, and the view switch needs the row */
+  .brand strong, .brand span { display: none; } /* the logo alone carries the name below tablet width; the nav needs the room */
+  .stage.page { padding: 12px; }
+  .slide-body { padding: 18px 20px 24px; }
+  .slide h2 { font-size: 30px; }
+  .slide .lead { font-size: 17px; }
+  .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 40px; }
+  .avatar { width: 220px; height: 220px; order: -1; }
+  .work-list { grid-template-columns: 1fr; }
+  .blog-layout { display: block; }
+  .blog-nav { position: static; padding: 20px 16px 0; max-height: none; overflow: visible; }
+  .blog-nav > ul { display: flex; flex-wrap: wrap; gap: 6px; }
+  .blog-nav > ul > li { border: 1px solid var(--line); border-radius: 999px; }
+  .blog-nav-row, .blog-nav-row-plain { padding: 0 12px; } /* equal left and right, so a capsule is symmetrical around its text and count */
+  .blog-nav-row a { padding: 4px 0; font-weight: 500; justify-content: flex-start; }
+  .blog-nav-all { padding-right: 10px; }
+  .blog-nav-posts, .blog-nav-row button { display: none; }
+  .blog { padding: 24px 16px 64px; }
+  .cv-hero { padding-top: 36px; }
+  .cv-skills > div { grid-template-columns: 1fr; gap: 2px; }
+  .series-nav { grid-template-columns: 1fr; }
+  .series-next { grid-column: 1; }
+}
+@media (max-width: 520px) {
+  .topbar { padding: 12px 16px; }
+  .actions { gap: 0; }
+  .nav-link { padding: 6px 7px; font-size: 14px; }
+  .pill { padding: 6px 12px; font-size: 13px; }
+  .theme-toggle { width: 30px; height: 30px; margin-left: 4px; }
+  .slide-back-more { display: none; } /* "← Back" is enough; the long label wrapped onto two lines */
+  .cv > * { padding-left: 16px; padding-right: 16px; }
+  .cv-section { padding-top: 28px; }
+  .cv-item { grid-template-columns: minmax(0, 1fr); gap: 0; } /* drop the icon column: it cost ~50px of a ~300px screen */
+  .cv-icon { display: none; }
+  .cv-role-head { display: block; }
+  .cv-role-head h3 { display: block; font-size: 16px; line-height: 1.35; }
+  .cv-role-title, .cv-role-org { display: block; }
+  .cv-role-org { padding-left: 0; border-left: 0; margin-top: 2px; }
+  .cv-dates { display: block; white-space: normal; margin-top: 4px; }
+  .cv-bullets { padding-left: 16px; }
+  .cv-bullets li { font-size: 14.5px; line-height: 1.6; }
+  .cv-summary { font-size: 16px; }
+  .cv-skills > div { font-size: 14.5px; }
+}
+@media (min-width: 1600px) {
+  .hero, .home-section, .home-footer { max-width: 1280px; }
+  .blog-layout { max-width: 1360px; }
+  .list { max-width: 1360px; }
+  .cv > * { max-width: 1000px; }
+}
 
 /* Callouts in posts (> [!WARNING] Title): a highlighted block with an accent bar. See src/remarkCallouts.ts. */
 .post-body .callout { --callout: var(--tan); margin: 1.4em 0; padding: 14px 18px; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--callout); border-radius: 10px; }
