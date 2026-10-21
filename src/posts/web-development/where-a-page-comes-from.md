@@ -47,22 +47,29 @@ The HTML is usually only the beginning. Many of the later articles are about wha
 
 HTTPS is HTTP wrapped in TLS. TLS gives three things: **encryption** (nobody on the café Wi-Fi can read the traffic), **identity** (you are talking to the real `example.com`) and **integrity** (the content was not altered on the way). Browsers label plain HTTP pages "not secure".
 
-It is not only about the padlock. Some browser features, called secure-context features, work only on HTTPS or on `localhost`. Examples: Service Workers, geolocation, camera and microphone.
+It is not only about the padlock. A secure context is a page the browser trusts enough to unlock powerful features: one served over HTTPS, or from `localhost`. Those secure-context features include Service Workers, geolocation, camera and microphone.
+
+So on `http://localhost:3000` the camera and Service Workers work without HTTPS. The same page opened as `http://192.168.1.10:3000` from your phone does not count as `localhost`, and the browser blocks both.
 
 ## Four environments, two behaviours
 
-The same app runs in several places, and they do not all use HTTPS.
+The same app runs in several places, and they do not all use HTTPS. Plain HTTP on `localhost` is the easiest default for development, not a best practice. Switch to local HTTPS when one of these applies:
+
+- You test from a phone or another device on your network, for example `http://192.168.1.10:3000`.
+- You test `Secure` cookies or OAuth callbacks.
+- You use a custom local domain such as `http://app.local:3000` instead of `localhost`.
 
 | Environment | Protocol | Notes |
 | --- | --- | --- |
-| Development | HTTP on `localhost` | Use a tool such as mkcert for local HTTPS when you test `Secure` cookies or OAuth callbacks. |
-| Test | HTTP, usually in CI | Nobody opens it in a real browser. |
+| Development | HTTP on `localhost` by default | Use a tool such as mkcert for local HTTPS in the cases above. |
+| Test | HTTP, usually in CI | End-to-end tests (for example Playwright or Cypress) open a real browser but connect to `localhost`, so plain HTTP is fine. |
 | Staging | HTTPS | Set up the same way as production, so surprises show up here. |
 | Production | HTTPS only | Redirect HTTP to HTTPS and send an HSTS header so browsers stop trying HTTP. |
 
 The gaps between development and production cause a predictable set of bugs:
 
-- A cookie marked `Secure` is never sent over plain HTTP.
+- A cookie marked `Secure` is not sent over plain HTTP. Chrome and Firefox make an exception for `localhost`, but Safari does not, so a login that works in Chrome can silently fail in Safari during development.
+- A cookie with `SameSite=None` must also be `Secure`, so it disappears on plain HTTP. See [Authentication: session vs JWT](/blog/authentication-session-vs-jwt) for cookie attributes.
 - The OAuth redirect URL registered with the provider says `https://example.com/callback`, not `http://localhost:3000/callback`.
 - CORS allows one origin, but the page is served from another.
 - Mixed content: an HTTPS page that loads an `http://` image is blocked.

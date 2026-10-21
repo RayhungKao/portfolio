@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 400" role="img"><title>Each tool exists to fix a problem the previous step left</title><desc>A vertical chain of six steps: script tags, ES modules, package manager, compiler, bundler and framework. Each step has a sentence next to it describing the problem it solves.</desc><defs><marker id="arrow-toolchain-chain" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 400" role="img"><title>Each tool fixes a problem that appears as a project grows</title><desc>A vertical chain of six steps: script tags, ES modules, package manager, compiler, bundler and framework. Each step has a sentence next to it describing the problem it solves.</desc><defs><marker id="arrow-toolchain-chain" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
 <text class="ts" x="290" y="18">The problem it solves</text>
 <g class="c-gray"><rect x="20" y="30" width="230" height="44" rx="8" stroke-width="0.5"/><text class="th" x="135" y="52" text-anchor="middle" dominant-baseline="central">script tags</text></g>
 <text class="t" x="290" y="56">Starting point: every file shares one global scope</text>
@@ -17,4 +17,4 @@
 <line x1="135" y1="316" x2="135" y2="328" class="arr" marker-end="url(#arrow-toolchain-chain)"/>
 <g class="c-purple"><rect x="20" y="330" width="230" height="44" rx="8" stroke-width="0.5"/><text class="th" x="135" y="352" text-anchor="middle" dominant-baseline="central">Framework</text></g>
 <text class="t" x="290" y="356">Adds routing, rendering modes and conventions</text>
-<text class="ts" x="20" y="392">Logical order, not strict history. Each step is the subject of a later article.</text></svg>
+<text class="ts" x="20" y="392">Logical order, not strict history. Each tool is the subject of a later article.</text></svg>

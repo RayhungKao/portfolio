@@ -10,7 +10,7 @@ draft: false
 
 **What you'll learn:** the three places code can run, what each one can and cannot do, and why this question sits underneath almost every choice in web development.
 
-Choosing a technology is mostly deciding **when and where** each piece of work happens: at build time, on a server, or in the browser.
+How should a page be rendered? Where should a form be validated? Questions like these come down to one thing: **when and where** does the work happen? At build time, on a server, or in the browser.
 
 ## Three spots
 
@@ -48,10 +48,10 @@ Example: a drawing app that follows the mouse and paints on a `<canvas>`.
 | --- | --- | --- |
 | Who provides and runs it | You or a cloud provider | The user's device |
 | How many people it serves | Shared by everyone | One copy per open tab |
-| Can it be trusted | Yes, you control it | No, users can change anything |
+| Can it be trusted | Mostly: you control the code | No, users can change anything |
 | What it can reach | Databases, files, internal services | The DOM, canvas, `localStorage`, user actions |
 | Who pays for the compute | You | The user's device |
 | When it exists | Always on, or started on demand | While the page is open (a Service Worker is the exception) |
 
 > [!PRINCIPLE] Core principle
-> Choosing technology means deciding, for each piece of work, whether it happens at build time, on a server or in the browser.
+> For each piece of work, decide when and where it runs: build time, server or browser. That choice decides what the code can reach, who can see it, and who pays for it.
