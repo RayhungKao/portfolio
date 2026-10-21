@@ -14,7 +14,7 @@ Routing means mapping a URL to a screen. Three approaches exist, and they differ
 
 ![A router is four jobs](diagram:router-four-jobs)
 
-Matching turns the URL into a route. Rendering picks the component for that route. Subscription listens for URL changes, such as the back and forward buttons. Navigation handles jumps made in code and intercepts link clicks.
+Matching turns the URL into a route. Rendering picks the component for that route. Subscription keeps the screen in sync when the URL changes without your code, for example when someone presses Back or Forward. Navigation is the reverse: a link click or your own code changes the URL, without reloading the page.
 
 ## Three approaches
 
@@ -125,24 +125,27 @@ Since Next.js 15, `params` is a Promise, so it has to be awaited (Next.js 16 rem
 
 ## Pitfalls when you write it yourself
 
-- `pushState` does not fire `popstate`; only the browser's back and forward buttons do. After calling `pushState`, update your own state too.
-- Let Ctrl/Cmd+click, middle click, `target="_blank"` and external links through when you intercept link clicks.
-- After a navigation, scroll to the top; on back, restore the previous position if you can.
-- If slugs can contain non-ASCII characters, call `decodeURIComponent` when reading and `encodeURIComponent` when building links.
-- When deploying under a sub-path, set the build tool's `base`, and make the router handle the same prefix.
-- Normalise `/blog` and `/blog/` to the same route.
+A hand-written router also has to handle scroll position, links opened in a new tab, non-ASCII slugs, and the base path when the site is deployed under a sub-path. Each is small, but together they are the cost listed in the table above.
 
 ## History mode or hash mode
 
-History mode (`/blog/my-post`) gives clean URLs, but the host must be configured with a fallback after deployment (see [Deployment and environment setup](/blog/deployment-and-env-setup)). Hash mode (`/#/blog/my-post`) needs no configuration, but the URL is uglier and everything after the `#` is never sent to the server.
+A single-page app has one HTML file, but its URLs can look like many pages. There are two ways to write them.
+
+- **History mode** (`/blog/my-post`): clean URLs. But if someone refreshes or opens that link directly, the browser asks the server for `/blog/my-post`, and no such file exists. The host has to be set up to answer unknown paths with the app's `index.html` (a fallback). See [Deployment and environment setup](/blog/deployment-and-env-setup).
+- **Hash mode** (`/#/blog/my-post`): the browser never sends anything after the `#` to the server, so the server always returns `index.html` and needs no setup. The cost is uglier URLs, and the server cannot see the part after the `#`.
 
 ## Server-side routing also exists
 
-Everything above is about the browser deciding which screen to show. A backend has its own router, with the same idea: a URL and an HTTP method map to a handler. `GET /orders/42` runs the function that returns order 42. The difference is what gets chosen. A frontend router decides **which component** to render; a backend router decides **which function** runs. Frameworks that do both, like Next.js, use the same folder-based idea for each. How the server side works is in [Inside a backend](/blog/inside-a-backend).
+A backend has a router too. It maps a URL and an HTTP method to a function: `GET /orders/42` runs the function that returns order 42. A frontend router picks which component to show, and a backend router picks which function to run. Next.js uses folders for both: `app/blog/[slug]/page.tsx` is a page, and `app/api/orders/[id]/route.ts` is a backend function. How the server side works is in [Inside a backend](/blog/inside-a-backend).
 
 ## When to move up
 
-Move to a router library or framework when you need nested layouts, per-route code splitting, per-route data loading, or per-route error boundaries.
+Move to a router library or framework when hand-written routing starts to strain. For example, when you need:
+
+- **Nested layouts**: a sidebar that stays on screen while only the inner page changes.
+- **Code splitting per route**: each page's code downloads only when someone visits it.
+- **Data loading per route**: a page's data starts loading as soon as its route matches.
+- **Error handling per route**: an error on one page shows an error screen without breaking the whole app.
 
 > [!PRINCIPLE] Core principle
 > Routing looks like one `switch` but is four jobs. Write it yourself while routes are few, and move to a library or framework when the needs grow.

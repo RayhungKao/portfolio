@@ -8,7 +8,7 @@ part: The toolchain
 draft: false
 ---
 
-**What you'll learn:** where the line between a UI library and a framework sits, how to choose each, and how to read market numbers without misreading them.
+**What you'll learn:** where the line between a UI library and a framework sits, when you need a framework, how to choose a UI library, and how to read market numbers without misreading them.
 
 A UI library decides **how a screen is built**. A framework decides **how the whole site works**. They are different layers, not substitutes.
 
@@ -34,12 +34,12 @@ A UI library handles components, state and updating the screen. The table lists 
 | Next.js | React | Full stack, SSR and SSG, file-based routing |
 | Nuxt | Vue | The full-stack framework for Vue |
 | SvelteKit | Svelte | The full-stack framework for Svelte |
-| Astro | Several | Content sites first, static HTML by default |
-| React Router (framework mode) | React | Built on Vite, with SSR and pre-rendering options |
+| Astro | React, Vue, Svelte and others | Content sites first, static HTML by default |
+| React Router (framework mode) | React | A routing library that can also run as a framework, built on Vite, with SSR and pre-rendering options |
 
 ## When you need a framework
 
-You need one when you want SSG or SSR, file-based routing, API routes or SEO. A logged-in app (a SPA) needs only a UI library and a build tool.
+You need one when you want SSG or SSR, file-based routing or API routes. A logged-in app (a SPA) needs only a UI library and a build tool.
 
 ## Choosing a UI library
 
