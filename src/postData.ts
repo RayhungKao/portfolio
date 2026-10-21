@@ -42,6 +42,10 @@ function postFiles(dir: string): string[] {
   });
 }
 
+/** Reading speed for the "min read" label. Dense technical series (tables, code, new terms) are read slower than prose. */
+const WORDS_PER_MINUTE = 230;
+const WORDS_PER_MINUTE_BY_SERIES: Record<string, number> = { 'web-development': 150 };
+
 function parse(file: string, raw: string): Post & { draft: boolean } {
   const slug = path.basename(file, '.md');
   const { data: meta, content } = matter(raw);
@@ -69,7 +73,7 @@ function parse(file: string, raw: string): Post & { draft: boolean } {
     summary,
     body,
     category: series ? undefined : str(meta.category) || UNCATEGORIZED,
-    readingMinutes: Math.max(1, Math.ceil((words + cjk / 2) / 230)),
+    readingMinutes: Math.max(1, Math.ceil((words + cjk / 2) / ((series && WORDS_PER_MINUTE_BY_SERIES[series]) || WORDS_PER_MINUTE))),
     tags,
   };
 }
