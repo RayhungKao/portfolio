@@ -92,7 +92,7 @@ export function Slide({ card, index, total, origin, phase, onCoverCard, onEntere
 
   const controls = (
     <div className="slide-controls">
-      <button className="slide-back" onClick={onClose}>← Back to the desk</button>
+      <button className="slide-back" onClick={onClose}>← Back<span className="slide-back-more"> to the desk</span></button>
       <div className="slide-nav">
         <button onClick={onPrev} aria-label="Previous">‹</button>
         <span>{index + 1} / {total}</span>

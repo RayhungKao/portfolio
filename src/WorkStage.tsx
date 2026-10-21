@@ -8,6 +8,7 @@ import { navigate } from './router';
 import { Slide, type SlidePhase } from './Slide';
 import { DeckContent, SLIDE_W, measureLayouts } from './DeckContent';
 import { useWorkView } from './WorkViewContext';
+import { ViewSwitch } from './ViewSwitch';
 
 type SlideState = { id: string; origin: Rect2D | null; phase: SlidePhase };
 
@@ -154,6 +155,8 @@ export default function WorkStage() {
 
   return (
     <div className="stage-host" ref={stageRef}>
+      {/* One switch for both views, so it never moves when you toggle. */}
+      <ViewSwitch hidden={focused} />
       {view === 'desk' ? (
         <main className={focused ? 'desk focused' : 'desk'}>
           <div className="canvas-slot" ref={hostRef} />
