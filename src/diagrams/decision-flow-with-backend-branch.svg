@@ -24,5 +24,5 @@
 <path d="M442 294 H668 V66 H652" fill="none" stroke="var(--b)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
 <path d="M668 148 H652" fill="none" stroke="var(--b)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
 <path d="M668 230 H652" fill="none" stroke="var(--b)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah9-decision-flow-with-backend-branch)"/>
-<text class="ts" x="556" y="310" text-anchor="middle">beside any of the three (Part 6)</text>
+<text class="ts" x="556" y="310" text-anchor="middle">beside any of the three (Parts 6 to 7)</text>
 <text class="ts" x="20" y="342">Purple: what you build. Dashed: an add-on that sits beside any rendering mode.</text></svg>

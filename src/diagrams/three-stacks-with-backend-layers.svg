@@ -28,4 +28,4 @@
 <g class="c-gray"><rect x="310" y="310" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="390" y="330" text-anchor="middle" dominant-baseline="central">static host / CDN</text></g>
 <g class="c-gray"><rect x="480" y="310" width="160" height="40" rx="6" stroke-width="0.5"/><text class="ts" x="560" y="330" text-anchor="middle" dominant-baseline="central">Node, serverless, or edge</text></g>
 <text class="ts" x="10" y="378">Purple: you write or run it. Gray: a provider runs it. Teal: where your data lives.</text>
-<text class="ts" x="10" y="396">Dashed: optional. Add it when a need from Part 6 appears.</text></svg>
+<text class="ts" x="10" y="396">Dashed: optional. Add it when a need from Parts 6 to 8 appears.</text></svg>

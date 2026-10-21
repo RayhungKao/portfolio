@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: "Verify a Firebase token in your own API, turn mixed credentials into one internal JWT, and keep sessions alive with refresh tokens."
 series: web-development
 order: 903
-part: Parked for a later series
+part: Backend in code
 draft: true
 ---
 
