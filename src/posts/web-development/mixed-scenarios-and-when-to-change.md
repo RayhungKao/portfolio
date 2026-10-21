@@ -3,8 +3,8 @@ title: Mixed scenarios and when to change
 date: 2026-10-18
 summary: Five real setups with a reason for every choice, and the signals that tell you it is time to change one of them.
 series: web-development
-order: 610
-part: Backend in practice
+order: 706
+part: Choosing a backend architecture
 draft: false
 ---
 

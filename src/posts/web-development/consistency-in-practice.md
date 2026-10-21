@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: "How a transaction callback commits or rolls back, when to use a row lock, what isolation levels change, and how an idempotency key survives a lost response."
 series: web-development
 order: 904
-part: Parked for a later series
+part: Backend in code
 draft: true
 ---
 

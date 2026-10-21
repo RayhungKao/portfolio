@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: "A full Nginx config behind Cloudflare, the Caddy equivalent, and four setups from a static site to a managed platform."
 series: web-development
 order: 901
-part: Parked for a later series
+part: Backend in code
 draft: true
 ---
 

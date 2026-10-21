@@ -3,8 +3,8 @@ title: Choosing the stack
 date: 2026-10-18
 summary: Choose per capability, not per brand. Backend-as-a-service, serverless and a full server are the three common bundles.
 series: web-development
-order: 609
-part: Backend in practice
+order: 704
+part: Choosing a backend architecture
 draft: false
 ---
 

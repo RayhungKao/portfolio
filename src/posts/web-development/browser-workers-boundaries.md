@@ -3,8 +3,8 @@ title: "Browser workers: what crosses the boundary, scope and updates"
 date: 2026-10-18
 summary: "What a copy and a transfer cost when data crosses to a Web Worker, and the scope, update and HTTPS rules that trip people up with Service Workers."
 series: web-development
-order: 704
-part: Going further
+order: 307
+part: The toolchain
 draft: false
 ---
 

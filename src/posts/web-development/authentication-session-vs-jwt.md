@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: Two ways for a server to remember who you are, how cookies and headers carry them, and which tools to reach for.
 series: web-development
 order: 604
-part: Backend in practice
+part: How a backend works
 draft: false
 ---
 

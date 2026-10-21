@@ -4,7 +4,7 @@ date: 2026-10-18
 summary: "How a middleware chain stops a request early, how three entry points share one service, and what Zod validation looks like."
 series: web-development
 order: 902
-part: Parked for a later series
+part: Backend in code
 draft: true
 ---
 

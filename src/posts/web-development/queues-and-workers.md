@@ -3,8 +3,8 @@ title: "Queues and workers: doing slow work after the response"
 date: 2026-10-18
 summary: "A queue lets a request finish quickly while a worker does the slow job, and the design questions that follow: lost jobs, failures, duplicates and which queue to pick."
 series: web-development
-order: 701
-part: Going further
+order: 801
+part: Growing the backend
 draft: false
 ---
 
