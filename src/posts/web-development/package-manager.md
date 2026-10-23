@@ -2,7 +2,7 @@
 title: "Package managers: npm, Yarn and pnpm"
 date: 2026-10-18
 summary: "All three read package.json, download dependencies and write a lockfile. They differ in how dependencies land in your project."
-series: web-development
+series: web-frontend
 order: 305
 part: The toolchain
 draft: false

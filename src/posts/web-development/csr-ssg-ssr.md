@@ -2,7 +2,7 @@
 title: "When the HTML is produced: CSR, SSG and SSR"
 date: 2026-10-18
 summary: "The three rendering modes differ in one thing, the moment the page HTML is produced, and that moment sets their costs."
-series: web-development
+series: web-frontend
 order: 202
 part: Needs to architecture
 draft: false

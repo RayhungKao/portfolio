@@ -2,7 +2,7 @@
 title: "Build tools: Vite, webpack and Turbopack"
 date: 2026-10-18
 summary: "A build tool is what shows you results while you code and produces files before you ship. The dev server and the build do different things."
-series: web-development
+series: web-frontend
 order: 303
 part: The toolchain
 draft: false

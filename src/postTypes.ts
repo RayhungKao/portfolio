@@ -31,7 +31,7 @@ export type Post = {
   body: string;
   /** Sidebar category. Not set for a post in a series: that post is listed under its series instead. */
   category?: string;
-  /** Minutes, from the word count (230 words a minute, 150 for the web-development series; rounded up). */
+  /** Minutes, from the word count (230 words a minute, 150 for the web-frontend and web-backend series; rounded up). */
   readingMinutes: number;
   tags: string[];
 };

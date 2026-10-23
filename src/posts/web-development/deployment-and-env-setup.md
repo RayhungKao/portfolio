@@ -2,7 +2,7 @@
 title: "Deployment and environment setup: hosting, CI and environment variables"
 date: 2026-10-18
 summary: "Static hosting needs a fallback, cache headers and a base path; environment variables are public; CI runs the same steps every time."
-series: web-development
+series: web-frontend
 order: 402
 part: Ship it
 draft: false

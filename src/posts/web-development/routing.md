@@ -2,7 +2,7 @@
 title: "Routing: write it yourself, use a library, or file-system routing"
 date: 2026-10-18
 summary: "Routing maps a URL to a screen. A router is four jobs, and there are three ways to get them."
-series: web-development
+series: web-frontend
 order: 302
 part: The toolchain
 draft: false

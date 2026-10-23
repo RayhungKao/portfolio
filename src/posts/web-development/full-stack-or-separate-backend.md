@@ -2,8 +2,8 @@
 title: "Full-stack framework or a separate backend"
 date: 2026-10-18
 summary: Two independent questions, where the HTML comes from and whether the backend is separate, and what Next.js gives you on the server.
-series: web-development
-order: 703
+series: web-backend
+order: 201
 part: Choosing a backend architecture
 draft: false
 ---
@@ -67,7 +67,7 @@ Choose B or C when:
 A useful middle path is to start with A and let the code tell you when to split. If your route handlers keep calling one service module, that module is already the future backend.
 
 > [!NOTE] Where the rest lives
-> How Server Actions and Route Handlers differ in detail is covered in [Server and client components](/blog/server-and-client-components), in Part 5.
+> How Server Actions and Route Handlers differ in detail is covered in [Server and client components](/blog/server-and-client-components), in the [frontend series](/series/web-frontend).
 
 > [!PRINCIPLE] Core principle
 > Rendering answers where the HTML comes from. Deployment answers whether the backend is separate. They are two independent axes.

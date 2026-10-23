@@ -2,7 +2,7 @@
 title: "Migrating a Vite SPA to Next.js: what changed and how to verify"
 date: 2026-10-18
 summary: "Most components move unchanged. What changes is routing, where data comes from and which code may only run in the browser."
-series: web-development
+series: web-frontend
 order: 504
 part: Next.js in practice
 draft: false
@@ -48,4 +48,4 @@ To keep the change small, the migration kept `<a href>` with a global click inte
 > [!PRINCIPLE] Core principle
 > Migration is not a rewrite. Separate routing, data source and browser-only code first, move the other components unchanged, then use an automated flow to show behaviour did not change.
 
-For the overall recap of choices, see [Stack cheat sheet](/blog/stack-cheat-sheet), or go back to the [series page](/series/web-development).
+For the overall recap of choices, see [Stack cheat sheet](/blog/stack-cheat-sheet), or go back to the [series page](/series/web-frontend). The [backend series](/series/web-backend) picks up where this one stops.

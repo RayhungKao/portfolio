@@ -2,8 +2,8 @@
 title: "Inside a backend: the request lifecycle"
 date: 2026-10-18
 summary: The five layers a request passes through, what each one is responsible for, and which error status each can return.
-series: web-development
-order: 603
+series: web-backend
+order: 103
 part: How a backend works
 draft: false
 ---

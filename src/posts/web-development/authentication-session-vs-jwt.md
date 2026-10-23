@@ -2,8 +2,8 @@
 title: "Authentication: session vs JWT"
 date: 2026-10-18
 summary: Two ways for a server to remember who you are, how cookies and headers carry them, and which tools to reach for.
-series: web-development
-order: 604
+series: web-backend
+order: 104
 part: How a backend works
 draft: false
 ---

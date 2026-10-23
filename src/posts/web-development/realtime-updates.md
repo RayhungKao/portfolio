@@ -2,8 +2,8 @@
 title: "Realtime updates: polling, SSE, WebSocket and who holds the connection"
 date: 2026-10-18
 summary: "Three ways to push updates to a browser, and three ways to decide who keeps the connection open."
-series: web-development
-order: 802
+series: web-backend
+order: 302
 part: Growing the backend
 draft: false
 ---

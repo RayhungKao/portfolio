@@ -2,7 +2,7 @@
 title: "Where a web page comes from: browser, server and HTTP"
 date: 2026-10-18
 summary: "The path of one request from typing a URL to seeing a page: browser, server, HTTP, and why HTTPS matters."
-series: web-development
+series: web-frontend
 order: 101
 part: The map
 draft: false

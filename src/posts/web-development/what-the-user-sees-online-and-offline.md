@@ -2,8 +2,8 @@
 title: What the user sees, online and offline
 date: 2026-10-18
 summary: How status codes turn into screens, how an offline action moves through five states, and which actions should never be queued.
-series: web-development
-order: 607
+series: web-backend
+order: 107
 part: How a backend works
 draft: false
 ---
