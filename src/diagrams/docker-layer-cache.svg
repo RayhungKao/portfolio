@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" role="img"><title>Layer order decides what a rebuild costs</title><desc>After editing server.js, a Dockerfile that copies the dependency list and installs before copying the source reuses every layer but the last one. A Dockerfile that copies all the source first rebuilds from that line on, so it reinstalls every dependency.</desc>
+<text class="th" x="160" y="30" text-anchor="middle" dominant-baseline="central">Dependencies first</text>
+<text class="th" x="520" y="30" text-anchor="middle" dominant-baseline="central">Source first</text>
+<g class="c-gray"><rect x="20" y="50" width="280" height="34" rx="6" stroke-width="0.5"/><text class="ts" x="160" y="67" text-anchor="middle" dominant-baseline="central">FROM node:22-slim</text></g>
+<g class="c-gray"><rect x="20" y="92" width="280" height="34" rx="6" stroke-width="0.5"/><text class="ts" x="160" y="109" text-anchor="middle" dominant-baseline="central">WORKDIR /app</text></g>
+<g class="c-gray"><rect x="20" y="134" width="280" height="34" rx="6" stroke-width="0.5"/><text class="ts" x="160" y="151" text-anchor="middle" dominant-baseline="central">COPY package*.json ./</text></g>
+<g class="c-gray"><rect x="20" y="176" width="280" height="34" rx="6" stroke-width="0.5"/><text class="ts" x="160" y="193" text-anchor="middle" dominant-baseline="central">RUN npm ci</text></g>
+<g class="c-coral"><rect x="20" y="218" width="280" height="34" rx="6" stroke-width="0.5"/><text class="ts" x="160" y="235" text-anchor="middle" dominant-baseline="central">COPY . .</text></g>
+<g class="c-gray"><rect x="380" y="50" width="280" height="34" rx="6" stroke-width="0.5"/><text class="ts" x="520" y="67" text-anchor="middle" dominant-baseline="central">FROM node:22-slim</text></g>
+<g class="c-gray"><rect x="380" y="92" width="280" height="34" rx="6" stroke-width="0.5"/><text class="ts" x="520" y="109" text-anchor="middle" dominant-baseline="central">WORKDIR /app</text></g>
+<g class="c-coral"><rect x="380" y="134" width="280" height="34" rx="6" stroke-width="0.5"/><text class="ts" x="520" y="151" text-anchor="middle" dominant-baseline="central">COPY . .</text></g>
+<g class="c-coral"><rect x="380" y="176" width="280" height="34" rx="6" stroke-width="0.5"/><text class="ts" x="520" y="193" text-anchor="middle" dominant-baseline="central">RUN npm ci</text></g>
+<text class="ts" x="160" y="270" text-anchor="middle" dominant-baseline="central">Edit server.js: one small layer rebuilds</text>
+<text class="ts" x="520" y="270" text-anchor="middle" dominant-baseline="central">Edit server.js: every dependency reinstalls</text>
+<rect x="20" y="294" width="14" height="14" rx="3" class="c-gray" stroke-width="0.5"/><text class="ts" x="42" y="301" dominant-baseline="central">Reused from cache</text>
+<rect x="200" y="294" width="14" height="14" rx="3" class="c-coral" stroke-width="0.5"/><text class="ts" x="222" y="301" dominant-baseline="central">Rebuilt</text>
+</svg>
