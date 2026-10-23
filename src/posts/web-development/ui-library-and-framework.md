@@ -2,7 +2,7 @@
 title: "UI library and framework: how React, Vue, Next.js and Astro relate"
 date: 2026-10-18
 summary: "A UI library draws the screen, a framework runs the whole site, and they are different layers rather than rivals."
-series: web-development
+series: web-frontend
 order: 301
 part: The toolchain
 draft: false

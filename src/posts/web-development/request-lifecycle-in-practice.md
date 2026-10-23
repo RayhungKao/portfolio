@@ -2,8 +2,8 @@
 title: "The request lifecycle in practice: middleware, shared services and validation"
 date: 2026-10-18
 summary: "How a middleware chain stops a request early, how three entry points share one service, and what Zod validation looks like."
-series: web-development
-order: 902
+series: web-backend
+order: 402
 part: Backend in code
 draft: true
 ---

@@ -2,8 +2,8 @@
 title: When you need a backend
 date: 2026-10-18
 summary: Five conditions that decide whether a site needs a backend, and the six parts a complete web service is made of.
-series: web-development
-order: 601
+series: web-backend
+order: 101
 part: How a backend works
 draft: false
 ---

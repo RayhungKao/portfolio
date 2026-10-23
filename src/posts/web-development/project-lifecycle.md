@@ -2,7 +2,7 @@
 title: "Develop, build, deploy: the life of a project"
 date: 2026-10-18
 summary: "A project passes through install, development, build and deployment, and each stage optimizes for a different goal."
-series: web-development
+series: web-frontend
 order: 401
 part: Ship it
 draft: false

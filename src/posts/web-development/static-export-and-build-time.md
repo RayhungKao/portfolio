@@ -2,7 +2,7 @@
 title: "Static export: server code runs only at build time"
 date: 2026-10-18
 summary: "With output: 'export', the server in server components shrinks to the moment of the build. What that gives and what it gives up."
-series: web-development
+series: web-frontend
 order: 503
 part: Next.js in practice
 draft: false

@@ -2,9 +2,9 @@
 title: "Where server code runs: VPS, containers, PaaS and serverless"
 date: 2026-10-18
 summary: "Four ways to run code on every request, and what you manage in each."
-series: web-development
-order: 403
-part: Ship it
+series: web-backend
+order: 501
+part: Running the backend
 draft: false
 ---
 

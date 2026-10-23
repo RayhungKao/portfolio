@@ -2,7 +2,7 @@
 title: "App Router: folders are routes, layouts keep the screen alive"
 date: 2026-10-18
 summary: "In the Next.js App Router the URL comes from folders, and nested layouts survive navigation, which is how an interactive canvas stays put while the URL changes."
-series: web-development
+series: web-frontend
 order: 501
 part: Next.js in practice
 draft: false

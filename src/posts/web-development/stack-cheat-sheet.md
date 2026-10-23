@@ -2,15 +2,15 @@
 title: "Stack cheat sheet: three typical stacks and their trade-offs"
 date: 2026-10-18
 summary: "A quick reference that condenses the series into three typical stacks, a starting rule and a settings table."
-series: web-development
-order: 404
+series: web-frontend
+order: 403
 part: Ship it
 draft: false
 ---
 
 **What you'll learn:** three typical stacks layer by layer, how to pick a starting point, and a settings table you can return to.
 
-This is the series condensed into three typical stacks and the trade-offs between them. It covers the frontend parts from the earlier articles and the backend parts from the backend articles.
+This is the series condensed into three typical stacks and the trade-offs between them. It covers the frontend parts from the earlier articles and the backend parts from the [backend series](/series/web-backend).
 
 ![Three typical stacks, layer by layer, with the backend layers](diagram:three-stacks-with-backend-layers)
 
@@ -47,7 +47,7 @@ The three stacks match three architectures: A is a SPA, B is SSG, C is SSR. A an
 
 ## Going further
 
-For the rest of the series, see the [series page](/series/web-development). To see how Next.js is actually used once you have chosen it, continue with [Next.js in practice](/blog/app-router-and-layouts).
+For the rest of the series, see the [series page](/series/web-frontend). To see how Next.js is actually used once you have chosen it, continue with [Next.js in practice](/blog/app-router-and-layouts). For the server side, continue with the [backend series](/series/web-backend).
 
 > [!PRINCIPLE] Core principle
 > Use the simplest stack that meets today's need, and move up when a new need appears.

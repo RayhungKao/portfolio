@@ -2,8 +2,8 @@
 title: "The edge layer: CDN and reverse proxy"
 date: 2026-10-18
 summary: What Cloudflare, CloudFront, Nginx and Caddy each do, and how they stack in front of your app.
-series: web-development
-order: 602
+series: web-backend
+order: 102
 part: How a backend works
 draft: false
 ---

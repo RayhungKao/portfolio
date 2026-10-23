@@ -9,7 +9,7 @@
  * linkedin: https://www.linkedin.com/feed/update/urn:li:activity:...
  * image: /og/my-post.png     (optional PNG in public/; default is a card drawn from the title)
  * draft: true               (optional; hidden from the production build)
- * series: web-development    (optional; with order: 3, the post is 3rd in that series)
+ * series: web-frontend       (optional; with order: 3, the post is 3rd in that series)
  * part: Backend              (optional; groups a series under "Part N · Backend", numbered in reading order)
  * threads: https://...       (optional; adds a "Discuss on Threads" button; instagram: likewise)
  * summary: Optional one-line teaser for the post list.
@@ -44,7 +44,7 @@ function postFiles(dir: string): string[] {
 
 /** Reading speed for the "min read" label. Dense technical series (tables, code, new terms) are read slower than prose. */
 const WORDS_PER_MINUTE = 230;
-const WORDS_PER_MINUTE_BY_SERIES: Record<string, number> = { 'web-development': 150 };
+const WORDS_PER_MINUTE_BY_SERIES: Record<string, number> = { 'web-frontend': 150, 'web-backend': 150 };
 
 function parse(file: string, raw: string): Post & { draft: boolean } {
   const slug = path.basename(file, '.md');

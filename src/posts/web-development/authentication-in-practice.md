@@ -2,8 +2,8 @@
 title: "Authentication in practice: verifying Firebase tokens, gateways and refresh tokens"
 date: 2026-10-18
 summary: "Verify a Firebase token in your own API, turn mixed credentials into one internal JWT, and keep sessions alive with refresh tokens."
-series: web-development
-order: 903
+series: web-backend
+order: 403
 part: Backend in code
 draft: true
 ---

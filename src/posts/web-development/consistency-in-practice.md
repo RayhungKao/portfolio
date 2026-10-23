@@ -2,8 +2,8 @@
 title: "Consistency in practice: transactions, row locks, isolation levels and idempotency"
 date: 2026-10-18
 summary: "How a transaction callback commits or rolls back, when to use a row lock, what isolation levels change, and how an idempotency key survives a lost response."
-series: web-development
-order: 904
+series: web-backend
+order: 404
 part: Backend in code
 draft: true
 ---

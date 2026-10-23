@@ -2,7 +2,7 @@
 title: "Start with the need: seven common kinds of sites"
 date: 2026-10-18
 summary: "Content sites, portfolios, shops, social apps, dashboards, SaaS and creator tools each ask for different things from a stack."
-series: web-development
+series: web-frontend
 order: 201
 part: Needs to architecture
 draft: false

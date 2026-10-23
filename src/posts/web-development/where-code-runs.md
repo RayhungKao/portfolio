@@ -2,7 +2,7 @@
 title: "Where code runs: build time, server and browser"
 date: 2026-10-18
 summary: "Every technical choice decides whether code runs at build time, on a server or in the browser."
-series: web-development
+series: web-frontend
 order: 102
 part: The map
 draft: false

@@ -2,7 +2,7 @@
 title: "Why there are so many tools: from script tags to the toolchain"
 date: 2026-10-18
 summary: "Modules, packages, compilers, bundlers and frameworks appeared one after another, each fixing the last one's problem."
-series: web-development
+series: web-frontend
 order: 103
 part: The map
 draft: false

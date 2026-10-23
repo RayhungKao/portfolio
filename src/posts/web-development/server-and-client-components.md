@@ -2,7 +2,7 @@
 title: "Server components and client components: who runs where"
 date: 2026-10-18
 summary: "Files are server components by default; add 'use client' only for the small part that needs interaction or the browser. Plus the other server entry points in Next.js."
-series: web-development
+series: web-frontend
 order: 502
 part: Next.js in practice
 draft: false

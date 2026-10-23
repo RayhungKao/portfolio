@@ -2,8 +2,8 @@
 title: Transactions and concurrent writes
 date: 2026-10-18
 summary: How to stop overselling, lost updates and duplicate submissions with the smallest tool that works.
-series: web-development
-order: 606
+series: web-backend
+order: 106
 part: How a backend works
 draft: false
 ---

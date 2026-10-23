@@ -2,7 +2,7 @@
 title: "From needs to architecture: one decision flow"
 date: 2026-10-18
 summary: "Two questions pick a rendering mode, a third adds a backend, and the simplest architecture that works is the right place to start."
-series: web-development
+series: web-frontend
 order: 203
 part: Needs to architecture
 draft: false

@@ -2,7 +2,7 @@
 title: "Compiler and bundler: from TSX to files a browser can run"
 date: 2026-10-18
 summary: "A compiler rewrites one file at a time, a bundler reorganises the whole project, and they work as a relay."
-series: web-development
+series: web-frontend
 order: 304
 part: The toolchain
 draft: false
