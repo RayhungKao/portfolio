@@ -2,8 +2,8 @@
 title: "Backend frameworks in practice: what each one is for, and who uses it"
 date: 2026-10-21
 summary: "Frameworks in the same language differ in how much they decide for you. Real companies pick them for their team, their product and the system they already have."
-series: web-development
-order: 702
+series: web-backend
+order: 202
 part: Choosing a backend architecture
 draft: false
 ---

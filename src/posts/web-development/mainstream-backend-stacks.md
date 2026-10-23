@@ -2,8 +2,8 @@
 title: "The mainstream backend stacks: language, framework and database"
 date: 2026-10-21
 summary: "Seven language families cover most backends. Their frameworks name things differently, but the layers inside are the same."
-series: web-development
-order: 701
+series: web-backend
+order: 201
 part: Choosing a backend architecture
 draft: false
 ---

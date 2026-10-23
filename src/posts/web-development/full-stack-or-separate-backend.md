@@ -3,7 +3,7 @@ title: "Full-stack framework or a separate backend"
 date: 2026-10-18
 summary: Two independent questions, where the HTML comes from and whether the backend is separate, and what Next.js gives you on the server.
 series: web-backend
-order: 201
+order: 203
 part: Choosing a backend architecture
 draft: false
 ---

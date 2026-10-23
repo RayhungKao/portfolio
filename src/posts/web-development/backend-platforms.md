@@ -3,7 +3,7 @@ title: "Backend platforms: what each one bundles and where the rules live"
 date: 2026-10-18
 summary: "Six backend platforms compared by what they bundle, and why row-level security decides whether the browser may talk to the database directly."
 series: web-backend
-order: 203
+order: 205
 part: Choosing a backend architecture
 draft: false
 ---
