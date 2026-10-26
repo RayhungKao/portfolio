@@ -34,7 +34,7 @@ export const RESUME = {
   title: 'Software Engineer',
   location: 'Taipei, Taiwan',
   summary:
-    "Nearly three years as core developer on YouCam Online Editor at Perfect Corp — the company's only browser-based product, an AI photo and video editing platform in React and Next.js, grown from roughly 10 editing tools to 80+ across 17 locales. Worked from rendering performance to the backend boundary: SSE streaming, asynchronous task architecture, payment integrations, and the data layers beneath them. Earlier co-founded a startup and, as sole developer, built its full-stack web product end to end.",
+    "Nearly three years as core developer on YouCam Online Editor at Perfect Corp, an AI photo and video editing platform in React and Next.js, grown from roughly 10 editing tools to 80+ across 17 locales. Worked from rendering performance to the backend boundary: SSE streaming, asynchronous task architecture, payment integrations, and the data layers beneath them. Earlier co-founded a startup and, as sole developer, built its full-stack web product end to end.",
 
   experience: [
     {
