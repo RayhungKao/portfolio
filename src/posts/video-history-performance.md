@@ -1,32 +1,47 @@
 ---
-title: How I made YCO's video history handle media-heavy list performance
+title: "How I made YCO's video history handle a media-heavy list"
 date: 2026-07-12
 category: Performance
+summary: "Performance on a media-heavy list comes down to four axes: network, main thread, data structures, and memory. Picking a technique means knowing which axis it acts on."
 linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7481974349168566272/
 ---
-Media-heavy list performance requires network, main-thread, data-structure, pagination, and memory. Picking a technique means knowing exactly which axis it acts on.
+Performance on a media-heavy list comes down to four axes: network, main thread, data structures, and memory. Picking a technique means knowing which axis it acts on.
 
-Every user in our app has their own video history, with all their generated videos fetched and rendered in chronological order, each in whatever state it's in: done, still processing, or failed. It's the nastiest shape a frontend list can have: unbounded, media-heavy, and mixed-state. Early on it was capped at 30 items and still stuttered. Four main changes fixed it:
+Every user has their own video history: all their generated videos, newest first, each one done, still processing, or failed. That makes it the hardest shape a frontend list can have: unbounded, media-heavy, and mixed-state. Early on it was capped at 30 items and still stuttered.
 
-1. Cursor pagination. Load metadata for 30 videos at a time via a `cursor` until it returns `null`, instead of everything, so the artificial cap disappeared with no bandwidth hit.
+## Four fetches per item
 
-2. Lazy-load the media. Each item starts with `preload="none"` plus a `poster`, and we only fetch the actual video bytes when it's about to enter the viewport (using IntersectionObserver with a pre-warm margin). Initial load dropped ~95%.
+| What | When | How many |
+| --- | --- | --- |
+| List metadata (id, type) | On page entry | Every page, 30 at a time |
+| Detail JSON (video URL, poster URL, prompt, model) | After the whole list has loaded | Every item: 5 at a time for the first 15, then 3 |
+| Poster image | When its card mounts | Every card |
+| Video (mp4) | When its tile nears the viewport | Only the tiles near the screen |
 
-3. Never lock the main thread. Hydrate results in small chunks and yield to the browser between them (`yieldToMain` via setTimeout(0)), batching state updates instead of one per item fetched, so the UI stays responsive while the whole history renders in the background.
+## Five changes
 
-4. Fix redundant work at O(n²) complexity. Dedup the merged results at the write boundary with a `Set` instead of nested array scans.
+**1. Cursor pagination + head sync (network).** We load the list 30 items at a time until the cursor returns `null`. Within a session, we fetch only from the top until we hit an id we already have, then prepend what's new. No refetching the whole history.
 
-✅ Beyond those four, heavy-media performance has a checklist worth naming:
-5. Cap concurrent media fetches. Don't let a fast scroll fire dozens of requests at once.
+**2. Chunked detail fetches that yield (main thread).** Each item needs its own detail request: 5 in flight for the first screen, then 3 at a time. We yield to the browser between chunks with `setTimeout(0)`. Details are LRU-cached, and cache hits resolve almost synchronously, so without the yield a re-run would become one long task. Why not `scheduler.yield()`? It's in Chrome and Edge 129+ and Firefox 142+, but not in Safari. The next step is to feature-detect it and fall back to `setTimeout`.
 
-6. Fix the aspect-ratio of containers to reserve space and kill layout shift (CLS) as media pops in.
+**3. Batched store updates + Set dedup (main thread, data structures).** Results flush at most every 500ms, and the first flush is immediate. Each batch is one store update and one render, so cards mount in batches rather than one by one. Redux selectors and `React.memo` keep a flush from re-rendering cards that didn't change. The reducer dedups against a `Set` of existing ids instead of nested array scans, so it's O(n), not O(n²).
 
-7. `posters`/thumbnails as placeholders, so nothing shows a blank or downloads a full frame just to render.
+**4. Wire videos only when they're near the viewport (network, memory).** Every `<video>` starts with `preload="none"` and no source. When a tile comes within 200–400px of the viewport, an IntersectionObserver sets its `<source>` and calls `load()`. In Chrome, that path starts buffering a few seconds of video right away, and `preload="none"` doesn't stop it. We didn't design it that way, but it works for us: playback and replays start instantly. If bandwidth mattered more, we could set `video.src` instead: in Chrome, the video then waits at 0 bytes until it plays, at the cost of a short delay on first play. Off-screen tiles pause but keep their buffer. First-load video bandwidth dropped ~95%.
 
-8. Native `loading="lazy"` + `decoding="async"` for images. The free, zero-JS version of what our IntersectionObserver does for video.
+**5. Debounced hover-to-autoplay (main thread).** Only the tile you settle on for 300ms starts playing, and leaving cancels it. Sweeping the mouse across the list no longer fires a `play()` and a decode on every tile.
 
-9. Debounce hover-to-autoplay. Only the tile you actually settle on starts playing (300ms debounce, cancelled if you leave). Sweeping the mouse across the grid no longer fires a play() + decode on every video it crosses.
+## Also in place
 
-🤔 Finally, we may ask "why IntersectionObserver and not list virtualization?"
+- **Fixed aspect-ratio containers.** Each card reserves its space up front, so nothing shifts the layout (CLS) as media loads in.
+- **Native `loading="lazy"` + `decoding="async"` for images.** The free, zero-JS version of what our IntersectionObserver does for video.
 
-Because they don't solve the same problem. IntersectionObserver controls bytes: what downloads. Virtualization controls DOM nodes: what stays mounted. We want smooth UX so we keep our user's loaded buffer in case they scroll away and back immediately, so replaying an older video is then instant. Virtualization unmounts off-screen items and destroys that. It also would have broken the imperative refs our video players expose.
+## Why IntersectionObserver and not virtualization?
+
+They solve different problems. IntersectionObserver controls which videos download. Virtualization controls which DOM nodes stay mounted. We keep cards mounted so a buffered video replays instantly and our players' imperative refs stay intact.
+
+The cost is real. DOM size grows with history length, and a buffer only survives while its card stays mounted: switching the type filter unmounts cards, and their buffers go with them. If histories keep growing, virtualization comes back on the table, and the hard part will be keeping buffers alive across unmounts.
+
+## Not done yet
+
+- **Lazy posters.** Every card's poster loads as soon as it mounts, so a long history still downloads every thumbnail up front.
+- **Start hydration earlier.** Details wait until the whole list has loaded, so a longer history delays the first card.
