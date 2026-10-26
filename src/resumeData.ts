@@ -34,7 +34,7 @@ export const RESUME = {
   title: 'Software Engineer',
   location: 'Taipei, Taiwan',
   summary:
-    "From 2024 to 2026, core developer on YouCam Online Editor at Perfect Corp — the company's only browser-based product, an AI photo and video editing platform in React and Next.js, grown from roughly 10 editing tools to 80+ across 17 locales. Works from rendering performance to the backend boundary: SSE streaming, asynchronous task architecture, payment integrations, and the data layers beneath them. Earlier co-founded a startup and, as sole developer, built its full-stack web product end to end.",
+    "Nearly three years as core developer on YouCam Online Editor at Perfect Corp, an AI photo and video editing platform in React and Next.js, grown from roughly 10 editing tools to 80+ across 17 locales. Worked from rendering performance to the backend boundary: SSE streaming, asynchronous task architecture, payment integrations, and the data layers beneath them. Earlier co-founded a startup and, as sole developer, built its full-stack web product end to end.",
 
   experience: [
     {
@@ -77,7 +77,7 @@ export const RESUME = {
   ] as Role[],
 
   skills: [
-    ['Languages', 'JavaScript (ES6+), TypeScript, Ruby, HTML5, CSS3, SCSS, SQL, Solidity'],
+    ['Languages', 'JavaScript (ES6+), TypeScript, Ruby, HTML5, CSS3, SCSS, SQL, Solidity; familiar with Python and Go'],
     ['Frameworks and Libraries', 'React.js, Next.js, Redux, Redux Toolkit, Node.js, Ruby on Rails, Fabric.js, Strapi'],
     ['Frontend Engineering', 'Server-Sent Events, Web Workers, IndexedDB, RESTful APIs, performance profiling, state management, async task orchestration, i18n, SEO'],
     ['Platforms and Tools', 'Git, Docker, AWS (S3, CloudFront), Stripe, Firebase, Google Analytics 4, Figma'],
