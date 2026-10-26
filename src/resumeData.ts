@@ -60,6 +60,7 @@ export const RESUME = {
   startups: [
     {
       org: 'Dafuon (Startup Matching Platform)',
+      orgUrl: 'https://startup-speedup.web.app/',
       title: 'Product Lead',
       dates: 'October 2022 – June 2023',
       bullets: [
@@ -68,6 +69,7 @@ export const RESUME = {
     },
     {
       org: 'Tripbook (Campus Tour Web App)',
+      orgUrl: 'https://tripbook-app-j206.onrender.com/',
       title: 'Co-Founder and Full-Stack Developer',
       dates: 'April 2022 – October 2022',
       bullets: [
