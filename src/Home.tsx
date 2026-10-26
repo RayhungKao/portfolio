@@ -14,7 +14,7 @@ import { SocialLinks } from './SocialLinks';
  */
 const SUGGESTIONS = [
   { label: 'How I built the AI Agent', href: '/work/ai-agent', keywords: 'ai agent chat sse streaming llm assistant' },
-  { label: 'Cutting load time by 95%', href: '/work/performance', keywords: 'performance video history speed load fast' },
+  { label: 'Cutting video bandwidth by 95%', href: '/work/performance', keywords: 'performance video history speed load fast bandwidth' },
   { label: 'Tripbook, my startup', href: '/work/tripbook', keywords: 'tripbook startup rails ruby postgres redis full-stack backend' },
   { label: 'Read the blog', href: '/blog', keywords: 'blog writing posts articles notes' },
   { label: 'Payments and subscriptions', href: '/work/payments', keywords: 'stripe payment paypal subscription billing checkout' },
