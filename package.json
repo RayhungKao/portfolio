@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/fetch-views.mjs",
     "build": "next build"
   },
   "dependencies": {

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CARDS, LINKS } from './content';
-import { UNCATEGORIZED, formatDate, listItems, type Post, type Series } from './postTypes';
+import { UNCATEGORIZED, formatDate, formatViews, listItems, type Post, type Series } from './postTypes';
 import { AppLink } from './AppLink';
 import { asset, isInternal, navigate } from './router';
 import { SocialLinks } from './SocialLinks';
@@ -158,7 +158,8 @@ function Avatar() {
   );
 }
 
-export function Home({ posts, series }: { posts: Post[]; series: Series[] }) {
+/** `siteViews` is the all-time total from GA4 (src/viewData.ts); unset, the footer shows no count. */
+export function Home({ posts, series, siteViews }: { posts: Post[]; series: Series[]; siteViews?: number }) {
   const work = SELECTED.map((id) => CARDS.find((c) => c.id === id)!).filter(Boolean);
   const latest = listItems(posts, series).slice(0, 3);
 
@@ -225,6 +226,7 @@ export function Home({ posts, series }: { posts: Post[]; series: Series[] }) {
                 <Link href={`/blog/${item.post.slug}`}>
                   <span className="latest-meta">
                     {item.post.category ?? UNCATEGORIZED} · {formatDate(item.post.date)} · {item.post.readingMinutes} min read
+                    {item.post.views !== undefined && ` · ${formatViews(item.post.views)}`}
                   </span>
                   <span className="latest-title">{item.post.title}</span>
                 </Link>
@@ -234,7 +236,10 @@ export function Home({ posts, series }: { posts: Post[]; series: Series[] }) {
         </ul>
       </section>
 
-      <footer className="home-footer">© {new Date().getFullYear()} Jui-Hung (Ray) Kao</footer>
+      <footer className="home-footer">
+        © {new Date().getFullYear()} Jui-Hung (Ray) Kao
+        {siteViews !== undefined && ` · ${formatViews(siteViews)} on this site`}
+      </footer>
     </main>
   );
 }

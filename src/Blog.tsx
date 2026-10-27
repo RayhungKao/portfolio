@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState, type ReactNode } from 'react';
-import { UNCATEGORIZED, categorySlug, formatDate, groupByPart, listItems, type Category, type Post, type Series, type SeriesNav } from './postTypes';
+import { UNCATEGORIZED, categorySlug, formatDate, formatViews, groupByPart, listItems, type Category, type Post, type Series, type SeriesNav } from './postTypes';
 
 function PostMeta({ post }: { post: Post }) {
   return (
@@ -10,6 +10,7 @@ function PostMeta({ post }: { post: Post }) {
       {post.category && <Link href={`/blog/category/${categorySlug(post.category)}`}>{post.category}</Link>}
       {post.date && <time dateTime={post.date}>{formatDate(post.date)}</time>}
       <span>{post.readingMinutes} min read</span>
+      {post.views !== undefined && <span>{formatViews(post.views)}</span>}
     </div>
   );
 }
@@ -217,6 +218,7 @@ export function SeriesPage({ series, allSeries, posts, categories }: { series: S
                       <span className="series-list-title">{p.title}</span>
                       <span className="series-list-meta">
                         {p.date && formatDate(p.date)} · {p.readingMinutes} min read
+                        {p.views !== undefined && ` · ${formatViews(p.views)}`}
                       </span>
                     </Link>
                   </li>
