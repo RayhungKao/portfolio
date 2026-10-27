@@ -30,6 +30,9 @@ Fabric.js desk on /work. Deployed to GitHub Pages by `.github/workflows/deploy.y
   `asset()` from `src/router.ts`. Never hard-code `/portfolio`.
 - `navigate()` (router.ts) is for code outside React components; `RouterBridge` wires it up.
 - Icons: edit `src/icons/*.svg`, then run `node scripts/gen-icons.mjs` (no `?raw` in Next).
+- Analytics: GTM (which loads GA4) and the Search Console tag come from env vars in `app/layout.tsx`;
+  view counts come from `views.json`, written by `scripts/fetch-views.mjs` (prebuild) and read by
+  the server-only `src/viewData.ts`. All are unset locally, so builds show no counts. Setup: README.
 - `src/remarkHashtags.ts` must return an `emphasis` node; a `text` node makes findAndReplace drop
   the text after the first match.
 

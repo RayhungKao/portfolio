@@ -1,4 +1,5 @@
-# Builds the site and publishes it to GitHub Pages on every push to main.
+# Builds the site and publishes it to GitHub Pages on every push to main, and once a day so the
+# view counts from GA4 stay current.
 # Repository Settings → Pages → Source must be set to "GitHub Actions".
 name: Deploy to GitHub Pages
 
@@ -6,6 +7,8 @@ on:
   push:
     branches: ['main']
   workflow_dispatch:
+  schedule:
+    - cron: '0 18 * * *' # 02:00 in Taipei
 
 permissions:
   contents: read
@@ -26,7 +29,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
-          node-version: lts/*
+          # The same Node as local builds, so a new LTS release cannot break the daily rebuild unattended.
+          node-version-file: .nvmrc
           cache: npm
       - run: npm ci
       # base_path is '/portfolio' on rayhungkao.github.io/portfolio and '' once a custom domain is set;
@@ -38,6 +42,11 @@ jobs:
         env:
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
           SITE_ORIGIN: ${{ steps.pages.outputs.origin }}
+          # Analytics (README, "Analytics"). Any of them unset leaves that part out of the site.
+          GTM_ID: ${{ vars.GTM_ID }}
+          GSC_VERIFICATION: ${{ vars.GSC_VERIFICATION }}
+          GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
+          GA4_CREDENTIALS: ${{ secrets.GA4_CREDENTIALS }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: ./out

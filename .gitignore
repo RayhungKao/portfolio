@@ -5,4 +5,5 @@ Claude outputs
 .next
 out
 next-env.d.ts
+views.json
 CLAUDE.local.md

@@ -34,6 +34,8 @@ export type Post = {
   /** Minutes, from the word count (230 words a minute, 150 for the web-frontend and web-backend series; rounded up). */
   readingMinutes: number;
   tags: string[];
+  /** All-time page views from GA4, fetched at build time (src/viewData.ts). Unset when the build has no GA4 data. */
+  views?: number;
 };
 
 export type Series = { slug: string; title: string; description?: string; posts: Post[] };
@@ -92,6 +94,9 @@ export type Category = { name: string; slug: string; posts: Post[] };
 
 export const categorySlug = (name: string) =>
   name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+/** "1,234 views", for the post meta lines and the home footer. */
+export const formatViews = (n: number) => `${n.toLocaleString('en-US')} ${n === 1 ? 'view' : 'views'}`;
 
 export function formatDate(iso: string): string {
   const d = new Date(`${iso}T00:00:00`);

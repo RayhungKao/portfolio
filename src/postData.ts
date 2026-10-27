@@ -29,6 +29,7 @@ import path from 'node:path';
 import matter from 'gray-matter';
 import { CATEGORY_ORDER, UNCATEGORIZED, categorySlug, groupByPart, type Category, type Post, type Series, type SeriesNav } from './postTypes';
 import { SERIES_INFO } from './series';
+import { viewsOf } from './viewData';
 
 /** Server only: reads the .md files under src/posts (any subfolder) at build time. Client components get posts as props. */
 const POSTS_DIR = path.join(process.cwd(), 'src', 'posts');
@@ -73,6 +74,7 @@ function parse(file: string, raw: string): Post & { draft: boolean } {
     summary,
     body,
     category: series ? undefined : str(meta.category) || UNCATEGORIZED,
+    views: viewsOf(`/blog/${slug}`),
     readingMinutes: Math.max(1, Math.ceil((words + cjk / 2) / ((series && WORDS_PER_MINUTE_BY_SERIES[series]) || WORDS_PER_MINUTE))),
     tags,
   };

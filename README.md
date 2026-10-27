@@ -76,6 +76,42 @@ slide always match. A name label above each card stays the same size at any zoom
 Each open card has its own URL (`/work/ai-agent`, `/work/performance`, …), so you can
 link straight to one; the page opens on the desk and flies to that card.
 
+## Analytics
+
+Google Tag Manager loads Google Analytics 4; Search Console is verified with a meta tag. The site
+reads their IDs at build time, so nothing is loaded in `npm run dev` or in a build without them.
+Post pages, post lists and the home footer show all-time views from GA4, fetched before each build
+by `scripts/fetch-views.mjs`; the workflow also rebuilds daily so the counts stay current.
+
+Set these under Settings → Secrets and variables → Actions:
+
+| Name | Kind | Where to find it |
+| --- | --- | --- |
+| `GTM_ID` | Variable | GTM container ID, `GTM-XXXXXXX` |
+| `GSC_VERIFICATION` | Variable | Search Console, HTML tag method: the `content` value |
+| `GA4_PROPERTY_ID` | Variable | GA4 Admin → Property details: the numeric ID (not `G-…`) |
+| `GA4_CREDENTIALS` | Secret | The whole JSON key of the service account below |
+
+One-time setup:
+
+1. **GA4**: create a property and a Web data stream for the site URL. Keep Enhanced measurement on,
+   including "Page changes based on browser history events": client-side navigation is counted as
+   page views with no code. Note the measurement ID (`G-…`).
+2. **GTM**: create a Web container. Add a "Google tag" with the `G-…` ID, triggered on All Pages, and
+   publish. To count contact clicks, add a "Just Links" trigger (Click URL starts with `mailto:`, or
+   contains `linkedin.com`) with a GA4 Event tag, for example `contact_click`. Do not also install
+   gtag.js on the site, or every view counts twice.
+3. **Search Console**: add a URL-prefix property for the site URL, pick the HTML tag method, set
+   `GSC_VERIFICATION`, deploy, then press Verify. Submit `sitemap.xml` under Sitemaps.
+4. **View counts**: in Google Cloud, enable the Google Analytics Data API, create a service account,
+   and add a JSON key. In GA4 Admin → Property access management, add the service account's email
+   as a Viewer. Store the key as `GA4_CREDENTIALS`.
+
+If the GA4 request fails, a push still deploys (without counts), while the daily run fails before
+deploying, so the live site keeps its last counts. Scheduled workflows stop after 60 days without
+commits; re-enable it on the Actions tab if so.
+Visitors with ad blockers are not counted, so the numbers run low.
+
 ## Theme
 
 Light (warm paper) is the default. The ☾ / ☀ button in the top bar switches to the dark
