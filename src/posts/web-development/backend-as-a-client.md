@@ -1,14 +1,14 @@
 ---
 title: "Your backend is also a client"
 date: 2026-10-24
-summary: "A backend answers requests and also sends them. How the layers around outgoing requests mirror middleware, what each language calls them, and why programs that mostly call other services are often written in Go."
+summary: "A backend answers requests and also sends them. How the layers around outgoing requests mirror middleware, what each language calls them, and why a transport sees every request, redirects included."
 series: web-backend
 order: 108
 part: How a backend works
-draft: true
+draft: false
 ---
 
-**What you'll learn:** why every backend is a client as well as a server, what layers belong around the requests it sends, what those layers are called in Node, Go, Java, Python and .NET, and when a program that mostly calls other services is a good fit for Go.
+**What you'll learn:** why every backend is a client as well as a server, what layers belong around the requests it sends, what those layers are called in Node, Go, Java, Python and .NET, and why a check placed in the transport cannot be skipped.
 
 [Inside a backend](/blog/inside-a-backend) followed a request on its way in: routing, middleware, handler, service, data access. That is half the picture. The same backend also sends requests out. It queries a database, charges a card through a payment API, sends an email through a mail service, asks a model API for a reply. In each of those exchanges your backend is the **client**.
 
@@ -27,7 +27,7 @@ Take a shop backend that handles `POST /api/orders`.
 | Backend → payment API | Your backend | Client |
 | Backend → mail service | Your backend | Client |
 
-Some programs are almost all client. A crawler I run reads three legal Q&A sites every half hour, asks a model API to draft a reply to each new question, and emails the drafts. The only request it receives is the scheduler's ping that starts a run. Everything else it does is sending requests.
+Some programs are almost all client. Picture a crawler that reads a few Q&A sites every half hour, asks a model API to draft a reply to each new question, and emails the drafts. The only request it receives is the scheduler's ping that starts a run. Everything else it does is sending requests.
 
 ## Outgoing requests have layers too
 
@@ -58,7 +58,7 @@ So "middleware" is the common word for the incoming side. For the outgoing side 
 
 ## A Go example: a client that can only read
 
-The crawler logs in to sites with an account that can publish answers under someone else's name. The program must only read, so every write except the login is refused before it leaves the machine. In Go that rule is a transport:
+Suppose the crawler logs in with an account that can also post answers. The program must only read, so every write except the login is refused before it leaves the machine. In Go that rule is a transport:
 
 ```go
 var ErrReadOnly = errors.New("refused: this account is read-only")
@@ -121,25 +121,9 @@ If one layer handled a whole chain of requests, for example by following redirec
 
 Layers stack: `readOnly{next: retry{next: proxy{next: http.DefaultTransport}}}`. Order matters. The guard goes outside the proxy layer, because a proxy layer rewrites the URL to the proxy vendor's address, and after that the guard could no longer tell which site the request was for.
 
-## Is a mostly-client program a good fit for Go?
+## Which language suits a mostly-client program
 
-Yes, and it is one of the things Go is used for most.
-
-| Kind of program | Written in Go |
-| --- | --- |
-| Crawlers | Colly |
-| Command-line tools that call APIs | `gh`, `kubectl`, `terraform`, the `docker` CLI |
-| Services that fetch data on a schedule | Prometheus, which scrapes metrics from every machine |
-| Proxies and gateways (server and client at once) | Caddy, Traefik |
-
-The reasons line up with what such a program needs:
-
-- **Many connections at once are cheap.** Each one can run in its own goroutine, with no callbacks or promise chains.
-- **Timeouts and cancellation have one mechanism.** A `context` carries the deadline from the scheduled run down to every request it makes.
-- **It can run for hours.** A long-running Go process has no 300-second function limit, unlike a serverless function.
-- **It ships as one file.** `GOOS=windows go build` produces an `.exe` that runs on an office PC with nothing else installed.
-
-It is not the only good choice. A one-off script is quicker in Python or Node. A crawler that needs a real browser to render JavaScript is easier with Playwright, which is strongest in Node and Python.
+Any backend language can send requests. Programs that do little else, such as crawlers, command-line tools that call APIs and services that fetch data on a schedule, are often written in Go, because goroutines make many connections cheap and one `context` cancels them all. The Go articles on this site cover that in code.
 
 > [!PRINCIPLE] Core principle
 > Server and client are roles in one exchange, and a backend plays both. Put the rules for incoming requests in middleware and the rules for outgoing requests in the client's transport, where no call site can skip them.

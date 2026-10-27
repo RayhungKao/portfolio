@@ -5,7 +5,7 @@ summary: "How a middleware chain stops a request early, how three entry points s
 series: web-backend
 order: 402
 part: Backend in code
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how a middleware chain short-circuits, how one service serves several entry points, and how to validate input with Zod.
@@ -44,7 +44,7 @@ app.post('/api/orders', async (req, res) => { // 4. handler: runs only if all pa
 })
 ```
 
-A middleware that does not call `next()` and does not answer leaves the request hanging, which is the classic bug in this style. The first two middlewares never stop a request; the third stops it with a 401 and the handler never runs. Order matters: if authentication came before body parsing, it could not read a token sent in the body.
+A middleware that does not call `next()` and does not answer leaves the request hanging, which is the classic bug in this style. The first two middlewares never stop a request; the third stops it with a 401 and the handler never runs. Order matters: if authentication came before body parsing, it could not read a token sent in the body. The example uses Express 5, which passes an error thrown inside an `async` middleware to the error handler. In Express 4 the same throw leaves the request hanging, so each async middleware needs its own `try`/`catch` that calls `next(err)`.
 
 ## One service, three callers
 
@@ -69,7 +69,7 @@ Each caller authenticates and parses in its own way, then calls `createOrder`. T
 
 ## Validating input with Zod
 
-A handler must treat every request body as untrusted. Zod describes the expected shape once, checks it at runtime, and gives you the TypeScript type for free.
+A handler must treat every request body as untrusted. Zod describes the expected shape once, checks it at runtime, and gives you the TypeScript type for free. The examples use Zod 4; in Zod 3 the error helpers are methods instead, such as `parsed.error.flatten()`.
 
 ```ts
 import { z } from 'zod'
@@ -96,8 +96,6 @@ Three details are worth knowing:
 - **Use `safeParse`.** `parse` throws an exception on bad input, and an unhandled one becomes a 500, which blames your code for the client's mistake.
 - **Shape errors are not business errors.** A quantity of `-3` is a 400 from validation. "Out of stock" is a 409 from the service. See "Two kinds of invalid" in [Inside a backend](/blog/inside-a-backend).
 - **Format errors for the reader.** `z.flattenError` suits a flat form. For nested data, `z.treeifyError` mirrors the schema's structure, and `z.prettifyError` produces a readable string for logs.
-
-The ORM, query patterns and the N+1 problem are not covered here.
 
 > [!PRINCIPLE] Core principle
 > Middleware answers "may this request continue?", a service answers "do the rules allow it?", and validation answers "is the input shaped right?" Keep the three apart.
