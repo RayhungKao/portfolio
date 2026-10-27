@@ -5,7 +5,7 @@ summary: "A full Nginx config behind Cloudflare, the Caddy equivalent, and four 
 series: web-backend
 order: 401
 part: Backend in code
-draft: true
+draft: false
 ---
 
 **What you'll learn:** a working Nginx configuration behind Cloudflare, the same job in Caddy, and four real setups to compare.
@@ -37,7 +37,7 @@ limit_req_status 429;
 
 server {
     listen 443 ssl;
-    http2 on;
+    http2 on;                                         # Nginx 1.25.1+; older: listen 443 ssl http2;
     server_name example.com;
 
     ssl_certificate     /etc/ssl/example.com.pem;       # a Cloudflare Origin certificate
@@ -63,6 +63,27 @@ server {
 ```
 
 Three things to notice. `set_real_ip_from` plus `real_ip_header` make `$remote_addr`, and therefore the rate limit and the logs, use the visitor's address instead of a Cloudflare address. `limit_req_status 429` makes a limited visitor see "too many requests" rather than the default 503. And the origin certificate lets Cloudflare talk to Nginx over HTTPS, which is the "Full (strict)" SSL mode, not the weaker "Flexible".
+
+## Refuse traffic that skips Cloudflare
+
+Cloudflare's filtering and rate limits only protect you if every request goes through Cloudflare. Your server's IP address can leak (old DNS records, email headers, a scan of the address range), and a request sent straight to it skips the whole edge. Close that door at one of two levels.
+
+**At the firewall:** accept HTTPS only from Cloudflare's ranges, so a direct connection never reaches Nginx.
+
+```bash
+ufw default deny incoming
+ufw allow 22/tcp                                              # keep SSH open
+ufw allow from 173.245.48.0/20 to any port 443 proto tcp     # repeat for every Cloudflare range
+```
+
+**In Nginx, with Authenticated Origin Pulls:** turn the feature on in Cloudflare, and Cloudflare then presents a client certificate on every connection to your origin. Nginx refuses any connection without it:
+
+```nginx
+ssl_client_certificate /etc/ssl/cloudflare-origin-pull-ca.pem;  # Cloudflare's origin-pull CA
+ssl_verify_client on;
+```
+
+The firewall rule needs updating when Cloudflare's ranges change; the certificate check does not. Doing both is common.
 
 ## The same job in Caddy
 

@@ -5,7 +5,7 @@ summary: "How a transaction callback commits or rolls back, when to use a row lo
 series: web-backend
 order: 404
 part: Backend in code
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how a transaction callback works and its one rule, when `SELECT … FOR UPDATE` is the right tool, what isolation levels and deadlocks mean, and how to code an idempotency key.
@@ -55,10 +55,10 @@ An isolation level says how much of other transactions' work yours can see. Post
 | Level | What your transaction sees | What can still go wrong | When to use it |
 | --- | --- | --- | --- |
 | Read Committed (PostgreSQL's default) | Each statement sees data committed before that statement began | Two reads in one transaction can return different values | Most code, together with atomic updates and constraints |
-| Repeatable Read | One snapshot for the whole transaction | A rule that spans several rows can still be broken by two concurrent transactions | Reports that must see a consistent snapshot |
+| Repeatable Read | One snapshot for the whole transaction | A rule that spans several rows can still be broken by two concurrent transactions; updating a row that another transaction changed fails with a serialization error | Reports that must see a consistent snapshot |
 | Serializable | As if transactions ran one after another | Some transactions fail with a serialization error and must be retried | A rule across several rows that no single statement can enforce |
 
-A higher level is not free: it costs speed, and Serializable requires you to catch the failure (PostgreSQL error code `40001`) and run the whole transaction again.
+A higher level is not free: it costs speed, and both Repeatable Read and Serializable can fail with PostgreSQL error code `40001`. Catch it and run the whole transaction again.
 
 ## Deadlocks
 
@@ -88,7 +88,9 @@ async function chargeOnce(key: string, userId: string, amount: number) {
 }
 ```
 
-Two requests carrying the same key at the same moment can both pass the `findUnique`. The unique constraint on `key` makes the second insert fail, its transaction rolls back, and the client's next retry then finds the stored result. Expire old keys after a day or two so the table does not grow forever. Stripe's `Idempotency-Key` header is the same design offered as a service.
+Two requests carrying the same key at the same moment can both pass the `findUnique`. The unique constraint on `key` makes the second insert fail (Prisma reports it as error `P2002`), and its transaction rolls back, payment included. Catch that error and answer **409 Conflict** with "the same request is already being processed", so the client waits and retries instead of seeing a 500. Its next retry finds the stored result. Expire old keys after a day or two so the table does not grow forever.
+
+The rollback protects only what lives in your database. If charging means calling a payment provider such as Stripe, that charge cannot be rolled back with your transaction. Send the same key to the provider as its `Idempotency-Key` header, so a retried call returns the first charge instead of making a second one; Stripe's header is this same design offered as a service.
 
 > [!PRINCIPLE] Core principle
 > Reach for the smallest tool first: a constraint, then an atomic update, then a row lock, then a higher isolation level. Whatever you choose, be ready to retry.

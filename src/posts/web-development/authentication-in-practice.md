@@ -5,7 +5,7 @@ summary: "Verify a Firebase token in your own API, turn mixed credentials into o
 series: web-backend
 order: 403
 part: Backend in code
-draft: true
+draft: false
 ---
 
 **What you'll learn:** how to verify a Firebase token on your own backend, how a gateway turns different credentials into one internal token, and how refresh tokens work.
