@@ -27,18 +27,16 @@ export type Card = {
  * - cards (default): numbered cards in a row; `accent` tints one, `warn` colors the numbers orange
  * - steps: cards in a row with arrows between them
  * - grid: cards in two columns
- * - stats: each item title as a large number in a card; figures: the same, larger, without cards
+ * - figures: each item title as a large number, without cards
  * - rows: stacked rows divided by rules
- * - split: a bar of two shares with a column of points under each (uses `split`, not `items`)
  * `callout` is a tinted box under the body; `note` is a closing line.
  */
 export type TalkSlide = {
   eyebrow: string;
   title: string;
-  layout?: 'cover' | 'cards' | 'steps' | 'grid' | 'stats' | 'figures' | 'rows' | 'split';
+  layout?: 'cover' | 'cards' | 'steps' | 'grid' | 'figures' | 'rows';
   warn?: boolean;
   items?: { n?: string; title: string; body?: string; points?: string[]; accent?: boolean }[];
-  split?: { value: number; title: string; points: string[] }[];
   callout?: { title: string; body: string };
   note?: string;
 };
@@ -67,43 +65,38 @@ export const CARDS: Card[] = [
     id: 'ai-agent',
     kicker: 'Perfect Corp',
     title: 'AI Agent',
-    subtitle: 'Conversational editing assistant, ~80 task-run features',
-    metric: 'SSE · capability handshake · cancel flow',
+    subtitle: 'Conversational editing assistant: ~80 features in two months',
+    metric: 'Capability handshake · SSE · cancel flow',
     links: [
       { label: 'How I built the AI Agent: streaming, multimodal, one prompt for the whole platform', href: '/blog/ai-agent-architecture' },
-      { label: 'Why chat apps lock the message box while a reply streams', href: '/blog/streaming-reply-identity' },
       { label: 'Making every long-running task non-blocking', href: '/blog/non-blocking-long-running-tasks' },
-      { label: 'Side project: a real-time AI chat built end to end', href: '/blog/realtime-ai-chat-end-to-end' },
     ],
     color: '#6366f1',
     angle: -3,
     detail: {
-      lead: 'Architected the frontend from scratch for a conversational assistant that edits photos and videos, launched with ~80 task-run features in its first two months.',
+      lead: 'Architected the frontend from scratch for a conversational assistant that edits photos and videos from a chat.',
       points: [
-        'SSE response streaming and async task polling.',
-        'A capability handshake that tells the backend which features the client supports.',
-        'A cancel flow that works at every stage of a reply and is restored from history on reload.',
-        'Led integration across product, AI engine, backend, and Beauty SDK teams.',
+        'A capability handshake that tells the agent which features the client supports, so it only picks tools the client can run.',
+        'Ran each tool the agent picked through the right route: in-browser filter, client task, tool page, or server task.',
+        'Kept basic photo edits on-device with Fabric.js on WebGL, and de-duplicated uploads by content hash.',
+        'Streamed replies over SSE, with a cancel flow that works at every stage and survives a reload.',
+        'Led integration across product, AI engine, backend, Beauty SDK and QA.',
       ],
       tags: ['SSE', 'React', 'Redux', 'Fabric.js'],
     },
     talk: [
       {
         eyebrow: 'Project case study · STAR',
-        title: 'AI Agent: ~80 features in two months',
+        title: 'Shipping the AI Agent',
         layout: 'cover',
-        note: 'From frontend architecture to cross-team integration',
       },
       {
         eyebrow: 'Situation',
         title: 'A web editor gets a conversational AI assistant',
-        layout: 'stats',
         items: [
-          { title: '~10 → 80+', body: 'Editing tools in YouCam Online Editor, across 17 locales' },
-          { title: '2 months', body: 'From zero to launch for the AI Agent' },
-          { title: '~80', body: 'Task-run features to ship' },
+          { title: 'The product', body: 'YouCam Online Editor: AI photo and video editing in 17 locales.' },
+          { title: 'The ask', body: 'Let users describe an edit in a chat, and have the assistant run it inside the editor.' },
         ],
-        note: 'Users describe the edit they want in a chat, and the assistant runs it inside the editor. Every feature needed support from the agent team, the backend team or QA.',
       },
       {
         eyebrow: 'Task · My role',
@@ -112,12 +105,21 @@ export const CARDS: Card[] = [
           {
             title: 'I owned',
             points: [
-              'The AI Agent’s frontend architecture, from scratch',
               'Integration with product, AI engine, backend, Beauty SDK and QA',
               'Tracking each team’s progress and clearing blockers',
             ],
           },
-          { title: 'Goal', body: 'Ship about 80 features in two months while the other teams had limited capacity', accent: true },
+          { title: 'Goal', body: 'Launch in two months', accent: true },
+        ],
+      },
+      {
+        eyebrow: 'Who does what',
+        title: 'Four teams behind one assistant; I own what users see',
+        items: [
+          { title: 'Frontend (me)', body: 'Everything users see and touch, and the state behind it.', accent: true },
+          { title: 'Backend · agent team', body: 'The LLM, plus tasks on third-party models: Nano Banana, Seedance, Seedream, Kling.' },
+          { title: 'Backend · task team', body: 'In-house tasks on company machines, and a record of every task for chat history.' },
+          { title: 'AI engine', body: 'The models behind every feature, in-house or third-party. The largest team.' },
         ],
       },
       {
@@ -125,20 +127,20 @@ export const CARDS: Card[] = [
         title: 'Three things that stalled progress',
         warn: true,
         items: [
-          { n: '01', title: 'Limited capacity', body: 'The agent and backend teams served many products and could not customize much for us; QA tested each feature one by one.' },
+          { n: '01', title: 'Limited capacity', body: 'The agent and task teams served many products and could not customize much for us; QA tested each feature one by one.' },
           { n: '02', title: 'Unclear interfaces', body: 'I had to call the API feature by feature to learn how each one worked and what its request and response looked like.' },
           { n: '03', title: 'Long-running tasks', body: 'Video generation takes time. Users may cancel or refresh midway, and the task state must not be lost.' },
         ],
       },
       {
         eyebrow: 'Action 1 · Cut the dependencies',
-        title: '41 of 83 features needed no server-side task',
-        layout: 'split',
-        split: [
-          { value: 41, title: 'Frontend or existing capabilities', points: ['Third-party AI services (mostly images)', 'Done in the browser (Fabric.js)', 'The company’s existing SDK', 'A jump to an existing tool page'] },
-          { value: 42, title: 'Server-side tasks', points: ['Split between the agent team and the backend team', 'Mostly video: long jobs whose progress the server tracks'] },
+        title: 'Three ways to run a feature',
+        items: [
+          { n: '~30', title: 'Beauty SDK effects', body: 'Makeup, reshape, skin and hair. The frontend builds the effect and sends it to the task service.' },
+          { n: '~10', title: 'Browser and existing tools', body: 'Fabric.js filters, an editing tool’s own pipeline, or a jump to that tool’s page.' },
+          { n: '~40', title: 'Agent server', body: 'Run by the agent and task teams; the client polls for the result or gets it inline.' },
         ],
-        note: 'Counts are the features the frontend declared to the agent at handover, with video features expanded.',
+        note: 'The frontend owned the first two, about half of all features, so they never waited on the agent server.',
       },
       {
         eyebrow: 'Action 2 · Make the interface clear',
@@ -147,7 +149,7 @@ export const CARDS: Card[] = [
         items: [
           { title: 'Frontend', body: 'Declares the features it supports (capability handshake)' },
           { title: 'Agent backend', body: 'Picks a tool only from that list' },
-          { title: 'Frontend runs it', body: 'Takes the matching route and reports the result' },
+          { title: 'Frontend runs it', body: 'Reports the result back, so the next turn edits it' },
         ],
         callout: {
           title: 'One record per feature',
@@ -170,20 +172,17 @@ export const CARDS: Card[] = [
         title: 'Weekly sync, then ship whatever is ready',
         layout: 'steps',
         items: [
-          { n: 'Step 1', title: 'Weekly sync', body: 'Through the PM, confirm which features the agent team, backend and QA support this week' },
+          { n: 'Step 1', title: 'Weekly sync', body: 'Through the PM, confirm which features the agent team, task team and QA support this week' },
           { n: 'Step 2', title: 'Integrate', body: 'Connect each feature as soon as its support lands' },
           { n: 'Step 3', title: 'Ship after QA', body: 'Release in batches instead of waiting for all of them' },
         ],
-        note: 'I did not ask other teams to change priorities. I cut what I needed from them, then kept a fixed rhythm.',
       },
       {
         eyebrow: 'Result',
-        title: 'Shipped on time, nearly half without a server-side task',
+        title: 'Shipped on time',
         layout: 'figures',
-        items: [
-          { title: '~80', body: 'Task-run features shipped in the first two months' },
-          { title: '41 / 83', body: 'Features done in the frontend or with existing capabilities' },
-        ],
+        items: [{ title: '~80', body: 'Task-run features shipped on schedule' }],
+        note: 'The agent and task teams spent their limited time on the features that truly needed a server-side task.',
       },
       {
         eyebrow: 'Lessons learned',

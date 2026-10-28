@@ -347,7 +347,7 @@ a { color: var(--tan-ink); }
 }
 .talk:focus-visible .talk-deck { outline: 3px solid var(--slate); outline-offset: 3px; border-radius: 31px; }
 .talk-slide {
-  grid-area: 1 / 1; visibility: hidden; position: relative; box-sizing: border-box; padding: 44px 56px 48px;
+  grid-area: 1 / 1; visibility: hidden; box-sizing: border-box; padding: 44px 56px;
   display: flex; flex-direction: column; gap: 28px;
   background: #fff; color: var(--t-ink); border-radius: 31px; box-shadow: 0 24px 60px rgba(17, 24, 39, 0.14);
 }
@@ -359,25 +359,23 @@ a { color: var(--tan-ink); }
 .talk-slide p, .talk-slide li { margin: 0; font-size: 15px; line-height: 1.55; color: var(--t-muted); }
 .talk-slide ul { margin: 0; padding-left: 18px; }
 .talk-slide li + li { margin-top: 4px; }
-.talk-page { position: absolute; right: 40px; bottom: 24px; font-size: 13px; color: var(--t-muted); font-variant-numeric: tabular-nums; }
 
 .talk-slide.cover { justify-content: center; }
 .talk-slide.cover .talk-head { gap: 16px; }
 .talk-slide.cover h3 { font-size: 52px; line-height: 1.15; max-width: 640px; }
-.talk-slide.cover .talk-note { font-size: 20px; }
 
 .talk-items { display: flex; gap: 14px; }
 .talk-item {
-  flex: 3 1 0; display: flex; flex-direction: column; gap: 12px; padding: 24px;
+  flex: 1 1 0; display: flex; flex-direction: column; gap: 12px; padding: 24px;
   background: var(--t-card); border: 1px solid var(--t-border); border-radius: 10px;
 }
 .talk-item > div { display: flex; flex-direction: column; gap: 8px; }
-.talk-item.accent { flex-grow: 2; background: var(--t-tint); border-color: var(--t-tint-border); }
+.talk-item.accent { background: var(--t-tint); border-color: var(--t-tint-border); }
 .talk-item.accent h4 { color: var(--t-blue); }
-.talk-item.accent p { font-size: 18px; color: var(--t-ink); }
+.talk-item.accent p { color: var(--t-ink); }
 .talk-n { font-family: var(--mono); font-size: 22px; font-weight: 500; line-height: 1; color: var(--t-blue); }
 .talk-items.warn .talk-n { color: var(--t-orange); }
-.steps .talk-n { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+.talk-items.steps .talk-n { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
 
 .talk-items.steps { gap: 36px; }
 .talk-items.steps .talk-item { position: relative; }
@@ -386,11 +384,9 @@ a { color: var(--tan-ink); }
   font-size: 22px; font-weight: 700; color: var(--t-blue);
 }
 .talk-items.grid { display: grid; grid-template-columns: 1fr 1fr; }
-.talk-items.stats h4 { font-size: 36px; line-height: 1.1; color: var(--t-blue); }
 .talk-items.figures { gap: 40px; margin-top: 16px; }
 .talk-items.figures .talk-item { padding: 0; background: none; border: 0; }
 .talk-items.figures h4 { font-size: 80px; line-height: 1.05; letter-spacing: -0.02em; color: var(--t-blue); }
-.talk-items.figures .talk-item:nth-child(2) h4 { color: var(--t-orange); }
 .talk-items.figures p { font-size: 18px; }
 .talk-items.rows { flex-direction: column; gap: 0; border-bottom: 1px solid var(--t-rule); }
 .talk-items.rows .talk-item {
@@ -398,17 +394,6 @@ a { color: var(--tan-ink); }
 }
 .talk-items.rows .talk-n { width: 32px; flex: none; font-size: 18px; line-height: 1.3; }
 .talk-items.rows .talk-item > div { gap: 4px; }
-
-.talk-bar { display: flex; gap: 4px; }
-.talk-bar span {
-  display: flex; align-items: center; height: 44px; padding: 0 18px; border-radius: 6px;
-  background: var(--t-blue); color: #fff; font-size: 24px; font-weight: 700;
-}
-.talk-bar span:nth-child(2) { background: var(--t-orange); }
-.talk-split { display: flex; gap: 4px; }
-.talk-split > div { display: flex; flex-direction: column; gap: 10px; padding: 0 18px; }
-.talk-split h4 { color: var(--t-blue); }
-.talk-split > div:nth-child(2) h4 { color: var(--t-orange); }
 
 .talk-callout { display: flex; flex-direction: column; gap: 8px; padding: 20px 24px; background: var(--t-tint); border: 1px solid var(--t-tint-border); border-radius: 10px; }
 .talk-callout h4 { color: var(--t-blue); }
@@ -527,11 +512,10 @@ a { color: var(--tan-ink); }
   .slide h2 { font-size: 30px; }
   .slide .lead { font-size: 17px; }
   .talk-deck { aspect-ratio: auto; }
-  .talk-slide { padding: 24px 20px 44px; gap: 20px; }
+  .talk-slide { padding: 24px 20px; gap: 20px; }
   .talk-slide h3 { font-size: 24px; }
   .talk-slide.cover h3 { font-size: 32px; }
-  .talk-page { right: 20px; bottom: 16px; }
-  .talk-items, .talk-split { flex-direction: column; }
+  .talk-items { flex-direction: column; }
   .talk-items.grid { grid-template-columns: 1fr; }
   .talk-items.steps { gap: 30px; }
   .talk-items.steps .talk-item + .talk-item::before { content: "↓"; left: 50%; top: -15px; }

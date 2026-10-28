@@ -4,27 +4,6 @@ import { useState, type KeyboardEvent } from 'react';
 import type { Card, TalkSlide } from './content';
 
 function Body({ s }: { s: TalkSlide }) {
-  if (s.split) {
-    return (
-      <>
-        <div className="talk-bar">
-          {s.split.map((p) => (
-            <span key={p.title} style={{ flex: p.value }}>{p.value}</span>
-          ))}
-        </div>
-        <div className="talk-split">
-          {s.split.map((p) => (
-            <div key={p.title} style={{ flex: p.value }}>
-              <h4>{p.title}</h4>
-              <ul>
-                {p.points.map((t) => <li key={t}>{t}</li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </>
-    );
-  }
   if (!s.items) return null;
   return (
     <div className={`talk-items ${s.layout ?? 'cards'}${s.warn ? ' warn' : ''}`}>
@@ -80,7 +59,6 @@ export function Talk({ card, slides }: { card: Card; slides: TalkSlide[] }) {
               </div>
             )}
             {s.note && <p className="talk-note">{s.note}</p>}
-            <span className="talk-page">{j + 1} / {n}</span>
           </div>
         ))}
       </div>
