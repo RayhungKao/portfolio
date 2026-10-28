@@ -12,11 +12,35 @@ export type Card = {
   blurb?: string;
   /** Links shown at the bottom of the detail panel. */
   links?: { label: string; href: string }[];
+  /** Optional talk shown under the opened card, one 16:9 slide at a time. */
+  talk?: TalkSlide[];
   detail: {
     lead: string;
     points: string[];
     tags: string[];
   };
+};
+
+/**
+ * A talk slide: an eyebrow and a title, then its body laid out by `layout`:
+ * - cover: the title alone, large, with `note` as the subtitle
+ * - cards (default): numbered cards in a row; `accent` tints one, `warn` colors the numbers orange
+ * - steps: cards in a row with arrows between them
+ * - grid: cards in two columns
+ * - stats: each item title as a large number in a card; figures: the same, larger, without cards
+ * - rows: stacked rows divided by rules
+ * - split: a bar of two shares with a column of points under each (uses `split`, not `items`)
+ * `callout` is a tinted box under the body; `note` is a closing line.
+ */
+export type TalkSlide = {
+  eyebrow: string;
+  title: string;
+  layout?: 'cover' | 'cards' | 'steps' | 'grid' | 'stats' | 'figures' | 'rows' | 'split';
+  warn?: boolean;
+  items?: { n?: string; title: string; body?: string; points?: string[]; accent?: boolean }[];
+  split?: { value: number; title: string; points: string[] }[];
+  callout?: { title: string; body: string };
+  note?: string;
 };
 
 export const CARDS: Card[] = [
@@ -45,6 +69,12 @@ export const CARDS: Card[] = [
     title: 'AI Agent',
     subtitle: 'Conversational editing assistant, ~80 task-run features',
     metric: 'SSE · capability handshake · cancel flow',
+    links: [
+      { label: 'How I built the AI Agent: streaming, multimodal, one prompt for the whole platform', href: '/blog/ai-agent-architecture' },
+      { label: 'Why chat apps lock the message box while a reply streams', href: '/blog/streaming-reply-identity' },
+      { label: 'Making every long-running task non-blocking', href: '/blog/non-blocking-long-running-tasks' },
+      { label: 'Side project: a real-time AI chat built end to end', href: '/blog/realtime-ai-chat-end-to-end' },
+    ],
     color: '#6366f1',
     angle: -3,
     detail: {
@@ -57,6 +87,115 @@ export const CARDS: Card[] = [
       ],
       tags: ['SSE', 'React', 'Redux', 'Fabric.js'],
     },
+    talk: [
+      {
+        eyebrow: 'Project case study · STAR',
+        title: 'AI Agent: ~80 features in two months',
+        layout: 'cover',
+        note: 'From frontend architecture to cross-team integration',
+      },
+      {
+        eyebrow: 'Situation',
+        title: 'A web editor gets a conversational AI assistant',
+        layout: 'stats',
+        items: [
+          { title: '~10 → 80+', body: 'Editing tools in YouCam Online Editor, across 17 locales' },
+          { title: '2 months', body: 'From zero to launch for the AI Agent' },
+          { title: '~80', body: 'Task-run features to ship' },
+        ],
+        note: 'Users describe the edit they want in a chat, and the assistant runs it inside the editor. Every feature needed support from the agent team, the backend team or QA.',
+      },
+      {
+        eyebrow: 'Task · My role',
+        title: 'Design the frontend from scratch and connect the teams',
+        items: [
+          {
+            title: 'I owned',
+            points: [
+              'The AI Agent’s frontend architecture, from scratch',
+              'Integration with product, AI engine, backend, Beauty SDK and QA',
+              'Tracking each team’s progress and clearing blockers',
+            ],
+          },
+          { title: 'Goal', body: 'Ship about 80 features in two months while the other teams had limited capacity', accent: true },
+        ],
+      },
+      {
+        eyebrow: 'Challenges',
+        title: 'Three things that stalled progress',
+        warn: true,
+        items: [
+          { n: '01', title: 'Limited capacity', body: 'The agent and backend teams served many products and could not customize much for us; QA tested each feature one by one.' },
+          { n: '02', title: 'Unclear interfaces', body: 'I had to call the API feature by feature to learn how each one worked and what its request and response looked like.' },
+          { n: '03', title: 'Long-running tasks', body: 'Video generation takes time. Users may cancel or refresh midway, and the task state must not be lost.' },
+        ],
+      },
+      {
+        eyebrow: 'Action 1 · Cut the dependencies',
+        title: '41 of 83 features needed no server-side task',
+        layout: 'split',
+        split: [
+          { value: 41, title: 'Frontend or existing capabilities', points: ['Third-party AI services (mostly images)', 'Done in the browser (Fabric.js)', 'The company’s existing SDK', 'A jump to an existing tool page'] },
+          { value: 42, title: 'Server-side tasks', points: ['Split between the agent team and the backend team', 'Mostly video: long jobs whose progress the server tracks'] },
+        ],
+        note: 'Counts are the features the frontend declared to the agent at handover, with video features expanded.',
+      },
+      {
+        eyebrow: 'Action 2 · Make the interface clear',
+        title: 'One shared answer to “what can the client do?”',
+        layout: 'steps',
+        items: [
+          { title: 'Frontend', body: 'Declares the features it supports (capability handshake)' },
+          { title: 'Agent backend', body: 'Picks a tool only from that list' },
+          { title: 'Frontend runs it', body: 'Takes the matching route and reports the result' },
+        ],
+        callout: {
+          title: 'One record per feature',
+          body: 'Issues found, how it connects, and the expected request and response. Used in the weekly sync to align every team.',
+        },
+      },
+      {
+        eyebrow: 'Action 3 · Make waiting reliable',
+        title: 'Long AI tasks that never leave users lost',
+        layout: 'grid',
+        items: [
+          { title: 'SSE streaming', body: 'Replies render as they are generated, not after the whole answer' },
+          { title: 'Async task polling', body: 'Tasks are tracked in the background, so the UI never blocks' },
+          { title: 'Cancel at any stage', body: 'Mid-reply or mid-task, cancel has a clear end state' },
+          { title: 'Restored on reload', body: 'State comes back from chat history, so nobody loses progress' },
+        ],
+      },
+      {
+        eyebrow: 'Action 4 · Keep a steady cadence',
+        title: 'Weekly sync, then ship whatever is ready',
+        layout: 'steps',
+        items: [
+          { n: 'Step 1', title: 'Weekly sync', body: 'Through the PM, confirm which features the agent team, backend and QA support this week' },
+          { n: 'Step 2', title: 'Integrate', body: 'Connect each feature as soon as its support lands' },
+          { n: 'Step 3', title: 'Ship after QA', body: 'Release in batches instead of waiting for all of them' },
+        ],
+        note: 'I did not ask other teams to change priorities. I cut what I needed from them, then kept a fixed rhythm.',
+      },
+      {
+        eyebrow: 'Result',
+        title: 'Shipped on time, nearly half without a server-side task',
+        layout: 'figures',
+        items: [
+          { title: '~80', body: 'Task-run features shipped in the first two months' },
+          { title: '41 / 83', body: 'Features done in the frontend or with existing capabilities' },
+        ],
+      },
+      {
+        eyebrow: 'Lessons learned',
+        title: 'Three things I would keep',
+        layout: 'rows',
+        items: [
+          { n: '01', title: 'Write the interface down first', body: 'Agree on a written spec with both server teams early, so nobody reverse-engineers it and QA can prepare sooner.' },
+          { n: '02', title: 'Cut dependencies, then push', body: 'With limited resources, changing my own plan beats asking others to reprioritize.' },
+          { n: '03', title: 'Every wait needs an end', body: 'Polling needs a limit; cancel and reload each need a clear final state.' },
+        ],
+      },
+    ],
   },
   {
     id: 'canvas',
@@ -83,6 +222,7 @@ export const CARDS: Card[] = [
     title: 'Video history performance',
     subtitle: 'Proposed and designed a new loading architecture',
     metric: '−95% video bandwidth',
+    links: [{ label: "Write-up: how I made YCO's video history handle a media-heavy list", href: '/blog/video-history-performance' }],
     color: '#10b981',
     angle: 1.5,
     detail: {
