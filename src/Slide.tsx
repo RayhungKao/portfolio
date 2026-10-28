@@ -6,6 +6,7 @@ import { LINKS } from './content';
 import type { Rect2D } from './desk';
 import { DeckContent, SLIDE_W } from './DeckContent';
 import { AppLink } from './AppLink';
+import { Talk } from './Talk';
 
 export type SlidePhase = 'enter' | 'open' | 'exit';
 
@@ -122,6 +123,11 @@ export function Slide({ card, index, total, origin, phase, onCoverCard, onEntere
         >
           <div style={{ zoom }}>
             <DeckContent card={card} />
+            {card.talk && (
+              <div style={{ width: SLIDE_W }}>
+                <Talk card={card} slides={card.talk} />
+              </div>
+            )}
           </div>
           <p className="slide-keys">← → to flip through · Esc to go back</p>
         </div>
@@ -166,6 +172,7 @@ export function Slide({ card, index, total, origin, phase, onCoverCard, onEntere
               <a href={LINKS.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             </div>
           )}
+          {card.talk && <Talk card={card} slides={card.talk} />}
         </div>
       </article>
     </div>

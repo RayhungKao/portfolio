@@ -336,6 +336,78 @@ a { color: var(--tan-ink); }
 .deck-links { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 32px; }
 .deck-links a { font-size: 20px; font-weight: 600; color: #111827; text-decoration: underline; line-height: 1.4; }
 
+/* Talk under an opened card, styled after its slide deck: a fixed light palette like .deck-slide. All
+   slides share one grid cell, so the deck is 16:9 or as tall as its tallest slide and never jumps. */
+.talk { margin-top: 40px; outline: none; }
+.talk-label { margin: 0 0 12px; text-align: center; font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+.talk-deck {
+  --t-ink: #14213d; --t-muted: #4a5568; --t-blue: #2563c9; --t-orange: #c2611f;
+  --t-card: #f7f8fa; --t-border: #e2e0d8; --t-tint: #eef3fc; --t-tint-border: #c9d8f5; --t-rule: #d8d5cb;
+  display: grid; aspect-ratio: 16 / 9;
+}
+.talk:focus-visible .talk-deck { outline: 3px solid var(--slate); outline-offset: 3px; border-radius: 31px; }
+.talk-slide {
+  grid-area: 1 / 1; visibility: hidden; box-sizing: border-box; padding: 44px 56px;
+  display: flex; flex-direction: column; gap: 28px;
+  background: #fff; color: var(--t-ink); border-radius: 31px; box-shadow: 0 24px 60px rgba(17, 24, 39, 0.14);
+}
+.talk-slide.on { visibility: visible; animation: backdrop-in 200ms ease-out; }
+.talk-head { display: flex; flex-direction: column; gap: 8px; }
+.talk-eyebrow { font-family: var(--mono); font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--t-blue); }
+.talk-slide h3 { margin: 0; font-size: 32px; line-height: 1.2; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+.talk-slide h4 { margin: 0; font-size: 18px; line-height: 1.3; font-weight: 700; }
+.talk-slide p, .talk-slide li { margin: 0; font-size: 15px; line-height: 1.55; color: var(--t-muted); }
+.talk-slide ul { margin: 0; padding-left: 18px; }
+.talk-slide li + li { margin-top: 4px; }
+
+.talk-slide.cover { justify-content: center; }
+.talk-slide.cover .talk-head { gap: 16px; }
+.talk-slide.cover h3 { font-size: 52px; line-height: 1.15; max-width: 640px; }
+
+.talk-items { display: flex; gap: 14px; }
+.talk-item {
+  flex: 1 1 0; display: flex; flex-direction: column; gap: 12px; padding: 24px;
+  background: var(--t-card); border: 1px solid var(--t-border); border-radius: 10px;
+}
+.talk-item > div { display: flex; flex-direction: column; gap: 8px; }
+.talk-item.accent { background: var(--t-tint); border-color: var(--t-tint-border); }
+.talk-item.accent h4 { color: var(--t-blue); }
+.talk-item.accent p { color: var(--t-ink); }
+.talk-n { font-family: var(--mono); font-size: 22px; font-weight: 500; line-height: 1; color: var(--t-blue); }
+.talk-items.warn .talk-n { color: var(--t-orange); }
+.talk-items.steps .talk-n { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.talk-items.steps { gap: 36px; }
+.talk-items.steps .talk-item { position: relative; }
+.talk-items.steps .talk-item + .talk-item::before {
+  content: "→"; position: absolute; left: -18px; top: 50%; transform: translate(-50%, -50%);
+  font-size: 22px; font-weight: 700; color: var(--t-blue);
+}
+.talk-items.grid { display: grid; grid-template-columns: 1fr 1fr; }
+.talk-items.figures { gap: 40px; margin-top: 16px; }
+.talk-items.figures .talk-item { padding: 0; background: none; border: 0; }
+.talk-items.figures h4 { font-size: 80px; line-height: 1.05; letter-spacing: -0.02em; color: var(--t-blue); }
+.talk-items.figures p { font-size: 18px; }
+.talk-items.rows { flex-direction: column; gap: 0; border-bottom: 1px solid var(--t-rule); }
+.talk-items.rows .talk-item {
+  flex-direction: row; gap: 24px; padding: 18px 0; background: none; border: 0; border-top: 1px solid var(--t-rule); border-radius: 0;
+}
+.talk-items.rows .talk-n { width: 32px; flex: none; font-size: 18px; line-height: 1.3; }
+.talk-items.rows .talk-item > div { gap: 4px; }
+
+.talk-callout { display: flex; flex-direction: column; gap: 8px; padding: 20px 24px; background: var(--t-tint); border: 1px solid var(--t-tint-border); border-radius: 10px; }
+.talk-callout h4 { color: var(--t-blue); }
+.talk-callout p { font-size: 17px; color: var(--t-ink); }
+.talk-slide .talk-note { font-size: 17px; line-height: 1.5; }
+
+.talk-nav { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 12px; font-size: 13px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.talk-nav button {
+  width: 32px; height: 32px; border-radius: 999px; border: 1px solid var(--line); background: var(--chrome);
+  font-size: 18px; line-height: 1; color: var(--ink);
+}
+.talk-nav button:disabled { opacity: 0.4; }
+@media (prefers-reduced-motion: reduce) { .talk-slide.on { animation: none; } }
+
 /* List view slide (narrow screens). */
 .stage.page { display: flex; align-items: center; justify-content: center; padding: 32px; }
 .stage.page .slide-controls { position: static; margin-bottom: 24px; }
@@ -439,6 +511,16 @@ a { color: var(--tan-ink); }
   .slide-body { padding: 18px 20px 24px; }
   .slide h2 { font-size: 30px; }
   .slide .lead { font-size: 17px; }
+  .talk-deck { aspect-ratio: auto; }
+  .talk-slide { padding: 24px 20px; gap: 20px; }
+  .talk-slide h3 { font-size: 24px; }
+  .talk-slide.cover h3 { font-size: 32px; }
+  .talk-items { flex-direction: column; }
+  .talk-items.grid { grid-template-columns: 1fr; }
+  .talk-items.steps { gap: 30px; }
+  .talk-items.steps .talk-item + .talk-item::before { content: "↓"; left: 50%; top: -15px; }
+  .talk-items.figures { gap: 20px; }
+  .talk-items.figures h4 { font-size: 56px; }
   .hero { grid-template-columns: 1fr; gap: 36px; padding-top: 40px; }
   .avatar { width: 220px; height: 220px; order: -1; }
   .work-list { grid-template-columns: 1fr; }
