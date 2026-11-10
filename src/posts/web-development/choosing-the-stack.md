@@ -52,7 +52,7 @@ Serverless functions have five traits worth knowing:
 - **Time limit.** A call has a maximum duration, so long jobs do not fit.
 - **Connection pooling.** Many short-lived functions can exhaust a database's connections, so they connect through a pooler.
 
-Functions also cannot keep a connection open for a chat, which is why serverless pairs with hosted realtime: Supabase Realtime, Ably or Pusher, or Cloudflare Durable Objects. Between a page that polls and a full WebSocket server there is a range of options, and [Realtime updates](/blog/realtime-updates) walks through it.
+Functions also hold a connection only until their time limit (Vercel Functions close WebSockets after 300 to 800 seconds), so a chat that stays open for hours pairs serverless with hosted realtime: Supabase Realtime, Ably or Pusher, or Cloudflare Durable Objects. Between a page that polls and a full WebSocket server there is a range of options, and [Realtime updates](/blog/realtime-updates) walks through it.
 
 ## Where function files go
 

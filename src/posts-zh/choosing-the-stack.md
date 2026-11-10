@@ -46,7 +46,7 @@ Serverless function 有五個值得知道的特性：
 - **時間限制。** 每次呼叫有最長執行時間，所以長時間的工作放不進去。
 - **連線池。** 大量短命的 function 可能耗盡資料庫的連線數，所以它們要透過 pooler 連線。
 
-Function 也無法為了聊天保持連線開著，所以 serverless 常搭配託管的即時服務：Supabase Realtime、Ably 或 Pusher，或 Cloudflare Durable Objects。在定期輪詢的頁面和完整的 WebSocket 伺服器之間，有一整排選項，[Realtime updates](/blog/realtime-updates) 會一一介紹。
+Function 也只能把連線握到時間上限為止（Vercel Functions 的 WebSocket 會在 300 到 800 秒後關閉），所以要開好幾小時的聊天，serverless 常搭配託管的即時服務：Supabase Realtime、Ably 或 Pusher，或 Cloudflare Durable Objects。在定期輪詢的頁面和完整的 WebSocket 伺服器之間，有一整排選項，[Realtime updates](/blog/realtime-updates) 會一一介紹。
 
 ## Function 檔案放在哪裡
 

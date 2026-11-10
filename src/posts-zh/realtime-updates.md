@@ -2,7 +2,7 @@
 title: "即時更新：輪詢、SSE、WebSocket，以及誰握著連線"
 ---
 
-**你會學到：** 輪詢、Server-Sent Events 和 WebSocket 有什麼不同、為什麼 serverless function 握不住連線，以及三種運作「握住連線那一部分」的方式。
+**你會學到：** 輪詢、Server-Sent Events 和 WebSocket 有什麼不同、為什麼 serverless function 不適合長時間握著連線，以及三種運作「握住連線那一部分」的方式。
 
 一般的 HTTP 只讓瀏覽器發問。如果伺服器有新消息，例如一則新的聊天訊息或騎手的新位置，它沒有辦法告訴瀏覽器。「即時」就是解決這件事的一整套技巧。
 
@@ -24,14 +24,14 @@ title: "即時更新：輪詢、SSE、WebSocket，以及誰握著連線"
 
 ## 誰把連線一直開著？
 
-一條開著的連線需要一個能存活好幾小時的行程。Serverless function 不是：它有時間限制，呼叫之間什麼都不記得。所以問題在於誰握著連線。有三種安排方式。
+一條開著的連線需要一個和連線活得一樣久的東西，常常是好幾小時。Serverless function 只能握到它的時間上限為止。Vercel Functions 支援 WebSocket（截至 2026 年 11 月仍是公開測試版），並在 function 到達最長執行時間時關閉連線：Hobby 方案 300 秒，Pro 最多 800 秒。之後用戶端必須重新連線，而且 function 在呼叫之間什麼都不記得。所以問題在於：誰能在你需要的時間內一直握著連線。有三種安排方式。
 
 ![Three ways to run the part that holds connections](diagram:three-ways-to-realtime)
 
 | 安排 | 怎麼運作 | 選項 | 什麼時候選（例子） | 你放棄什麼 |
 | --- | --- | --- | --- | --- |
 | 資料庫推送 | 平台監看你的資料，把變更推給訂閱的瀏覽器。 | Supabase Realtime（透過 WebSocket 的 Postgres Changes，依你的 RLS policy 過濾）；Convex（資料變更時 query 重新執行，結果推給訂閱的用戶端）；Appwrite Realtime | 畫面是你已經存下的資料列的即時檢視。例如在每台裝置上都會更新的筆記清單。 | 你被綁在那個平台上，而且只有存在它資料庫裡的資料能被推送。 |
-| 託管的 pub/sub 服務 | 一個服務握住每一條瀏覽器連線。你的 function 只要用一次短呼叫發佈。 | Ably（伺服器可以透過 REST 發佈，不需要持久連線）；Pusher Channels（有備援機制的 WebSocket、私人與 presence channel）；Supabase Realtime Broadcast | 一個 serverless webhook 必須告訴頁面「已付款」。例如金流服務呼叫你的 function，它再發佈到 `order-123` 這個 channel。 | 多一個要付費的服務。訊息是事件，不是你資料庫裡的資料列。 |
+| 託管的 pub/sub 服務 | 一個服務握住每一條瀏覽器連線。你的 function 只要用一次短呼叫發佈。 | Ably（伺服器可以透過 REST 發佈，不需要持久連線）；AWS API Gateway 的 WebSocket API（由 gateway 握著每條連線，每收到一則訊息就呼叫一次 Lambda function，閒置 10 分鐘或滿 2 小時就關閉）；Pusher Channels（有備援機制的 WebSocket、私人與 presence channel）；Supabase Realtime Broadcast | 一個 serverless webhook 必須告訴頁面「已付款」。例如金流服務呼叫你的 function，它再發佈到 `order-123` 這個 channel。 | 多一個要付費的服務。訊息是事件，不是你資料庫裡的資料列。 |
 | 你自己的 WebSocket 伺服器 | 你跑一個握住所有連線的行程。 | 你所用語言的 WebSocket 函式庫，放在 VPS 或容器上 | 你能掌控的雙向、高頻訊息。例如聊天，或編輯器裡的共用游標。 | 工作量最大（見下方）。 |
 
 自己的伺服器需要三樣另外兩種免費提供的東西：
@@ -52,4 +52,4 @@ title: "即時更新：輪詢、SSE、WebSocket，以及誰握著連線"
 上面的產品已於 2026 年 10 月對照它們自己的文件確認。
 
 > [!PRINCIPLE] 核心原則
-> 選能滿足需求的最簡單方式，並先決定誰握著開著的連線。Serverless function 握不住。
+> 選能滿足需求的最簡單方式，並先決定誰握著開著的連線。Serverless function 只能握到它的時間上限為止。
