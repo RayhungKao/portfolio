@@ -51,3 +51,12 @@ Fabric.js desk on /work. Deployed to GitHub Pages by `.github/workflows/deploy.y
 - Do not add empty Work cards; add one only when there is real content.
 - English at the root URLs; Chinese goes under /zh (not built yet). Chinese share images will need
   a bundled CJK font passed to ImageResponse.
+- Every new post is tied to a system Ray built or ran, and answers these four questions. Before
+  drafting, check the material against them; if one has no answer yet, ask Ray rather than fill it in.
+  1. Who had the problem, and what did it cost them?
+  2. What were the options, and why this one?
+  3. What happened once it shipped, in numbers (volume, cost, latency)? If nothing is measured yet,
+     say how it is measured and what it shows so far.
+  4. What broke, and how was it fixed? If nothing has broken yet, say what is expected to break
+     first and how it is watched.
+- No new generic explainer posts: the web-frontend and web-backend series stay as reference.

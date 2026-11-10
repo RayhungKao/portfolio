@@ -1,11 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { CARDS } from '../src/content';
 import { CATEGORIES, POSTS, SERIES } from '../src/postData';
-import { SITE_URL } from '../src/site';
+import { absUrl as abs } from '../src/site';
 
 export const dynamic = 'force-static'; // required for output: 'export'
-
-const abs = (path: string) => new URL(path.replace(/^\//, ''), SITE_URL).toString();
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
