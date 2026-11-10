@@ -29,7 +29,12 @@ function isDiagramParagraph(node?: { children?: { type: string; tagName?: string
  * remark-breaks keeps the LinkedIn-style "one newline = one line break" the posts were written with.
  * `![alt](diagram:name)` inlines src/diagrams/name.svg, so the diagram follows the light/dark theme.
  */
-export default function PostMarkdown({ body }: { body: string }) {
+/** A diagram's ids and url(#…) references, with `suffix` added. A page that shows one diagram twice (the 中文 copy of a post) needs this, or the hidden copy's ids win and the visible one loses its arrowheads. */
+function suffixIds(svg: string, suffix: string): string {
+  return svg.replace(/ id="([^"]+)"/g, ` id="$1${suffix}"`).replace(/url\(#([^)]+)\)/g, `url(#$1${suffix})`);
+}
+
+export default function PostMarkdown({ body, idSuffix = '' }: { body: string; idSuffix?: string }) {
   return (
     <div className="post-body">
       <Markdown
@@ -47,7 +52,7 @@ export default function PostMarkdown({ body }: { body: string }) {
           img: ({ node: _node, src, alt, ...rest }) =>
             typeof src === 'string' && src.startsWith(DIAGRAM) ? (
               // The SVG carries its own <title> and <desc>, which is what screen readers announce.
-              <figure className="diagram" dangerouslySetInnerHTML={{ __html: readDiagram(src.slice(DIAGRAM.length)) }} />
+              <figure className="diagram" dangerouslySetInnerHTML={{ __html: suffixIds(readDiagram(src.slice(DIAGRAM.length)), idSuffix) }} />
             ) : (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={typeof src === 'string' ? to(src) : undefined} alt={alt ?? ''} loading="lazy" {...rest} />

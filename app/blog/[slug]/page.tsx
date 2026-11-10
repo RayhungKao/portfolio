@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { BlogPost } from '../../../src/Blog';
 import PostMarkdown from '../../../src/PostMarkdown';
-import { CATEGORIES, POSTS, POST_LIST, SERIES, seriesNav } from '../../../src/postData';
+import { CATEGORIES, POSTS, POST_LIST, SERIES, ZH, seriesNav } from '../../../src/postData';
 import { PERSON, absUrl, jsonLd } from '../../../src/site';
 
 type Params = { slug: string };
@@ -30,6 +30,7 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
   const { slug } = await params;
   const post = POSTS.find((p) => p.slug === slug);
   if (!post) notFound();
+  const zh = ZH.get(post.slug);
   const posting = {
     '@type': 'BlogPosting',
     headline: post.title,
@@ -43,7 +44,7 @@ export default async function PostPage({ params }: { params: Promise<Params> }) 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(posting)} />
-      <BlogPost post={{ ...post, body: '' }} posts={POST_LIST} categories={CATEGORIES} allSeries={SERIES} series={seriesNav(post.slug)}>
+      <BlogPost post={{ ...post, body: '' }} posts={POST_LIST} categories={CATEGORIES} allSeries={SERIES} series={seriesNav(post.slug)} zh={zh && { title: zh.title, body: <PostMarkdown body={zh.body} idSuffix="-zh" /> }}>
         <PostMarkdown body={post.body} />
       </BlogPost>
     </>

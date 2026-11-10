@@ -104,6 +104,20 @@ export const POSTS: Post[] = FILES
   // Same-day posts fall back to the slug: the order must not depend on the file system's listing order.
   .sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 
+/**
+ * Optional Chinese translations: src/posts-zh/<slug>.md (front matter `title:`, then the body). Kept out of
+ * src/posts so the slug check above does not see them. A post with one gets a 中文 / English switch.
+ */
+const ZH_DIR = path.join(process.cwd(), 'src', 'posts-zh');
+export const ZH = new Map<string, { title: string; body: string }>(
+  (fs.existsSync(ZH_DIR) ? postFiles(ZH_DIR) : []).map((file) => {
+    const slug = path.basename(file, '.md');
+    if (!FILES.some((f) => path.basename(f, '.md') === slug)) throw new Error(`posts-zh/${slug}.md has no English post with that name`);
+    const { data, content } = matter(fs.readFileSync(file, 'utf8'));
+    return [slug, { title: String(data.title ?? slug), body: content.trim() }];
+  }),
+);
+
 /** The same posts without their bodies: what client components receive as props. */
 export const POST_LIST: Post[] = POSTS.map((p) => ({ ...p, body: '' }));
 

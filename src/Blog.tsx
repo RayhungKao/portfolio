@@ -141,7 +141,19 @@ export function BlogList({ category, posts: allPosts, categories, series }: { ca
   );
 }
 
-export function BlogPost({ post, posts, categories, allSeries, series, children }: { post: Post; posts: Post[]; categories: Category[]; allSeries: Series[]; series?: SeriesNav; children: ReactNode }) {
+/** Flips the 中文 / English choice for every translated post. The head script in app/layout.tsx applies it before first paint. */
+function toggleLang() {
+  const zh = document.documentElement.dataset.lang !== 'zh';
+  if (zh) document.documentElement.dataset.lang = 'zh';
+  else delete document.documentElement.dataset.lang;
+  try {
+    window.localStorage.setItem('post-lang', zh ? 'zh' : 'en');
+  } catch {
+    // Storage can be unavailable; the switch still works for this page.
+  }
+}
+
+export function BlogPost({ post, posts, categories, allSeries, series, zh, children }: { post: Post; posts: Post[]; categories: Category[]; allSeries: Series[]; series?: SeriesNav; zh?: { title: string; body: ReactNode }; children: ReactNode }) {
   const slug = post.slug;
   // A post in a series goes back to its series; any other post goes back to its category.
   const category = post.category ?? UNCATEGORIZED;
@@ -158,8 +170,27 @@ export function BlogPost({ post, posts, categories, allSeries, series, children 
               Series · {series.position} / {series.total} · {series.title}
             </Link>
           )}
-          <h1>{post.title}</h1>
-          {children}
+          {zh ? (
+            <>
+              <button className="lang-toggle pill" onClick={toggleLang}>
+                <span className="lang-en" lang="zh-Hant">中文</span>
+                <span className="lang-zh">English</span>
+              </button>
+              <div className="lang-en">
+                <h1>{post.title}</h1>
+                {children}
+              </div>
+              <div className="lang-zh" lang="zh-Hant">
+                <h1>{zh.title}</h1>
+                {zh.body}
+              </div>
+            </>
+          ) : (
+            <>
+              <h1>{post.title}</h1>
+              {children}
+            </>
+          )}
           <Tags tags={post.tags} />
           <div className="post-social">
             {post.linkedin && <a className="pill" href={post.linkedin} target="_blank" rel="noreferrer">Discuss on LinkedIn →</a>}

@@ -51,6 +51,9 @@ Fabric.js desk on /work. Deployed to GitHub Pages by `.github/workflows/deploy.y
 - Do not add empty Work cards; add one only when there is real content.
 - English at the root URLs; Chinese goes under /zh (not built yet). Chinese share images will need
   a bundled CJK font passed to ImageResponse.
+- Exception: a post can carry a Chinese translation in `src/posts-zh/<slug>.md` (front matter `title`,
+  then the body). The post page renders both and a 中文 / English button switches them (saved in
+  localStorage as `post-lang`). Translate only; extra discussion goes elsewhere, not into the zh file.
 - Every new post is tied to a system Ray built or ran, and answers these four questions. Before
   drafting, check the material against them; if one has no answer yet, ask Ray rather than fill it in.
   1. Who had the problem, and what did it cost them?
