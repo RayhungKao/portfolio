@@ -54,12 +54,14 @@ Fabric.js desk on /work. Deployed to GitHub Pages by `.github/workflows/deploy.y
 - Exception: a post can carry a Chinese translation in `src/posts-zh/<slug>.md` (front matter `title`,
   then the body). The post page renders both and a 中文 / English button switches them (saved in
   localStorage as `post-lang`). Translate only; extra discussion goes elsewhere, not into the zh file.
-- Every new post is tied to a system Ray built or ran, and answers these four questions. Before
-  drafting, check the material against them; if one has no answer yet, ask Ray rather than fill it in.
+- Every new post outside the web-frontend and web-backend series is tied to a system Ray built or ran,
+  and answers these four questions. Before drafting, check the material against them; if one has no
+  answer yet, ask Ray rather than fill it in.
   1. Who had the problem, and what did it cost them?
   2. What were the options, and why this one?
   3. What happened once it shipped, in numbers (volume, cost, latency)? If nothing is measured yet,
      say how it is measured and what it shows so far.
   4. What broke, and how was it fixed? If nothing has broken yet, say what is expected to break
      first and how it is watched.
-- No new generic explainer posts: the web-frontend and web-backend series stay as reference.
+- No new generic explainer posts outside those two series. The web-frontend and web-backend series are
+  generic explainers by design: they can gain new articles, which need no tie to Ray's systems.
