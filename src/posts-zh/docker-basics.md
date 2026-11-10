@@ -2,7 +2,7 @@
 title: "Docker：用途、怎麼組在一起，以及日常指令"
 ---
 
-**你會學到：** 大家用 Docker 做什麼、映像檔怎麼變成執行中的容器、為什麼 Dockerfile 的順序很重要、port、network 和 volume 怎麼接在一起，以及最該先檢查的陷阱。
+**你會學到：** 大家用 Docker 做什麼、映像檔怎麼變成執行中的容器、為什麼 Dockerfile 的順序很重要、port、network 和 volume 怎麼接在一起、Docker、Compose 和 Kubernetes 的關係，以及最該先檢查的陷阱。
 
 [伺服器程式在哪裡執行](/blog/running-server-code)把容器稱為一種打包格式：你的 App 加上它需要的一切，打包起來讓它在哪裡都以同樣方式執行。這篇是實作的那一面。
 
@@ -104,6 +104,21 @@ volumes:
 ```
 
 `docker compose up -d` 在同一個 network 上啟動兩者。`docker compose down` 停止它們並保留 volume；`docker compose down -v` 會連 volume 一起刪掉。
+
+## Docker、Compose 和 Kubernetes
+
+這三個名字位在不同的層次，而且常常一起使用。
+
+| | Docker | Docker Compose | Kubernetes |
+| --- | --- | --- | --- |
+| 做什麼 | 建置映像檔、執行容器 | 定義並執行由好幾個容器組成的應用程式 | 在一群機器組成的叢集上執行容器，並維持在你描述的狀態 |
+| 典型用法 | 建置映像檔、執行單一容器 | 在筆電或一台伺服器上，把 App、資料庫和 Redis 一起啟動 | 分散在很多台機器上的正式系統 |
+
+Kubernetes 的官方文件列出它替你做的事：容器失敗時重啟或替換、一步步推出新版本並可以回滾、把流量分散到各份副本、CPU 使用率升高時增加副本、把每個容器放到有空間的機器上，以及保管機密資料。文件也寫明它不做的事：它不建置你的應用程式，也不部署原始碼。Docker 負責建置映像檔，Kubernetes 負責執行它。
+
+有一個改變常讓人混淆。從 1.24 版開始，Kubernetes 在它的機器上不再用 Docker Engine 執行容器，而是改用 containerd 這類 runtime。用 `docker build` 建出來的映像檔還是能跑，因為它們不是 Docker 專屬的格式：它們遵循 OCI（Open Container Initiative）的映像檔格式，任何符合標準的 runtime 都能拉下來執行（[Kubernetes 部落格](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/)）。
+
+自己架 Kubernetes 本身就是一份工作。三大雲都提供代管的版本：EKS（AWS）、GKE（Google）和 AKS（Azure）。[伺服器程式在哪裡執行](/blog/running-server-code)說明了它們和其他選項的相對位置。
 
 ## 日常指令
 

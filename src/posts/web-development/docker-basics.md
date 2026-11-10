@@ -3,12 +3,12 @@ title: "Docker: what it is for, how it fits together, and the everyday commands"
 date: 2026-10-23
 summary: "Images, containers, layers, ports, networks and volumes in three diagrams, the everyday workflow and commands, and the pitfalls to check first."
 series: web-backend
-order: 502
+order: 503
 part: Running the backend
 draft: false
 ---
 
-**What you'll learn:** what people use Docker for, how an image becomes a running container, why the order of a Dockerfile matters, how ports, networks and volumes connect, and the pitfalls to check first.
+**What you'll learn:** what people use Docker for, how an image becomes a running container, why the order of a Dockerfile matters, how ports, networks and volumes connect, how Docker, Compose and Kubernetes relate, and the pitfalls to check first.
 
 [Where server code runs](/blog/running-server-code) calls a container a packaging format: your app and everything it needs, packed so it runs the same anywhere. This article is the hands-on side.
 
@@ -110,6 +110,21 @@ volumes:
 ```
 
 `docker compose up -d` starts both on one network. `docker compose down` stops them and keeps the volume; `docker compose down -v` deletes the volume too.
+
+## Docker, Compose and Kubernetes
+
+The three names sit at different levels, and they are often used together.
+
+| | Docker | Docker Compose | Kubernetes |
+| --- | --- | --- | --- |
+| What it does | Builds images and runs containers | Defines and runs an application made of several containers | Runs containers across a cluster of machines and keeps them in the state you describe |
+| Typical use | Building images, running one container | The app, its database and Redis, started together on a laptop or one server | Production systems spread over many machines |
+
+The Kubernetes documentation lists what it does for you: it restarts or replaces containers that fail, rolls out a new version step by step and can roll it back, spreads traffic across copies, adds copies when CPU use rises, places each container on a machine with room for it, and stores secrets. It also says what it does not do: it does not build your application or deploy source code. Docker builds the image; Kubernetes runs it.
+
+One change confuses people. Since version 1.24, Kubernetes no longer uses Docker Engine to run containers on its machines; it uses runtimes such as containerd. Images built with `docker build` still run, because they are not Docker-specific: they follow the OCI (Open Container Initiative) image format, which any compliant runtime can pull and run ([Kubernetes blog](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/)).
+
+Running Kubernetes yourself is a job of its own. The big clouds offer it as a managed service, EKS (AWS), GKE (Google) and AKS (Azure), and [Where server code runs](/blog/running-server-code) places these among the other options.
 
 ## Everyday commands
 

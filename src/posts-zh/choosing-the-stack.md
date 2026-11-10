@@ -24,6 +24,8 @@ title: 選擇技術棧
 | Serverless function | 依需求執行的小段程式碼。你不用部署伺服器。 | 一天只跑幾次的 Stripe webhook。 | 有時間限制、不能長連線、有冷啟動。 |
 | 完整伺服器 | 一個持續執行的行程，放在 VPS 或容器平台上。 | 有很多用戶端的外送 API，或 WebSocket 聊天。 | 你要自己維運和擴展。 |
 
+Backend-as-a-service 和 function 合起來就是所謂的 **serverless**：依 Mike Roberts 的定義，serverless 涵蓋這兩者，可以只用其中一種，也可以一起用（[martinfowler.com](https://martinfowler.com/articles/serverless.html)）。兩者都沒有需要你去跑的伺服器。
+
 在 BaaS 裡，規則放在資料庫中。以 Supabase 來說，**列級安全性**（row-level security，RLS）把規則寫成 SQL，即使瀏覽器直接和資料庫溝通，資料庫也會強制執行：
 
 ```sql
@@ -64,14 +66,14 @@ Function 也只能把連線握到時間上限為止（Vercel Functions 的 WebSo
 
 ## 三個問題
 
-1. **App 只需要資料存取加上權限嗎？** 選 BaaS。RLS 涵蓋規則，你不用寫後端。
+1. **App 只需要資料存取加上權限嗎？** 選 BaaS。RLS 涵蓋規則，你只需要寫很少的後端程式；需要一些自訂邏輯時，Supabase 的 Edge Functions 和 Cloud Functions for Firebase（Google）可以替你執行。
 2. **有自訂邏輯，但規模小、時間短、由事件觸發嗎？** 選 serverless function。Webhook、表單處理、呼叫需要 secret key 的 API，或縮放圖片都適合。
-3. **需要長連線、長時間任務、大量運算，或很多共用同一套規則的用戶端嗎？** 選完整伺服器。
+3. **需要長連線、長時間任務、大量運算，或很多共用同一套規則的用戶端嗎？** 選完整伺服器。要自己跑 VPS 還是用託管的執行環境，要用大型雲端還是獨立供應商，是[伺服器程式在哪裡執行](/blog/running-server-code)裡的決策樹。
 
 很多人說 Supabase 是第一個全端專案的合理預設。截至 2026 年 10 月這是常見的看法，不是量測出來的事實，而且只在你的需求屬於第 1 題時成立。如果不是，這張矩陣讓你可以混搭。
 
 > [!NOTE] 其他內容在哪裡
-> 依照組合內容比較的六個平台，以及列級安全性怎麼運作，在 [Backend platforms](/blog/backend-platforms)。VPS、容器和 PaaS 是什麼，在 [Where server code runs](/blog/running-server-code)。
+> 依照組合內容比較的六個平台，以及列級安全性怎麼運作，在 [BaaS 平台](/blog/baas-platforms)。VPS、容器和 PaaS 是什麼、怎麼在它們之間做選擇，在[伺服器程式在哪裡執行](/blog/running-server-code)；成本怎麼算，在[什麼時候選 VPS 划算](/blog/when-a-vps-pays-off)。
 
 > [!PRINCIPLE] 核心原則
 > 選擇的單位是每一項能力。BaaS、serverless 和完整伺服器只是這些選擇的常見組合。
