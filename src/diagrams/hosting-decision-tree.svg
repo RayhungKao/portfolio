@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 616" role="img"><title>Where to run a backend: pick the type, then the vendor</title><desc>Step 1 picks the type. Question one: is the need mostly data, login and permissions with little logic of your own? If yes, BaaS such as Supabase or Firebase. If no, question two: are the jobs short and the traffic low or spiky? If yes, FaaS such as Lambda or Vercel Functions. If no, question three: do you want to run the operating system yourself, with steady traffic, a fixed bill and someone to patch it? If yes, a VM such as EC2 or a DigitalOcean Droplet. If no, a managed runtime: a PaaS or a container platform. Step 2 picks the vendor for whichever type you chose. If the data must stay in Taiwan, you have credits from a big cloud, or the code must run inside your own VPC, use a big cloud (AWS, Google Cloud or Azure), which needs someone who can run its networking and permissions. Otherwise an independent vendor such as Render, Railway, Fly.io or Vercel is usually simpler.</desc>
+<defs><marker id="ah10-hosting-decision-tree" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text class="th" x="20" y="24">Step 1: pick the type</text>
+<rect x="20" y="40" width="300" height="56" rx="8" fill="none" stroke="var(--b)" stroke-width="1"/>
+<text class="ts" x="170" y="60" text-anchor="middle" dominant-baseline="central">Mostly data, login and permissions,</text><text class="ts" x="170" y="78" text-anchor="middle" dominant-baseline="central">little logic of your own?</text>
+<g class="c-gray"><rect x="440" y="42" width="220" height="52" rx="8" stroke-width="0.5"/><text class="th" x="550" y="58" text-anchor="middle" dominant-baseline="central">BaaS</text><text class="ts" x="550" y="76" text-anchor="middle" dominant-baseline="central">Supabase, Firebase (Google)</text></g>
+<line x1="322" y1="68" x2="438" y2="68" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah10-hosting-decision-tree)"/>
+<text class="ts" x="380" y="58" text-anchor="middle">yes</text>
+<line x1="170" y1="98" x2="170" y2="118" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah10-hosting-decision-tree)"/>
+<text class="ts" x="180" y="108" dominant-baseline="central">no</text>
+<rect x="20" y="120" width="300" height="56" rx="8" fill="none" stroke="var(--b)" stroke-width="1"/>
+<text class="ts" x="170" y="140" text-anchor="middle" dominant-baseline="central">Short jobs, and low or</text><text class="ts" x="170" y="158" text-anchor="middle" dominant-baseline="central">spiky traffic?</text>
+<g class="c-gray"><rect x="440" y="122" width="220" height="52" rx="8" stroke-width="0.5"/><text class="th" x="550" y="138" text-anchor="middle" dominant-baseline="central">FaaS</text><text class="ts" x="550" y="156" text-anchor="middle" dominant-baseline="central">Lambda (AWS), Vercel Functions</text></g>
+<line x1="322" y1="148" x2="438" y2="148" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah10-hosting-decision-tree)"/>
+<text class="ts" x="380" y="138" text-anchor="middle">yes</text>
+<line x1="170" y1="178" x2="170" y2="198" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah10-hosting-decision-tree)"/>
+<text class="ts" x="180" y="188" dominant-baseline="central">no</text>
+<rect x="20" y="200" width="300" height="56" rx="8" fill="none" stroke="var(--b)" stroke-width="1"/>
+<text class="ts" x="170" y="220" text-anchor="middle" dominant-baseline="central">Run the OS yourself: steady traffic,</text><text class="ts" x="170" y="238" text-anchor="middle" dominant-baseline="central">fixed bill, someone to patch it?</text>
+<g class="c-gray"><rect x="440" y="202" width="220" height="52" rx="8" stroke-width="0.5"/><text class="th" x="550" y="218" text-anchor="middle" dominant-baseline="central">VM (VPS)</text><text class="ts" x="550" y="236" text-anchor="middle" dominant-baseline="central">EC2 (AWS), DigitalOcean</text></g>
+<line x1="322" y1="228" x2="438" y2="228" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah10-hosting-decision-tree)"/>
+<text class="ts" x="380" y="218" text-anchor="middle">yes</text>
+<line x1="170" y1="258" x2="170" y2="278" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah10-hosting-decision-tree)"/>
+<text class="ts" x="180" y="268" dominant-baseline="central">no</text>
+<g class="c-gray"><rect x="20" y="280" width="300" height="52" rx="8" stroke-width="0.5"/><text class="th" x="170" y="296" text-anchor="middle" dominant-baseline="central">Managed runtime</text><text class="ts" x="170" y="314" text-anchor="middle" dominant-baseline="central">PaaS or container platform</text></g>
+<line x1="20" y1="360" x2="660" y2="360" stroke="var(--b)" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text class="th" x="20" y="388">Step 2: pick the vendor, for whichever type you chose</text>
+<rect x="20" y="404" width="300" height="96" rx="8" fill="none" stroke="var(--b)" stroke-width="1"/>
+<text class="ts" x="36" y="426" dominant-baseline="central">Any of these?</text>
+<text class="ts" x="36" y="448" dominant-baseline="central">• Data must stay in Taiwan</text>
+<text class="ts" x="36" y="466" dominant-baseline="central">• Credits from a big cloud</text>
+<text class="ts" x="36" y="484" dominant-baseline="central">• Must run inside your own VPC</text>
+<g class="c-gray"><rect x="440" y="418" width="220" height="68" rx="8" stroke-width="0.5"/><text class="th" x="550" y="436" text-anchor="middle" dominant-baseline="central">Big cloud</text><text class="ts" x="550" y="454" text-anchor="middle" dominant-baseline="central">AWS, Google Cloud, Azure</text><text class="ts" x="550" y="472" text-anchor="middle" dominant-baseline="central">needs someone for network, IAM</text></g>
+<line x1="322" y1="452" x2="438" y2="452" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah10-hosting-decision-tree)"/>
+<text class="ts" x="380" y="442" text-anchor="middle">yes</text>
+<line x1="170" y1="502" x2="170" y2="522" stroke="var(--b)" stroke-width="1.5" marker-end="url(#ah10-hosting-decision-tree)"/>
+<text class="ts" x="180" y="512" dominant-baseline="central">no</text>
+<g class="c-gray"><rect x="20" y="524" width="300" height="52" rx="8" stroke-width="0.5"/><text class="th" x="170" y="540" text-anchor="middle" dominant-baseline="central">Independent vendor, usually simpler</text><text class="ts" x="170" y="558" text-anchor="middle" dominant-baseline="central">Render, Railway, Fly.io, Vercel, Supabase</text></g>
+<text class="ts" x="20" y="604">Gray: platforms you rent. The big clouds offer every type in step 1.</text></svg>

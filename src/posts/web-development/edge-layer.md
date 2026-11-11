@@ -8,7 +8,7 @@ part: How a backend works
 draft: false
 ---
 
-**What you'll learn:** what a CDN and a reverse proxy are, how Cloudflare, CloudFront, Nginx and Caddy fit together, and why a proxy on your own machine cannot stop a flood of traffic.
+**What you'll learn:** what a CDN and a reverse proxy are, how Cloudflare, CloudFront, Nginx and Caddy fit together, and why a proxy on a server you run cannot stop a flood of traffic.
 
 Between the browser and your app sits a layer you rarely write code for: the edge. It serves files from a place close to the user, ends the TLS connection, and decides which requests are allowed to reach your server at all. Two names cover most of it: a CDN and a reverse proxy.
 
@@ -26,8 +26,8 @@ In this setup the first stop is Cloudflare, which lives on the internet edge. It
 | --- | --- | --- | --- |
 | Cloudflare | Cloudflare's network, between users and you | CDN, DNS, DDoS protection, firewall rules | A blog served from a VPS, with Cloudflare caching images and blocking bots. |
 | CloudFront | Amazon's network, part of AWS | CDN for an AWS-hosted site | Product photos in an S3 bucket, delivered through CloudFront. |
-| Nginx | Your own machine | Reverse proxy, TLS, routing, static files | `/api` goes to a Node service on port 4000, everything else to Next.js on port 3000. |
-| Caddy | Your own machine | The same job as Nginx, with automatic HTTPS | A side project where you want a working HTTPS certificate without touching certbot. |
+| Nginx | A server you run (e.g. a VPS) | Reverse proxy, TLS, routing, static files | `/api` goes to a Node service on port 4000, everything else to Next.js on port 3000. |
+| Caddy | A server you run (e.g. a VPS) | The same job as Nginx, with automatic HTTPS | A side project where you want a working HTTPS certificate without touching certbot. |
 
 Read the table in pairs. Nginx and Caddy are alternatives: you pick one for the machine. Cloudflare and CloudFront are alternatives too: you pick one CDN. A CDN and a reverse proxy are not alternatives, because they live in different places and are normally stacked.
 
@@ -49,7 +49,7 @@ The network link has a fixed bandwidth, and a full pipe drops legitimate packets
 # one set_real_ip_from line per Cloudflare range
 set_real_ip_from 173.245.48.0/20;
 real_ip_header CF-Connecting-IP;
-limit_req_status 429;   # the default rejection is 503
+limit_req_status 429;   # answer 429 "Too Many Requests"; without this line Nginx answers 503
 ```
 
 **The SSL mode.** Cloudflare can encrypt only the browser leg and talk to your server in plain HTTP, which leaves the second leg readable. Use *Full (strict)*: Cloudflare encrypts to your server and checks that its certificate is valid.
@@ -57,4 +57,4 @@ limit_req_status 429;   # the default rejection is 503
 **The firewall.** Cloudflare only helps if attackers cannot walk around it. If your server's IP address leaks, they send traffic straight to it. Configure the VPS firewall to accept ports 80 and 443 only from Cloudflare's IP ranges.
 
 > [!PRINCIPLE] Core principle
-> A CDN is one thing a reverse proxy does. Cloudflare sits at the internet edge and absorbs traffic; Nginx sits on your own machine and routes it.
+> A CDN is one thing a reverse proxy does. Cloudflare sits at the internet edge and absorbs traffic; Nginx sits on a server you run and routes it.

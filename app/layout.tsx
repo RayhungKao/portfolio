@@ -27,7 +27,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { width: 'device-width', initialScale: 1 };
 
 // Apply a saved dark theme before first paint, so it never flashes light.
-const THEME_SCRIPT = `try{if(localStorage.getItem('theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}`;
+// Same for the 中文 / English choice on translated posts (src/Blog.tsx).
+const THEME_SCRIPT = `try{if(localStorage.getItem('theme')==='dark')document.documentElement.dataset.theme='dark';if(localStorage.getItem('post-lang')==='zh')document.documentElement.dataset.lang='zh'}catch(e){}`;
 
 // Home page only: start downloading the avatar photo in parallel with the app's JS.
 const AVATAR_SCRIPT = `(function(){var b=${JSON.stringify(BASE)};var p=location.pathname.replace(/\\/+$/,'');if(p!==b)return;var l=document.createElement('link');l.rel='preload';l.as='image';l.type='image/webp';l.href=b+'/avatar-photo.webp';l.setAttribute('fetchpriority','high');document.head.appendChild(l)})()`;

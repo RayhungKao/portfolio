@@ -482,6 +482,8 @@ a { color: var(--tan-ink); }
 .series-card { box-shadow: 5px 5px 0 -1px var(--surface), 5px 5px 0 0 var(--line); }
 .series-badge { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 600; color: var(--tan-ink); text-decoration: none; }
 .series-badge:hover { text-decoration: underline; }
+.lang-toggle { display: block; margin-top: 12px; cursor: pointer; }
+:root[data-lang="zh"] .lang-en, :root:not([data-lang="zh"]) .lang-zh { display: none; }
 .post-social { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 .post-social .pill { display: inline-block; text-decoration: none; }
 .series-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); }

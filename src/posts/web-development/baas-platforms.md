@@ -1,16 +1,16 @@
 ---
-title: "Backend platforms: what each one bundles and where the rules live"
+title: "BaaS platforms: what each one bundles and where the rules live"
 date: 2026-10-18
-summary: "Six backend platforms compared by what they bundle, and why row-level security decides whether the browser may talk to the database directly."
+summary: "Six backend-as-a-service (BaaS) platforms compared by what they bundle, and why row-level security decides whether the browser may talk to the database directly."
 series: web-backend
 order: 205
 part: Choosing a backend architecture
 draft: false
 ---
 
-**What you'll learn:** what six backend platforms bundle, why the rules must live in the database when the browser talks to it directly, and what goes wrong when they do not.
+**What you'll learn:** what a BaaS is and how it differs from a PaaS, what six BaaS platforms bundle, why the rules must live in the database when the browser talks to it directly, and what goes wrong when they do not.
 
-[Choosing the stack](/blog/choosing-the-stack) says to choose per capability. This article puts names on the options. Platform features change quickly, so treat the table as the position in October 2026, checked against each product's own documentation, and read the current pages before you commit.
+A backend-as-a-service (BaaS) hands you finished backend features, such as a database, login, file storage and access rules, so you write little or no server code of your own. A PaaS is different: it runs a server you wrote ([Where server code runs](/blog/running-server-code)). [Choosing the stack](/blog/choosing-the-stack) says to choose per capability. This article puts names on the BaaS options. Platform features change quickly, so treat the table as the position in October 2026, checked against each product's own documentation, and read the current pages before you commit.
 
 ## Six platforms
 
@@ -22,6 +22,8 @@ draft: false
 | Convex | A reactive database with TypeScript functions | Queries and mutations written in TypeScript; queries re-run and push results to subscribed clients | The product is a live view of changing data and the team writes TypeScript throughout. E.g. a shared task board. | You query with TypeScript instead of SQL, so SQL tools and knowledge do not carry over. |
 | AWS Amplify (Gen 2) | A toolkit for full-stack apps on AWS | A backend defined in TypeScript files in your repo: Cognito for auth, AppSync and DynamoDB for data, plus hosting | You are on AWS already and want the backend as code next to the frontend. E.g. one repo with per-developer sandbox environments. | You run on AWS services and their limits, and the model is closer to DynamoDB than to SQL. |
 | Neon | Serverless PostgreSQL | Postgres with autoscaling, scale to zero and branching; its documentation also lists Auth, Realtime, Object Storage, Functions and a Data API | You want only a Postgres database and will bring the rest. E.g. a Next.js app with its own API on a serverless host. | Check how much of the wider bundle you want before treating it as a database only. Neon joined Databricks in May 2025, and part of its documentation now uses the name Lakebase Postgres. |
+
+Two of the six sit at the edge of the BaaS label. Neon is mainly a managed Postgres database: its row above says to pick it when you want only the database and will bring the rest. Amplify also hosts your frontend, and that part works like a PaaS.
 
 The grid in [Choosing the stack](/blog/choosing-the-stack) shows why Supabase and Neon appear in the same PostgreSQL row: both run Postgres, and what differs is what comes bundled with it.
 

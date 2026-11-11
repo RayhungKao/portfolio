@@ -30,6 +30,8 @@ Read the PostgreSQL row first. It is PostgreSQL in every column, and the only di
 | Serverless functions | Small pieces of code that run on demand. You deploy no server. | A Stripe webhook that runs a few times a day. | Time limits, no long connections, cold starts. |
 | Full server | A process that stays running, on a VPS or a container platform. | A delivery API with many clients, or a WebSocket chat. | You operate and scale it. |
 
+Backend-as-a-service and functions are the two halves of what is called **serverless**: in Mike Roberts' definition, serverless covers both, either one or together ([martinfowler.com](https://martinfowler.com/articles/serverless.html)). Neither has a server for you to run.
+
 In a BaaS, the rules live in the database. With Supabase, **row-level security** (RLS) expresses a rule as SQL, and the database enforces it even though the browser talks to it directly:
 
 ```sql
@@ -52,7 +54,7 @@ Serverless functions have five traits worth knowing:
 - **Time limit.** A call has a maximum duration, so long jobs do not fit.
 - **Connection pooling.** Many short-lived functions can exhaust a database's connections, so they connect through a pooler.
 
-Functions also cannot keep a connection open for a chat, which is why serverless pairs with hosted realtime: Supabase Realtime, Ably or Pusher, or Cloudflare Durable Objects. Between a page that polls and a full WebSocket server there is a range of options, and [Realtime updates](/blog/realtime-updates) walks through it.
+Functions also hold a connection only until their time limit (Vercel Functions close WebSockets after 300 to 800 seconds), so a chat that stays open for hours pairs serverless with hosted realtime: Supabase Realtime, Ably or Pusher, or Cloudflare Durable Objects. Between a page that polls and a full WebSocket server there is a range of options, and [Realtime updates](/blog/realtime-updates) walks through it.
 
 ## Where function files go
 
@@ -70,14 +72,14 @@ Each platform has its own convention for where the code lives.
 
 ## Three questions
 
-1. **Does the app only need data access plus permissions?** Choose a BaaS. RLS covers the rules, and you write no backend.
+1. **Does the app only need data access plus permissions?** Choose a BaaS. RLS covers the rules, and you write little backend code; when some custom logic is needed, Supabase Edge Functions and Cloud Functions for Firebase (Google) run it.
 2. **Is there custom logic, but small, short and triggered by events?** Choose serverless functions. A webhook, a form handler, a call to an API that needs a secret key, or an image resize fits.
-3. **Do you need long-lived connections, long tasks, heavy computing, or many clients that share one set of rules?** Choose a full server.
+3. **Do you need long-lived connections, long tasks, heavy computing, or many clients that share one set of rules?** Choose a full server. Whether that is a VPS you run or a managed runtime, and whether it comes from a big cloud or an independent vendor, is the decision tree in [Where server code runs](/blog/running-server-code).
 
 Many people say Supabase is a sensible default for a first full-stack project. That is a common view as of October 2026, not a measured fact, and it holds when your needs are question 1. If they are not, the matrix lets you mix.
 
 > [!NOTE] Where the rest lives
-> Six platforms compared by what they bundle, and how row-level security works, are in [Backend platforms](/blog/backend-platforms). What a VPS, a container and a PaaS are is in [Where server code runs](/blog/running-server-code).
+> Six platforms compared by what they bundle, and how row-level security works, are in [BaaS platforms](/blog/baas-platforms). What a VPS, a container and a PaaS are, and how to choose between them, is in [Where server code runs](/blog/running-server-code); [When a VPS pays off](/blog/when-a-vps-pays-off) works through the cost.
 
 > [!PRINCIPLE] Core principle
 > The unit of choice is each capability. BaaS, serverless and a full server are only common bundles of those choices.
