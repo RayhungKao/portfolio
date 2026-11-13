@@ -8,9 +8,11 @@ part: How a backend works
 draft: false
 ---
 
-**What you'll learn:** the two ways a server can remember a logged-in user, how each one behaves when you log out or add servers, and what the attributes on a login cookie protect against.
+**What you'll learn:** the two ways a server can remember a logged-in user, how each one behaves when you log out or add servers, what the attributes on a login cookie protect against, and where Sign in with Google fits.
 
-HTTP has no memory. Each request arrives alone, and the server cannot tell that the request for `/cart` comes from the same person who logged in a minute ago. Authentication solves this by handing the browser something to show on every request. There are two kinds of "something".
+HTTP has no memory. Each request arrives alone, and the server cannot tell that the request for `/cart` comes from the same person who logged in a minute ago. Authentication solves this by handing the browser something to show on every request.
+
+That something is not the account. Signing up creates an **account**: a row in your database with the email and, for password login, a password hash, kept until the account is deleted. Logging in creates something separate, a session or a token, which expires. Each login makes a new one, so a user signed in on a phone and a laptop has two. There are two kinds of this "something".
 
 ![Session and JWT login flows](diagram:session-vs-jwt-flows)
 
@@ -18,14 +20,15 @@ HTTP has no memory. Each request arrives alone, and the server cannot tell that 
 
 A **session** gives the browser a random ID such as `9f3a…`. The ID means nothing by itself. The user's data stays on the server in a session store, and each request makes the server look the ID up.
 
-A **JWT** (JSON Web Token) is a token that carries the data inside it: the user ID, the expiry, sometimes a role. The server signs it with a secret key. On each request the server checks the signature and trusts what is inside, with no lookup.
+A **JWT** (JSON Web Token) is a token that carries the data inside it: the user ID, the expiry, sometimes a role. The server signs it with a key: either one secret that both signs and checks (for example HS256), or a private key that signs and a public key that checks (for example RS256, which Firebase uses). On each request the server checks the signature and trusts what is inside, with no lookup.
 
 | | Session | JWT |
 | --- | --- | --- |
 | Where the user data lives | In a store on the server (Redis, a database) | Inside the token the browser holds |
 | Work per request | One store lookup | Verify a signature, no lookup |
-| Logout and revoking | Delete the record and the user is out at once | The token stays valid until it expires |
-| Several servers | Every server must reach the same store | Every server only needs the key |
+| Logout (the user ends this login) | Delete the record and the user is out at once | The client throws the token away, but a copied token still works until it expires |
+| Revoking (the server cuts a login off early) | The same: delete the record | Needs a revocation list, checked on each request |
+| Several servers | Every server must reach the same store | Every server only needs the key that checks the signature |
 | Strongest when | You must kick a user out immediately, such as a banking site or an admin panel | Many services or servers need to check identity without sharing a database |
 
 The weakness of the JWT is revocation. A stolen token works until it expires, so the usual answer is a short expiry plus a revocation list for the cases where you must cut a user off at once. That list is a store lookup again, which is a fair sign that neither side is free.
@@ -35,7 +38,7 @@ The weakness of the JWT is revocation. A stolen token works until it expires, so
 People often say "sessions use cookies and JWTs use headers". That is a habit, not a rule. A cookie or an `Authorization` header can carry either kind.
 
 - A **browser** stores cookies and sends them back automatically, which is why cookies suit websites.
-- A **mobile app** has no cookie jar by default. It keeps the token in the system's secure storage, the iOS Keychain or the Android Keystore, and adds it to the `Authorization` header itself.
+- A **mobile app** usually manages the token itself: it keeps the token in secure storage and adds it to the `Authorization` header. On iOS the Keychain can hold the token directly. On Android the Keystore holds keys, not data, so the app encrypts the token with a Keystore key and stores the result.
 
 Choose the token type by how you need to revoke and scale. Choose the transport by what the client is.
 
@@ -55,9 +58,34 @@ Set-Cookie: sid=9f3a…; HttpOnly; Secure; SameSite=Lax
 
 ## Login, then permission
 
-Authentication answers "who are you?", and authorisation answers "may you do this?". They fail with different codes: 401 when the server does not know who you are, 403 when it knows and refuses.
+Authentication answers "who are you?", and authorisation answers "may you do this?". They fail with different codes: 401 when the request has no valid credentials, so logging in may help; 403 when the server refuses whoever you are, so logging in again does not help.
 
 Real systems often mix the pieces. A store can use Firebase Auth only for login and verify its token in its own API. A company can keep a gateway that checks the outside credential, then issues an internal JWT for the services behind it. The next articles come back to both shapes.
+
+## Sign in with Google: where SSO fits
+
+Single sign-on (SSO), such as "Sign in with Google", is not a third kind of token. It changes who checks the password, not how your server remembers the user afterwards.
+
+1. The user clicks "Sign in with Google" and types their password at Google, the **identity provider**. Your server never sees the password.
+2. Google sends back an **ID token**. In OpenID Connect (OIDC), a common standard for this, the ID token is a JWT signed by the provider.
+3. Your server verifies the ID token, finds or creates the user, and issues its own session or JWT, as in the sections above.
+
+Every login brings a new ID token. The OIDC spec requires these claims in it:
+
+| Claim | Meaning | Same on every login? |
+| --- | --- | --- |
+| `iss` | Who issued it, for example Google | Yes |
+| `sub` | The user's ID at that issuer, never reassigned to anyone else | Yes |
+| `aud` | Which site it was issued for: your client ID | Yes |
+| `exp`, `iat` | When it expires and when it was issued | No |
+
+Before trusting the token, your server checks that the signature is valid with the issuer's keys, that `iss` is the provider you expect, that `aud` includes your client ID, that `exp` has not passed, and, if you sent a `nonce` when starting the login, that it comes back unchanged.
+
+The `aud` check is the easiest to skip. Suppose a game site also offers Sign in with Google, and one of your users logs in there. The game site now holds a genuine ID token: Google's signature, Google's `iss`, and the user's `sub`. If your server checked only those, the game site's owner could send that token to you and log in as your user. Only `aud` gives it away: it names the game site, not yours. (A provider may also give each site a different `sub`, called pairwise identifiers, but you do not control that, so check `aud` anyway.)
+
+To recognise the user, use `iss` and `sub` together. The spec calls them the only claims you can rely on as a stable identifier, and says `email` and `name` must not be used as unique identifiers. So the first login creates a user row holding the `sub`, later logins find that row by `iss` and `sub`, and the email is kept only to display and to send mail. In code a library runs these checks.
+
+Firebase Auth adds one more layer. It accepts the result of Google sign-in, creates a user in your project, and issues its own ID token, whose `iss` and `aud` name your Firebase project rather than Google and your client ID. Your API then verifies Firebase's token, not Google's, as in [Authentication in practice](/blog/authentication-in-practice).
 
 ## Tools, so you do not build login yourself
 
