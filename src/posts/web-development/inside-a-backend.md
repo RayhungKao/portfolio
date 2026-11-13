@@ -18,7 +18,7 @@ Layers 2, 3 and 4 can each stop the request early. That is the point of the spli
 
 ## One request through five layers
 
-Here is `POST /api/orders` in a Next.js route handler, with each layer marked by the number from the diagram.
+Here is `POST /api/orders` in a Next.js Route Handler, with each layer marked by the number from the diagram. Next.js calls `route.ts` a Route Handler. In this article, *handler* on its own means only layer 3, the part of that code that deals with HTTP.
 
 ```ts
 // 1. Routing: this file's path (app/api/orders/route.ts) is the URL
@@ -80,11 +80,11 @@ These two get confused constantly. **401** means the server does not know who yo
 
 ## Middleware in Next.js 16
 
-Next.js 16 renamed its middleware file. As of October 2026, `proxy.ts` replaces `middleware.ts`, which is deprecated (a proxy runs on the Node.js runtime, not the edge runtime). A project has one `proxy.ts`, and it runs before routes are matched, which makes it a good coarse gate: redirect anyone without a session cookie away from `/dashboard`. Do not treat it as the only check. Route handlers and Server Actions can be reached by other means, so each one still verifies the user itself, as the inline check above does.
+Next.js 16 renamed its middleware file. As of October 2026, `proxy.ts` replaces `middleware.ts`, which is deprecated (a proxy runs on the Node.js runtime, not the edge runtime). A project has one `proxy.ts`, and it runs before routes are matched, which makes it a good coarse gate: redirect anyone without a session cookie away from `/dashboard`. Do not treat it as the only check. Route Handlers and Server Actions can be reached by other means, so each one still verifies the user itself, as the inline check above does.
 
 ## When you do not need a service layer
 
-For a small app, a handler that validates and calls the ORM directly is fine. Add a service when the same rule is needed from a second place, or when a handler grows beyond what you can read at a glance. Layers are a cost, so pay for them when they start to save you something.
+For a small app, the `POST` function can do the work of layers 3 to 5 itself: check the input, apply the rule and call the ORM. Add a service when the same rule is needed from a second place, or when the function grows beyond what you can read at a glance. Layers are a cost, so pay for them when they start to save you something.
 
 One rule holds at every size. Never build SQL by gluing strings from user input, because that is how SQL injection happens. Pass values as parameters and let the driver or ORM handle them; the examples above do this without any extra effort.
 

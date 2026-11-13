@@ -58,7 +58,7 @@ function parse(file: string, raw: string): Post & { draft: boolean } {
   const summary = str(meta.summary) || (firstLine.length > 180 ? `${firstLine.slice(0, 177)}…` : firstLine);
   const words = body.match(/[A-Za-z0-9'’-]+/g)?.length ?? 0;
   const cjk = body.match(/[\u3400-\u9fff]/g)?.length ?? 0; // CJK reads at roughly two characters per word
-  const tags = [...new Set([...body.matchAll(/#([\p{L}\p{N}_]+)/gu)].map((m) => m[1]))];
+  const tags = [...new Set([...body.matchAll(/(?<!\S)#([\p{L}\p{N}_]+)/gu)].map((m) => m[1]))];
   return {
     draft: meta.draft === true,
     slug,

@@ -72,23 +72,23 @@ A client sends "Pay", the server commits, and the response is lost. The client r
 
 ![A retry with the same key returns the stored result](diagram:idempotent-retry-after-lost-response)
 
-The client creates one key for the intended action and sends it with every attempt. The server stores the key and the result under a unique constraint:
+The client creates one key for the intended action and sends it with every attempt. The server stores the key together with the user ID, and the result, under a unique constraint on the pair. Scoping the key to the user means one user's key can never return another user's result:
 
 ```ts
 async function chargeOnce(key: string, userId: string, amount: number) {
   return prisma.$transaction(async (tx) => {
-    // idempotency_keys.key has a UNIQUE constraint
-    const seen = await tx.idempotencyKey.findUnique({ where: { key } })
+    // idempotency_keys has UNIQUE (user_id, key): @@unique([userId, key]) in the Prisma schema
+    const seen = await tx.idempotencyKey.findUnique({ where: { userId_key: { userId, key } } })
     if (seen) return seen.response                      // a retry: return the stored result
 
     const charge = await tx.payment.create({ data: { userId, amount } })
-    await tx.idempotencyKey.create({ data: { key, response: charge } })
+    await tx.idempotencyKey.create({ data: { userId, key, response: charge } })
     return charge
   })
 }
 ```
 
-Two requests carrying the same key at the same moment can both pass the `findUnique`. The unique constraint on `key` makes the second insert fail (Prisma reports it as error `P2002`), and its transaction rolls back, payment included. Catch that error and answer **409 Conflict** with "the same request is already being processed", so the client waits and retries instead of seeing a 500. Its next retry finds the stored result. Expire old keys after a day or two so the table does not grow forever.
+Two requests carrying the same key at the same moment can both pass the `findUnique`. The unique constraint on `(user_id, key)` makes the second insert fail (Prisma reports it as error `P2002`), and its transaction rolls back, payment included. Catch that error and answer **409 Conflict** with "the same request is already being processed", so the client waits and retries instead of seeing a 500. Its next retry finds the stored result. Expire old keys after a day or two so the table does not grow forever.
 
 The rollback protects only what lives in your database. If charging means calling a payment provider such as Stripe, that charge cannot be rolled back with your transaction. Send the same key to the provider as its `Idempotency-Key` header, so a retried call returns the first charge instead of making a second one; Stripe's header is this same design offered as a service.
 

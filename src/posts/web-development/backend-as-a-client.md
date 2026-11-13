@@ -36,7 +36,7 @@ Middleware exists so that rules about incoming requests live in one place, befor
 | Concern | Incoming (middleware) | Outgoing (client layers) |
 | --- | --- | --- |
 | Who is allowed | Reject a caller who is not logged in (401) | Attach the API key; refuse a request the program must never send |
-| Time | Cap how long a handler may run | Give up on a remote site that does not answer |
+| Time | Cap how long a request may take | Give up on a remote site that does not answer |
 | Failure | Turn an exception into a 500 | Retry a 503 with a pause; switch to a backup provider |
 | Records | Log method, path and status | Log the call, with secrets removed from the URL |
 

@@ -9,7 +9,8 @@ import type { Emphasis, Root } from 'mdast';
 export default function remarkHashtags() {
   return (tree: Root) => {
     findAndReplace(tree, [
-      /#([\p{L}\p{N}_]+)/gu,
+      // Same rule as the tags in src/postData.ts: a # after a letter (a link's #anchor, C#) is not a tag.
+      /(?<!\S)#([\p{L}\p{N}_]+)/gu,
       // An emphasis node, rewritten to <span class="hashtag"> on the way to HTML.
       // (A `text` node here makes findAndReplace drop the text after the first match.)
       (tag: string): Emphasis => ({

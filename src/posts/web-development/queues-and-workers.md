@@ -10,7 +10,7 @@ draft: false
 
 **What you'll learn:** how a queue and a worker split slow work from the request, how a job can get lost between your database and the queue, what happens when a job fails, and how to choose a queue by where it keeps its jobs.
 
-Some work does not belong inside a request: sending an email, resizing an image, building a report, charging a card through a slow provider. If the handler does it inline, the user waits, and a failure halfway through is lost. A **queue** and a **worker** fix both problems.
+Some work does not belong inside a request: sending an email, resizing an image, building a report, charging a card through a slow provider. If the server does this work before it answers, the user waits, and a failure halfway through is lost. A **queue** and a **worker** fix both problems.
 
 ("Worker" also names the Web Worker in the browser, a different thing: see [Browser workers](/blog/browser-workers-boundaries). This article is about the backend kind.)
 
@@ -18,7 +18,7 @@ Some work does not belong inside a request: sending an email, resizing an image,
 
 ![A queue lets the web request finish before the slow work starts](diagram:queue-and-worker-flow)
 
-The API saves the order, adds a job to the queue and answers at once. A worker takes jobs from the queue and does the slow part. The queue is where jobs wait, so it also absorbs a burst: a thousand orders in a minute become a thousand jobs, worked off at the pace the worker can manage.
+The server saves the order, adds a job to the queue and answers at once. A worker takes jobs from the queue and does the slow part. The queue is where jobs wait, so it also absorbs a burst: a thousand orders in a minute become a thousand jobs, worked off at the pace the worker can manage.
 
 In code, the request side is only this (BullMQ, a Node library that keeps its jobs in Redis):
 
@@ -31,7 +31,7 @@ The worker is a separate, long-running process that receives each job and calls 
 
 ## Saving and enqueueing are two writes
 
-The handler writes to the database and then to the queue. These are two systems, so no transaction covers both. If the process crashes between them, the order exists and the job does not, and no receipt is ever sent. Swapping the order does not help: a job added first may run before the order is saved, or the save may fail and leave a job for an order that never existed. This is the **dual-write problem**.
+The server writes to the database and then to the queue. These are two systems, so no transaction covers both. If the process crashes between them, the order exists and the job does not, and no receipt is ever sent. Swapping the order does not help: a job added first may run before the order is saved, or the save may fail and leave a job for an order that never existed. This is the **dual-write problem**.
 
 | Fix | How it works (example) | What you give up |
 | --- | --- | --- |

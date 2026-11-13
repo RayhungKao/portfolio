@@ -18,7 +18,7 @@ Real projects rarely match one bundle. A subscription app might use a hosted log
 
 Next.js on Vercel sits in the centre. Clerk handles sign-in, and Next.js verifies the session it issues. Data goes to a PostgreSQL database on Neon. Stripe reports payments by calling a webhook on the Next.js side. A long report is too slow for a function, so Next.js sends it to Inngest as an event. Inngest then calls a job endpoint in your own worker app on Fly.io, step by step, and the worker saves the finished report to the database.
 
-The Stripe webhook shows why the pieces need care. Stripe calls your URL when a payment succeeds, and it will call again if your answer is slow or fails. The same event can therefore arrive twice, and the handler must not mark the subscription paid twice.
+The Stripe webhook shows why the pieces need care. Stripe calls your URL when a payment succeeds, and it will call again if your answer is slow or fails. The same event can therefore arrive twice, and your server must not mark the subscription paid twice.
 
 ```ts
 // app/api/stripe/webhook/route.ts
@@ -43,7 +43,7 @@ Three earlier ideas meet here. The signature check is a secret that stays on the
 
 **2. A leave system for 20 people.** Supabase provides login and the PostgreSQL database, so RLS can use the user's ID to show only their own rows, or their department's. One Edge Function posts to Slack, because the Slack key must stay on the server. Nobody needs live updates, and it can launch in two weeks.
 
-**3. A subscription SaaS.** A three-person team should not rebuild login, so it uses Clerk. Billing data is relational, so Neon's PostgreSQL fits, and it scales to zero while there are few users. Webhooks are short, so route handlers on Vercel are enough. Reports exceed a function's time limit, which is why the worker exists.
+**3. A subscription SaaS.** A three-person team should not rebuild login, so it uses Clerk. Billing data is relational, so Neon's PostgreSQL fits, and it scales to zero while there are few users. Webhooks are short, so Route Handlers on Vercel are enough. Reports exceed a function's time limit, which is why the worker exists.
 
 **4. Delivery and ride-hailing.** Three kinds of client share one set of accounts, so login is a library the team controls. Orders are relational, and PostGIS answers map queries. Many clients share complex dispatch and pricing rules, so a full server in NestJS or Go is the right place for them. A queue and a worker send notifications without slowing requests, rider positions change every second, so Redis and WebSocket carry them, and steady traffic suits always-on containers.
 

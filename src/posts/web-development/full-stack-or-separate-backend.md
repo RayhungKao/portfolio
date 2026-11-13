@@ -22,7 +22,7 @@ The second axis is **deployment**: is the backend in the same project as the fro
 | --- | --- | --- |
 | SPA | A Vite app served by an Express server that also hosts the API | A React app on a CDN calling a Java or Go API |
 | MPA | A Rails or Django site | A server-rendered site that calls an internal API |
-| Hybrid | Next.js with route handlers talking to the database | Next.js calling a shared API service |
+| Hybrid | Next.js with Route Handlers talking to the database | Next.js calling a shared API service |
 
 Each row can be combined with either column. Picking Next.js tells you nothing about whether the backend is separate.
 
@@ -64,7 +64,7 @@ Choose B or C when:
 - **The backend needs long-lived connections or heavy computing**, such as WebSocket chat or video processing, which suit a long-running server more than a function.
 - **Parts must scale or release independently.** The checkout service should deploy without redeploying the marketing site.
 
-A useful middle path is to start with A and let the code tell you when to split. If your route handlers keep calling one service module, that module is already the future backend.
+A useful middle path is to start with A and let the code tell you when to split. If your Route Handlers keep calling one service module, that module is already the future backend.
 
 > [!NOTE] Where the rest lives
 > How Server Actions and Route Handlers differ in detail is covered in [Server and client components](/blog/server-and-client-components), in the [frontend series](/series/web-frontend).
