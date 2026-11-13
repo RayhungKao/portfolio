@@ -46,6 +46,9 @@ Fabric.js desk on /work. Deployed to GitHub Pages by `.github/workflows/deploy.y
   sidebar categories. Setting both fails the build.
 - Series titles/descriptions live in `src/series.ts`. A series is one card in the list.
 - Share images are generated per post at build time; `image:` overrides.
+- `scripts/check-links.mjs` (prebuild) fails the build on a link to a missing or draft post, a missing
+  series, or a `#anchor` with no matching heading, so renaming a heading means fixing its links.
+- Hashtags (`#Tag`) count only after a space or at a line start, so a link's `#anchor` is not a tag.
 
 ## Content rules
 - Do not add empty Work cards; add one only when there is real content.

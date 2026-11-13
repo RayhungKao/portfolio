@@ -21,12 +21,12 @@ title: 選擇技術棧
 | 組合 | 你得到什麼 | 適合 | 代價 |
 | --- | --- | --- | --- |
 | Backend-as-a-service（BaaS） | 由同一個供應商提供登入、資料庫、檔案和存取規則。 | 放在 Supabase 上的筆記 App，每個使用者只看到自己的筆記。 | 複雜的邏輯不好寫，而且你會依賴廠商。 |
-| Serverless function | 依需求執行的小段程式碼。你不用部署伺服器。 | 一天只跑幾次的 Stripe webhook。 | 有時間限制、不能長連線、有冷啟動。 |
-| 完整伺服器 | 一個持續執行的行程，放在 VPS 或容器平台上。 | 有很多用戶端的外送 API，或 WebSocket 聊天。 | 你要自己維運和擴展。 |
+| Serverless function | 依需求執行的小段程式碼。你不用部署伺服器。 | 一天只跑幾次的 Stripe webhook。 | 有時間限制、不能長連線、有 cold start。 |
+| 完整伺服器 | 一個持續執行的 process，放在 VPS 或 container 平台上。 | 有很多用戶端的外送 API，或 WebSocket 聊天。 | 你要自己維運和擴展。 |
 
 Backend-as-a-service 和 function 合起來就是所謂的 **serverless**：依 Mike Roberts 的定義，serverless 涵蓋這兩者，可以只用其中一種，也可以一起用（[martinfowler.com](https://martinfowler.com/articles/serverless.html)）。兩者都沒有需要你去跑的伺服器。
 
-在 BaaS 裡，規則放在資料庫中。以 Supabase 來說，**列級安全性**（row-level security，RLS）把規則寫成 SQL，即使瀏覽器直接和資料庫溝通，資料庫也會強制執行：
+在 BaaS 裡，規則放在資料庫中。以 Supabase 來說，**row-level security**（RLS）把規則寫成 SQL，即使瀏覽器直接和資料庫溝通，資料庫也會強制執行：
 
 ```sql
 create policy "users manage their own notes" on notes
@@ -36,7 +36,7 @@ create policy "users manage their own notes" on notes
   with check ((select auth.uid()) = user_id);
 ```
 
-`to authenticated` 把規則限制在已登入的使用者，而把 `auth.uid()` 包在 `select` 裡，讓 Postgres 每個敘述只計算一次，而不是每一列算一次。這兩點都依照 Supabase 自己的範例。
+`to authenticated` 把規則限制在已登入的使用者，而把 `auth.uid()` 包在 `select` 裡，讓 Postgres 每個 statement 只計算一次，而不是每個 row 算一次。這兩點都依照 Supabase 自己的範例。
 
 ## Serverless 在實務上的意思
 
@@ -44,11 +44,11 @@ Serverless function 有五個值得知道的特性：
 
 - **縮到零。** 沒有流量時，什麼都不跑，也不計費。
 - **無狀態。** 兩次呼叫可能跑在不同的機器上，所以它們之間不會在記憶體裡記住任何東西。
-- **冷啟動。** 閒置一段時間後的第一次呼叫會比較慢。
+- **Cold start。** 閒置一段時間後的第一次呼叫會比較慢。
 - **時間限制。** 每次呼叫有最長執行時間，所以長時間的工作放不進去。
-- **連線池。** 大量短命的 function 可能耗盡資料庫的連線數，所以它們要透過 pooler 連線。
+- **Connection pool。** 大量短命的 function 可能耗盡資料庫的連線數，所以它們要透過 pooler 連線。
 
-Function 也只能把連線握到時間上限為止（Vercel Functions 的 WebSocket 會在 300 到 800 秒後關閉），所以要開好幾小時的聊天，serverless 常搭配託管的即時服務：Supabase Realtime、Ably 或 Pusher，或 Cloudflare Durable Objects。在定期輪詢的頁面和完整的 WebSocket 伺服器之間，有一整排選項，[Realtime updates](/blog/realtime-updates) 會一一介紹。
+Function 也只能把連線握到時間上限為止（Vercel Functions 的 WebSocket 會在 300 到 800 秒後關閉），所以要開好幾小時的聊天，serverless 常搭配託管的即時服務：Supabase Realtime、Ably 或 Pusher，或 Cloudflare Durable Objects。在定期 polling 的頁面和完整的 WebSocket 伺服器之間，有一整排選項，[Realtime updates](/blog/realtime-updates) 會一一介紹。
 
 ## Function 檔案放在哪裡
 
@@ -67,13 +67,13 @@ Function 也只能把連線握到時間上限為止（Vercel Functions 的 WebSo
 ## 三個問題
 
 1. **App 只需要資料存取加上權限嗎？** 選 BaaS。RLS 涵蓋規則，你只需要寫很少的後端程式；需要一些自訂邏輯時，Supabase 的 Edge Functions 和 Cloud Functions for Firebase（Google）可以替你執行。
-2. **有自訂邏輯，但規模小、時間短、由事件觸發嗎？** 選 serverless function。Webhook、表單處理、呼叫需要 secret key 的 API，或縮放圖片都適合。
-3. **需要長連線、長時間任務、大量運算，或很多共用同一套規則的用戶端嗎？** 選完整伺服器。要自己跑 VPS 還是用託管的執行環境，要用大型雲端還是獨立供應商，是[伺服器程式在哪裡執行](/blog/running-server-code)裡的決策樹。
+2. **有自訂邏輯，但規模小、時間短、由事件觸發嗎？** 選 serverless function。Webhook、表單送出、呼叫需要 secret key 的 API，或縮放圖片都適合。
+3. **需要長連線、長時間任務、大量運算，或很多共用同一套規則的用戶端嗎？** 選完整伺服器。要自己跑 VPS 還是用 managed runtime，要用大型雲端還是獨立供應商，是[伺服器程式在哪裡執行](/blog/running-server-code)裡的決策樹。
 
 很多人說 Supabase 是第一個全端專案的合理預設。截至 2026 年 10 月這是常見的看法，不是量測出來的事實，而且只在你的需求屬於第 1 題時成立。如果不是，這張矩陣讓你可以混搭。
 
 > [!NOTE] 其他內容在哪裡
-> 依照組合內容比較的六個平台，以及列級安全性怎麼運作，在 [BaaS 平台](/blog/baas-platforms)。VPS、容器和 PaaS 是什麼、怎麼在它們之間做選擇，在[伺服器程式在哪裡執行](/blog/running-server-code)；成本怎麼算，在[什麼時候選 VPS 划算](/blog/when-a-vps-pays-off)。
+> 依照組合內容比較的六個平台，以及 row-level security 怎麼運作，在 [BaaS 平台](/blog/baas-platforms)。VPS、container 和 PaaS 是什麼、怎麼在它們之間做選擇，在[伺服器程式在哪裡執行](/blog/running-server-code)；成本怎麼算，在[什麼時候選 VPS 划算](/blog/when-a-vps-pays-off)。
 
 > [!PRINCIPLE] 核心原則
 > 選擇的單位是每一項能力。BaaS、serverless 和完整伺服器只是這些選擇的常見組合。

@@ -22,7 +22,7 @@ Many sites need no backend at all. A portfolio, a blog or a documentation site i
 | Work independent of the browser | Something that must happen whether or not the tab stays open. | A confirmation email after checkout, a nightly sales report, transcoding an uploaded video. |
 | Systems the browser cannot reach | Resources that are not exposed to the internet, or do not speak HTTP. | A PostgreSQL database speaks its own protocol behind a firewall. An internal ERP answers only to the company network. |
 
-If none of the five is true, you do not need a backend. A portfolio like this one, a Next.js project exported as static files and hosted on GitHub Pages, needs none of them. The pages are built once and served as files. GitHub Pages only serves files that already exist, so a route handler in the project could never answer a request there.
+If none of the five is true, you do not need a backend. A portfolio like this one, a Next.js project exported as static files and hosted on GitHub Pages, needs none of them. The pages are built once and served as files. GitHub Pages only serves files that already exist, so a Route Handler in the project could never answer a request there.
 
 Ask the five questions feature by feature, not site by site. A store's product pages can be plain files while its checkout needs a backend, and that one backend then serves every feature that needs it.
 
@@ -44,7 +44,7 @@ The colours mean the same thing in every diagram of this series. Purple is code 
 | --- | --- | --- |
 | Client | Runs the code you ship but do not control. | A browser on a laptop, the iOS app. |
 | Edge | Sits in front of your servers. It serves cached files, terminates TLS and filters attacks. | Cloudflare caches product images and blocks abusive traffic. A server-rendered product listing that looks the same for everyone can be cached there too. A cart, which is personal, cannot. |
-| Backend | Your code. It holds the secrets and enforces the rules. | A Node service with Next.js route handlers that check the login, price the cart and charge Stripe. |
+| Backend | Your code. It holds the secrets and enforces the rules. | A Node service with Next.js Route Handlers that check the login, price the cart and charge Stripe. |
 | Data stores | Everything you keep. | PostgreSQL for orders and users, Redis for sessions, S3 for product photos. |
 | Queue and worker | Does work after the request has already returned. | A queue such as BullMQ or SQS holds a "send confirmation email" job, and a worker process picks it up. |
 | Third-party services | Systems you call but do not run. | Stripe for payments, SendGrid for email. |

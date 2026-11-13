@@ -61,7 +61,7 @@ Access token 到期時，用戶端把 refresh token 送到驗證 endpoint，換�
 
 - **輪替（rotation）。** 每次使用都回傳一個新的 refresh token，並讓舊的失效。
 - **重用偵測。** 如果一個已經用過的 refresh token 又出現了，代表有人持有複本。撤銷整條鏈，讓使用者重新登入。
-- **伺服器端紀錄。** 把 refresh token（或它們的雜湊值）存在一張表裡，這樣才能撤銷。session 與 JWT 那篇討論的撤銷清單，就放在這裡。
+- **伺服器端紀錄。** 把 refresh token（或它們的雜湊值）存在一張表裡，這樣才能撤銷。Session 與 JWT 那篇討論的撤銷清單，就放在這裡。
 
 > [!PRINCIPLE] 核心原則
 > 每個 token 都自己驗證；讓一個 gateway 把外部憑證翻譯成一種內部 token；讓活得久的那個 token 成為你能撤銷的那一個。

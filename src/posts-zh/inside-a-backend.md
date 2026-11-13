@@ -12,7 +12,7 @@ title: "後端內部：請求的生命週期"
 
 ## 一個請求穿過五層
 
-下面是 Next.js route handler 裡的 `POST /api/orders`，每一層都用圖中的編號標出來。
+下面是 Next.js Route Handler 裡的 `POST /api/orders`，每一層都用圖中的編號標出來。Next.js 把 `route.ts` 叫做 Route Handler；在這篇文章裡，單獨寫 *handler* 時只指第 3 層，也就是這段程式碼裡處理 HTTP 的部分。
 
 ```ts
 // 1. 路由：這個檔案的路徑（app/api/orders/route.ts）就是 URL
@@ -74,11 +74,11 @@ Handler 只懂 HTTP，其他一概不管：它讀取 body、檢查形狀，再�
 
 ## Next.js 16 的 middleware
 
-Next.js 16 把 middleware 檔案改名了。截至 2026 年 10 月，`proxy.ts` 取代了已被棄用的 `middleware.ts`（proxy 跑在 Node.js runtime，而不是 edge runtime）。一個專案只有一個 `proxy.ts`，它在路由比對之前執行，很適合當作粗略的第一道關卡：把沒有 session cookie 的人從 `/dashboard` 重新導向出去。但不要把它當成唯一的檢查。Route handler 和 Server Action 可以透過其他方式被呼叫，所以每一個都還是要自己驗證使用者，就像上面那個寫在函式裡的檢查一樣。
+Next.js 16 把 middleware 檔案改名了。截至 2026 年 10 月，`proxy.ts` 取代了已被棄用的 `middleware.ts`（proxy 跑在 Node.js runtime，而不是 edge runtime）。一個專案只有一個 `proxy.ts`，它在路由比對之前執行，很適合當作粗略的第一道關卡：把沒有 session cookie 的人從 `/dashboard` 重新導向出去。但不要把它當成唯一的檢查。Route Handler 和 Server Action 可以透過其他方式被呼叫，所以每一個都還是要自己驗證使用者，就像上面那個寫在函式裡的檢查一樣。
 
 ## 什麼時候不需要 service 層
 
-對小型 App 來說，一個 handler 做完驗證就直接呼叫 ORM 也沒問題。當同一條規則需要在第二個地方使用，或某個 handler 長到你沒辦法一眼看完時，再加上 service 層。分層是有成本的，等它開始幫你省下東西時再付這筆錢。
+對小型 App 來說，`POST` 函式可以自己做完第 3 到第 5 層的工作：檢查輸入、套用規則、呼叫 ORM。當同一條規則需要在第二個地方使用，或這個函式長到你沒辦法一眼看完時，再加上 service 層。分層是有成本的，等它開始幫你省下東西時再付這筆錢。
 
 有一條規則不管規模大小都成立：永遠不要用使用者輸入拼接字串來組 SQL，SQL injection 就是這樣發生的。把值當作參數傳進去，交給 driver 或 ORM 處理；上面的例子不必額外費力就做到了這點。
 

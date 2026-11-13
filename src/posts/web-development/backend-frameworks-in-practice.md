@@ -19,7 +19,7 @@ draft: false
 | Express | Minimal, and the oldest of the four | Handles routing and middleware. You choose validation, database access and project structure yourself. It has the most tutorials and the largest ecosystem. |
 | Fastify | A more modern take on Express | Still small, but validates and serializes with JSON Schema, has a plugin system and built-in logging, and is faster. |
 | NestJS | A framework with a fixed structure | Decides how the code is split into modules, controllers and services, and uses decorators and dependency injection. It is TypeScript-first and runs on top of Express or Fastify. It feels closest to Spring Boot. |
-| Next.js route handlers | Part of a frontend framework, not a separate backend | You export `GET` or `POST` functions from a `route.ts` file in the `app` folder. Good for the few endpoints a Next.js site needs, often deployed as serverless functions. Not meant for a large, separate backend. |
+| Next.js Route Handlers | Part of a frontend framework, not a separate backend | You export `GET` or `POST` functions from a `route.ts` file in the `app` folder. Good for the few endpoints a Next.js site needs, often deployed as serverless functions. Not meant for a large, separate backend. |
 
 ## Python frameworks
 
@@ -36,7 +36,7 @@ draft: false
 | Minimal: you assemble the rest | Express | Flask |
 | Schemas or types drive validation, with attention to speed | Fastify | FastAPI |
 | The framework decides a lot for you | NestJS | Django |
-| Built into a frontend framework | Next.js route handlers | No direct equivalent |
+| Built into a frontend framework | Next.js Route Handlers | No direct equivalent |
 
 NestJS and Django both decide a lot, but different things. NestJS decides how the code is structured. Django gives you finished features.
 
@@ -54,7 +54,7 @@ A large company almost always uses several stacks. "Company X uses framework Y" 
 | Express | A frontend team writing its own backend, a light API, or a backend for one frontend | E-commerce, startups, web backends | PayPal moved some services from Java to Node.js in 2013, and its Kraken.js framework is built on Express. |
 | Fastify | Express's flexibility with more speed and schema validation | High-traffic APIs, microservices | The [Fastify site](https://fastify.dev/organizations/) names Nearform and Platformatic, the companies behind most of its development, as production users. |
 | NestJS | A large team that needs one shared structure, or a team coming from Java or Angular | Enterprise systems, finance, retail, pharmaceuticals | The [NestJS site](https://nestjs.com/discover/companies) lists IBM, Adidas, Sanofi, Mercedes, BMW, GitLab, Decathlon, Roche and Société Générale. |
-| Next.js route handlers | A Next.js site that needs a few endpoints: forms, webhooks, calls to other services | SaaS products, marketing sites, storefronts | A pattern more than a named stack. Companies rarely announce "our backend is route handlers". |
+| Next.js Route Handlers | A Next.js site that needs a few endpoints: forms, webhooks, calls to other services | SaaS products, marketing sites, storefronts | A pattern more than a named stack. Companies rarely announce "our backend is Route Handlers". |
 
 ### The other families
 

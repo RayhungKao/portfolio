@@ -16,7 +16,7 @@ title: "全端框架，還是獨立的後端"
 | --- | --- | --- |
 | SPA | 一個 Vite App，由同時提供 API 的 Express 伺服器來提供 | 放在 CDN 上的 React App，呼叫 Java 或 Go 的 API |
 | MPA | Rails 或 Django 網站 | 呼叫內部 API 的伺服器渲染網站 |
-| 混合型 | Next.js 用 route handler 直接和資料庫溝通 | Next.js 呼叫一個共用的 API 服務 |
+| 混合型 | Next.js 用 Route Handler 直接和資料庫溝通 | Next.js 呼叫一個共用的 API 服務 |
 
 每一列都能和任一欄組合。選了 Next.js，並不代表後端要不要分開。
 
@@ -58,7 +58,7 @@ title: "全端框架，還是獨立的後端"
 - **後端需要長連線或大量運算**，例如 WebSocket 聊天或影片處理，這些比較適合長時間執行的伺服器，而不是 function。
 - **各部分必須獨立擴展或發布。** 結帳服務部署時，不應該連帶重新部署行銷網站。
 
-一條實用的中間路線是：從 A 開始，讓程式碼告訴你什麼時候該拆。如果你的 route handler 一直呼叫同一個 service 模組，那個模組就已經是未來的後端了。
+一條實用的中間路線是：從 A 開始，讓程式碼告訴你什麼時候該拆。如果你的 Route Handler 一直呼叫同一個 service 模組，那個模組就已經是未來的後端了。
 
 > [!NOTE] 其他內容在哪裡
 > Server Action 和 Route Handler 細部的差異，在[前端系列](/series/web-frontend)的 [Server and client components](/blog/server-and-client-components) 裡。

@@ -50,7 +50,7 @@ A middleware that does not call `next()` and does not answer leaves the request 
 
 A service function knows the business rules and nothing about HTTP, so several entry points can call it.
 
-![A route handler, a Server Action and an admin script all call one service](diagram:service-reused-by-multiple-callers)
+![A Route Handler, a Server Action and an admin script all call one service](diagram:service-reused-by-multiple-callers)
 
 | Caller | Who uses it | What it does before calling the service |
 | --- | --- | --- |
@@ -65,7 +65,7 @@ export async function createOrder(userId: string, input: OrderInput) {
 }
 ```
 
-Each caller authenticates and parses in its own way, then calls `createOrder`. The rule "no order above the stock level" exists once. If it lived in the route handler, the Server Action would need its own copy, and the two would drift apart.
+Each caller authenticates and parses in its own way, then calls `createOrder`. The rule "no order above the stock level" exists once. If it lived in the Route Handler, the Server Action would need its own copy, and the two would drift apart.
 
 ## Validating input with Zod
 

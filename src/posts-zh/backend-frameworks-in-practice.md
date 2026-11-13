@@ -13,7 +13,7 @@ title: "後端框架實務：每個框架用在哪裡，誰在用"
 | Express | 極簡，四者中最老的 | 處理路由和 middleware。驗證、資料庫存取和專案結構都由你自己選。教學最多、生態系最大。 |
 | Fastify | 更現代的 Express | 一樣小，但用 JSON Schema 做驗證和序列化，有 plugin 系統和內建 logging，而且更快。 |
 | NestJS | 結構固定的框架 | 決定程式要怎麼拆成 module、controller 和 service，並使用 decorator 和依賴注入。以 TypeScript 為主，跑在 Express 或 Fastify 之上。感覺最接近 Spring Boot。 |
-| Next.js route handler | 前端框架的一部分，不是獨立的後端 | 從 `app` 資料夾裡的 `route.ts` 匯出 `GET` 或 `POST` 函式。適合 Next.js 網站需要的少數幾個 endpoint，常部署成 serverless function。不是拿來做大型獨立後端的。 |
+| Next.js Route Handler | 前端框架的一部分，不是獨立的後端 | 從 `app` 資料夾裡的 `route.ts` 匯出 `GET` 或 `POST` 函式。適合 Next.js 網站需要的少數幾個 endpoint，常部署成 serverless function。不是拿來做大型獨立後端的。 |
 
 ## Python 框架
 
@@ -30,7 +30,7 @@ title: "後端框架實務：每個框架用在哪裡，誰在用"
 | 極簡：其他的自己組裝 | Express | Flask |
 | 由 schema 或型別驅動驗證，並注重速度 | Fastify | FastAPI |
 | 框架替你決定很多 | NestJS | Django |
-| 內建於前端框架 | Next.js route handler | 沒有直接對應的 |
+| 內建於前端框架 | Next.js Route Handler | 沒有直接對應的 |
 
 NestJS 和 Django 都替你決定很多，但決定的東西不同。NestJS 決定程式碼的結構，Django 給你現成的功能。
 
@@ -46,9 +46,9 @@ NestJS 和 Django 都替你決定很多，但決定的東西不同。NestJS 決�
 | Flask | 小型、自己組裝的網頁層，常放在更大的工具裡 | 資料平台、內部工具、原型 | 開源 BI 工具 Apache Superset 跑在 Flask 上。 |
 | FastAPI | 放在機器學習模型前面的 API，或高並行的 API | AI 產品、ML 平台、資料服務 | [FastAPI 網站](https://fastapi.tiangolo.com/)引用了 Microsoft（ML 服務）、Uber（Ludwig 的預測伺服器）、Netflix（危機管理工具 Dispatch）和 Cisco。Hugging Face 的 Gradio 建立在 FastAPI 上。 |
 | Express | 前端團隊自己寫後端、輕量 API，或服務單一前端的後端 | 電商、新創、網頁後端 | PayPal 在 2013 年把部分服務從 Java 搬到 Node.js，它的 Kraken.js 框架建立在 Express 上。 |
-| Fastify | 想要 Express 的彈性，再加上更快的速度和 schema 驗證 | 高流量 API、微服務 | [Fastify 網站](https://fastify.dev/organizations/)列出 Nearform 和 Platformatic 是正式環境使用者，也是主要開發者背後的公司。 |
+| Fastify | 想要 Express 的彈性，再加上更快的速度和 schema 驗證 | 高流量 API、microservice | [Fastify 網站](https://fastify.dev/organizations/)列出 Nearform 和 Platformatic 是正式環境使用者，也是主要開發者背後的公司。 |
 | NestJS | 需要共同結構的大型團隊，或從 Java、Angular 轉過來的團隊 | 企業系統、金融、零售、製藥 | [NestJS 網站](https://nestjs.com/discover/companies)列出 IBM、Adidas、Sanofi、Mercedes、BMW、GitLab、Decathlon、Roche 和 Société Générale。 |
-| Next.js route handler | 需要幾個 endpoint 的 Next.js 網站：表單、webhook、呼叫其他服務 | SaaS 產品、行銷網站、商店前台 | 比較像一種模式，而不是一個有名字的技術棧。公司很少會宣布「我們的後端是 route handler」。 |
+| Next.js Route Handler | 需要幾個 endpoint 的 Next.js 網站：表單、webhook、呼叫其他服務 | SaaS 產品、行銷網站、商店前台 | 比較像一種模式，而不是一個有名字的技術棧。公司很少會宣布「我們的後端是 Route Handler」。 |
 
 ### 其他家族
 
@@ -92,7 +92,7 @@ Rust 不在[主流後端技術棧](/blog/mainstream-backend-stacks)的七個家�
 
 1. **從你想要的工作開始。** 讀十則你目標職位和地點的職缺，數一數它們提到哪些框架。
 2. **深入學那個一直出現的。** 一個你能拿來交付的框架，勝過五個你試過的。
-3. **學層，不只是學名字。** [同樣的層，不同的名字](/blog/mainstream-backend-stacks#同樣的層不同的名字)說明了 middleware、路由、驗證、資料庫存取和背景工作到處都有。在一個框架裡懂了它們，下一個框架大多只是換個寫法。
+3. **學層，不只是學名字。** [同樣的層，不同的名字](/blog/mainstream-backend-stacks#同樣的層不同的名字)說明了 middleware、路由、驗證、資料庫存取和 background job 到處都有。在一個框架裡懂了它們，下一個框架大多只是換個寫法。
 4. **做公司會做的東西。** 用 Django 做管理後台、用 FastAPI 在模型前面做 API，或用 NestJS 做一個結構固定的服務，學到的會比待辦清單多。
 
 > [!PRINCIPLE] 核心原則

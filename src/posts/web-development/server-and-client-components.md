@@ -76,7 +76,7 @@ export async function placeOrder(formData: FormData) {
 }
 ```
 
-`proxy.ts` is a coarse gate, not a replacement for those checks. It is a good place to redirect early, but handlers and actions can be reached by other means, so each one still verifies the user itself.
+`proxy.ts` is a coarse gate, not a replacement for those checks. It is a good place to redirect early, but Route Handlers and Server Actions can be reached by other means, so each one still verifies the user itself.
 
 None of the three work at request time in a static export. [Static export](/blog/static-export-and-build-time) lists exactly what is left.
 

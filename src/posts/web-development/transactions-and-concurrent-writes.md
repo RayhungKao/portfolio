@@ -69,7 +69,19 @@ DELETE FROM files WHERE id = $1 AND owner_id = $2;
 
 The second time, zero rows are deleted, which means the work is already done, and the handler can still answer success.
 
-Creating an order or charging a card is not safe to repeat. For those the client sends an **idempotency key**, a unique value generated once per intended action. The server remembers the keys it has handled and returns the earlier result for a repeat. Stripe's `Idempotency-Key` header works this way.
+Creating an order or charging a card is not safe to repeat. For those the client sends an **idempotency key**, a unique value generated once per intended action. The server remembers the keys it has handled and returns the earlier result for a repeat.
+
+Take an order placed on your own site:
+
+1. When the checkout page opens, the browser creates a key for this one order with `crypto.randomUUID()`, such as `a1b2…`. It creates the key once, when the page opens, not on every click, so a double-click sends the same key twice. If the cart changes, the page creates a new key: a key stands for one exact order.
+2. Pressing "Place order" sends `POST /orders` with the header `Idempotency-Key: a1b2…`.
+3. In one transaction, the server stores the key together with the user ID and creates the order. A unique constraint on `(user_id, key)` makes a second insert of the same pair fail.
+4. The response is lost on the way back, so the browser sends the same request again, with the same key.
+5. The server finds `a1b2…` already stored for this user and returns the saved result. No second order is created.
+
+A version 4 UUID has 122 random bits. Even across a billion keys, the chance that any two match is about 9.4 × 10⁻²⁰; it takes about 2.7 × 10¹⁸ keys before the chance reaches one half. The real risks are bugs: a key built from a timestamp or `Math.random()`, or one key reused for two different orders. The IETF's draft standard for the `Idempotency-Key` header says the server SHOULD answer 422 when a key comes back with a different request body, and Stripe also returns an error in that case. [Consistency in practice](/blog/consistency-in-practice) shows the server side in code.
+
+Stripe's `Idempotency-Key` header is the same design with the roles shifted: your backend is the client and Stripe is the server.
 
 ## When one statement is not enough
 

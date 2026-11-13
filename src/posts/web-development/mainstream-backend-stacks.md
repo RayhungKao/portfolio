@@ -16,7 +16,7 @@ A backend stack is four choices: a language and runtime, a framework, a database
 
 | Family | Common frameworks | Commonly known for |
 | --- | --- | --- |
-| Node.js / TypeScript | Express, NestJS, Fastify, Next.js route handlers | One language in the browser and on the server |
+| Node.js / TypeScript | Express, NestJS, Fastify, Next.js Route Handlers | One language in the browser and on the server |
 | Java / Kotlin | Spring Boot | Large, long-lived systems and a mature ecosystem |
 | Python | Django, FastAPI, Flask | Quick to write, and the usual language for data and AI work |
 | C# | ASP.NET Core | Strong tooling and a complete platform from Microsoft |

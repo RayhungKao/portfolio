@@ -10,7 +10,7 @@ title: "主流後端技術棧：語言、框架與資料庫"
 
 | 家族 | 常見框架 | 常見的名聲 |
 | --- | --- | --- |
-| Node.js / TypeScript | Express、NestJS、Fastify、Next.js route handler | 瀏覽器和伺服器用同一種語言 |
+| Node.js / TypeScript | Express、NestJS、Fastify、Next.js Route Handler | 瀏覽器和伺服器用同一種語言 |
 | Java / Kotlin | Spring Boot | 大型、長壽的系統，以及成熟的生態系 |
 | Python | Django、FastAPI、Flask | 寫得快，也是資料和 AI 工作的常用語言 |
 | C# | ASP.NET Core | 強大的工具，以及 Microsoft 提供的完整平台 |
@@ -38,7 +38,7 @@ Stack Overflow 2025 開發者調查問了所有受訪者使用哪些網頁框架
 | 路由 | `app.get('/orders/:id', handler)` | controller 方法上的 `@GetMapping("/orders/{id}")` | `urls.py` 裡的 `path('orders/<int:id>/', view)` | `app.MapGet("/orders/{id}", ...)` 或 controller |
 | 驗證 | Zod 之類的函式庫 | Bean Validation，搭配 `@Valid` | Form，或 Django REST framework 的 serializer | Data annotation，或 FluentValidation 之類的函式庫 |
 | 資料庫存取 | Prisma 或 Drizzle 之類的函式庫 | Spring Data JPA | 內建的 Django ORM | Entity Framework Core |
-| 背景工作 | BullMQ 之類的 queue 函式庫 | `@Async`、`@Scheduled`，或 message broker | Celery，或 Django 6.0 的 task API 加上你自己跑的 worker | `BackgroundService`，或 Hangfire 之類的函式庫 |
+| Background job | BullMQ 之類的 queue 函式庫 | `@Async`、`@Scheduled`，或 message broker | Celery，或 Django 6.0 的 task API 加上你自己跑的 worker | `BackgroundService`，或 Hangfire 之類的函式庫 |
 
 當這個系列的範例是用 Express 寫的時候，就拿這張表來對照：概念是相通的，只有寫法不同。
 

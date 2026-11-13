@@ -44,7 +44,7 @@ app.post('/api/orders', async (req, res) => { // 4. handler：全部通過才會
 
 Service 函式懂商業規則、不懂 HTTP，所以好幾個入口都能呼叫它。
 
-![A route handler, a Server Action and an admin script all call one service](diagram:service-reused-by-multiple-callers)
+![A Route Handler, a Server Action and an admin script all call one service](diagram:service-reused-by-multiple-callers)
 
 | 呼叫者 | 誰在用 | 呼叫 service 之前做什麼 |
 | --- | --- | --- |
@@ -59,7 +59,7 @@ export async function createOrder(userId: string, input: OrderInput) {
 }
 ```
 
-每個呼叫者用自己的方式驗證身分和解析輸入，然後呼叫 `createOrder`。「訂單數量不能超過庫存」這條規則只存在一次。如果它放在 route handler 裡，Server Action 就需要自己的一份複本，而兩份遲早會越差越遠。
+每個呼叫者用自己的方式驗證身分和解析輸入，然後呼叫 `createOrder`。「訂單數量不能超過庫存」這條規則只存在一次。如果它放在 Route Handler 裡，Server Action 就需要自己的一份複本，而兩份遲早會越差越遠。
 
 ## 用 Zod 驗證輸入
 

@@ -4,7 +4,7 @@ title: "邊緣層實務：Nginx、Caddy 與四種真實架構"
 
 **你會學到：** 一份在 Cloudflare 後面能用的 Nginx 設定、用 Caddy 做同樣的工作，以及四種可以比較的真實架構。
 
-[邊緣層](/blog/edge-layer)解釋了 CDN 和反向代理在做什麼。這篇是設定檔和架構。
+[邊緣層](/blog/edge-layer)解釋了 CDN 和 reverse proxy 在做什麼。這篇是設定檔和架構。
 
 ## 常見架構裡每一層在做什麼
 
@@ -56,7 +56,7 @@ server {
 }
 ```
 
-有三點要注意。`set_real_ip_from` 加上 `real_ip_header` 讓 `$remote_addr`（以及因此而來的 rate limit 和日誌）使用訪客的位址，而不是 Cloudflare 的位址。`limit_req_status 429` 讓被限流的訪客看到「請求太多」，而不是預設的 503。而 origin 憑證讓 Cloudflare 能用 HTTPS 和 Nginx 溝通，也就是「Full (strict)」SSL 模式，而不是較弱的「Flexible」。
+有三點要注意。`set_real_ip_from` 加上 `real_ip_header` 讓 `$remote_addr`（以及因此而來的 rate limit 和日誌）使用訪客的位址，而不是 Cloudflare 的位址。`limit_req_status 429` 讓被 rate limit 的訪客看到「請求太多」，而不是預設的 503。而 origin 憑證讓 Cloudflare 能用 HTTPS 和 Nginx 溝通，也就是「Full (strict)」SSL 模式，而不是較弱的「Flexible」。
 
 ## 拒絕繞過 Cloudflare 的流量
 
@@ -103,7 +103,7 @@ example.com {
 }
 ```
 
-Caddy 會自己取得並更新 `example.com` 的憑證，所以 Nginx 版本裡的憑證那幾行都不需要了。`servers` 區塊扮演 `set_real_ip_from` 和 `real_ip_header` 的角色；如果你沒有用 Cloudflare，就把它刪掉。Caddy 沒有內建 rate limiter，所以每位訪客的限流需要 plugin，或在其他層做。
+Caddy 會自己取得並更新 `example.com` 的憑證，所以 Nginx 版本裡的憑證那幾行都不需要了。`servers` 區塊扮演 `set_real_ip_from` 和 `real_ip_header` 的角色；如果你沒有用 Cloudflare，就把它刪掉。Caddy 沒有內建 rate limiter，所以每位訪客的 rate limit 需要 plugin，或在其他層做。
 
 ## 四種真實架構
 
