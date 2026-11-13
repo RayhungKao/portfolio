@@ -8,7 +8,7 @@ part: How a backend works
 draft: false
 ---
 
-**What you'll learn:** the two ways a server can remember a logged-in user, how each one behaves when you log out or add servers, and what the attributes on a login cookie protect against.
+**What you'll learn:** the two ways a server can remember a logged-in user, how each one behaves when you log out or add servers, what the attributes on a login cookie protect against, and where Sign in with Google fits.
 
 HTTP has no memory. Each request arrives alone, and the server cannot tell that the request for `/cart` comes from the same person who logged in a minute ago. Authentication solves this by handing the browser something to show on every request. There are two kinds of "something".
 
@@ -58,6 +58,29 @@ Set-Cookie: sid=9f3a…; HttpOnly; Secure; SameSite=Lax
 Authentication answers "who are you?", and authorisation answers "may you do this?". They fail with different codes: 401 when the server does not know who you are, 403 when it knows and refuses.
 
 Real systems often mix the pieces. A store can use Firebase Auth only for login and verify its token in its own API. A company can keep a gateway that checks the outside credential, then issues an internal JWT for the services behind it. The next articles come back to both shapes.
+
+## Sign in with Google: where SSO fits
+
+Single sign-on (SSO), such as "Sign in with Google", is not a third kind of token. It changes who checks the password, not how your server remembers the user afterwards.
+
+1. The user clicks "Sign in with Google" and types their password at Google, the **identity provider**. Your server never sees the password.
+2. Google sends back an **ID token**. In OpenID Connect (OIDC), a common standard for this, the ID token is a JWT signed by the provider.
+3. Your server verifies the ID token, finds or creates the user, and issues its own session or JWT, as in the sections above.
+
+Every login brings a new ID token. The OIDC spec requires these claims in it:
+
+| Claim | Meaning | Same on every login? |
+| --- | --- | --- |
+| `iss` | Who issued it, for example Google | Yes |
+| `sub` | The user's ID at that issuer, never reassigned to anyone else | Yes |
+| `aud` | Which site it was issued for: your client ID | Yes |
+| `exp`, `iat` | When it expires and when it was issued | No |
+
+Before trusting the token, your server checks that the signature is valid with the issuer's keys, that `iss` is the provider you expect, that `aud` includes your client ID, that `exp` has not passed, and, if you sent a `nonce` when starting the login, that it comes back unchanged.
+
+The `aud` check is the easiest to skip. Suppose a game site also offers Sign in with Google, and one of your users logs in there. The game site now holds a genuine ID token: Google's signature, Google's `iss`, and the user's `sub`. If your server checked only those, the game site's owner could send that token to you and log in as your user. Only `aud` gives it away: it names the game site, not yours. (A provider may also give each site a different `sub`, called pairwise identifiers, but you do not control that, so check `aud` anyway.)
+
+To recognise the user, use `iss` and `sub` together. The spec calls them the only claims you can rely on as a stable identifier, and says `email` and `name` must not be used as unique identifiers. So the first login creates a user row holding the `sub`, later logins find that row by `iss` and `sub`, and the email is kept only to display and to send mail. In code a library runs these checks; [Authentication in practice](/blog/authentication-in-practice) verifies a Firebase ID token this way.
 
 ## Tools, so you do not build login yourself
 
