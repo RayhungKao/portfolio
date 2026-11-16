@@ -1,12 +1,20 @@
 ---
-title: "Queue 與 worker：先回應，慢的工作之後再做"
+title: "Queue 與 worker：把工作移出請求"
 ---
 
-**你會學到：** queue 和 worker 怎麼把慢的工作從請求裡拆出去、job 怎麼會在資料庫和 queue 之間不見、job 失敗時會怎樣，以及怎麼依 job 存放的位置來選 queue。
+**你會學到：** 哪些情況需要 queue 和 worker、它們怎麼把慢的工作從請求裡拆出去、job 怎麼會在資料庫和 queue 之間不見、job 失敗時會怎樣，以及怎麼依「一個 job 是什麼、由誰來讀」選工具。
 
-有些工作不該在請求裡做：寄信、縮放圖片、產生報表、透過很慢的服務商刷卡。如果伺服器要做完這些才回應，使用者就得一直等，而且做到一半出錯，這筆工作就沒了。**Queue** 和 **worker** 可以同時解決這兩個問題。
+有些工作不該在觸發它的那個請求裡做。**Queue** 把這些工作存成一個個 job，**worker** 是另一個 process，負責拿出 job 來做。請求不用等工作做完就能回應，job 做到一半失敗了也會重試，不會就這樣不見。
 
 （瀏覽器裡的 Web Worker 也叫「worker」，但那是另一回事，請見 [Browser workers](/blog/browser-workers-boundaries)。這篇講的是後端的 worker。）
+
+## 什麼時候需要
+
+- **Asynchronous processing。** 寄收據、縮放圖片、產生報表：使用者馬上拿到回應，工作在幾秒後做完。影片轉檔要好幾分鐘，比 proxy 願意等的時間長，也超過 serverless function 的執行上限（Vercel：300 到 800 秒）；worker 沒有這種限制。
+- **Decoupling。** 訂單服務記下訂單，留下一則訊息。庫存和出貨服務各自照自己的速度去讀；就算出貨服務停了一個小時，訂單還是照樣成立。
+- **Load leveling（peak shaving）。** 開賣搶票，一分鐘湧進 2,000 筆訂單。Queue 先把它們收下，worker 用穩定的速度消化，所以資料庫和有 rate limit 的服務商（例如每秒只接受固定次數呼叫的寄信或簡訊 API），看到的是平穩的負載，而不是尖峰。Worker 跑在自己的機器上，可以跟網頁伺服器分開擴充。
+
+這篇接下來都用第一種情況當例子，但用到的東西每種情況都一樣：一個存放 job 的 queue、一個拿 job 來做的 worker、重試，以及執行兩次也不會出事的 job。
 
 ## 基本架構
 
@@ -48,17 +56,23 @@ Worker 是另一個一直在跑的 process，每拿到一個 job 就呼叫 `send
 
 ## 怎麼選
 
-先看 job 要存在哪裡，因為這決定了你要多跑哪些東西。以下細節在 2026 年 10 月對照過各專案的官方文件。
+這些工具看起來很像，但最關鍵的差別在於**一個 job 是什麼、由誰來讀**。照順序問自己：
 
-| 存在哪裡 | 選擇 | 什麼時候選（例子） | 代價 |
+1. **一個 job 有好幾個步驟，中間要等（幾小時、幾天、等人審核），而且當機後要能接著做？** 用 durable workflow：Inngest、Trigger.dev 或 Temporal。
+2. **這則訊息是給其他服務讀的，而不是給你自己的 worker？** 用 message broker 或雲端 queue：要在服務之間依規則轉送，用 RabbitMQ；在 AWS 上用 Amazon SQS。如果好幾個 consumer 都要各自讀同一條資料流，或要重新讀一次，那是 Kafka（見表格下方）。
+3. **以上都不是，就是你自己 App 的 job。** 用 job queue 函式庫，依你已經在跑的儲存來選：資料在 PostgreSQL、job 要跟資料一起 commit，選 pg-boss 或 Graphile Worker；已經有 Redis，選 BullMQ；大部分是排程工作，選 Agenda。如果在雲端上、不想自己跑任何東西，Amazon SQS 或 Google Cloud Tasks 也能做到一樣的事。
+
+以下細節在 2026 年 10 月對照過各專案的官方文件。
+
+| 類型 | 選擇 | 什麼時候選（例子） | 代價 |
 | --- | --- | --- | --- |
-| Redis | BullMQ | 想要功能完整的 Node 函式庫（重試、延遲執行、重複執行、優先順序），而且本來就有在跑 Redis。例如寄收據。 | Redis 要設成 `noeviction`，BullMQ 也建議開啟 AOF 持久化。沒有 dead-letter queue。 |
-| PostgreSQL | pg-boss、Graphile Worker | 資料在 PostgreSQL，而且 job 應該跟資料一起 commit。pg-boss 還有 dead-letter queue 和 cron；Graphile Worker 是另一個 Node 加 PostgreSQL 的選擇，有重試和排程。例如訂單和寄收據的 job 在同一個 transaction 裡。 | Job 跟應用程式共用同一個資料庫。 |
-| MongoDB、PostgreSQL 或 Redis | Agenda（v6） | 大部分是排程工作：cron、好讀的時間間隔、時區、優先順序。例如每天凌晨兩點產生報表。 | 選它是為了排程功能：第 6 版三種儲存都支援，所以不用看你現在用哪個資料庫。 |
+| Job queue 函式庫（Redis） | BullMQ | 想要功能完整的 Node 函式庫（重試、延遲執行、重複執行、優先順序），而且本來就有在跑 Redis。例如寄收據。 | Redis 要設成 `noeviction`，BullMQ 也建議開啟 AOF 持久化。沒有 dead-letter queue。 |
+| Job queue 函式庫（PostgreSQL） | pg-boss、Graphile Worker | 資料在 PostgreSQL，而且 job 應該跟資料一起 commit。pg-boss 還有 dead-letter queue 和 cron；Graphile Worker 是另一個 Node 加 PostgreSQL 的選擇，有重試和排程。例如訂單和寄收據的 job 在同一個 transaction 裡。 | Job 跟應用程式共用同一個資料庫。 |
+| 排程函式庫（MongoDB、PostgreSQL 或 Redis） | Agenda（v6） | 大部分是排程工作：cron、好讀的時間間隔、時區、優先順序。例如每天凌晨兩點產生報表。 | 選它是為了排程功能：第 6 版三種儲存都支援，所以不用看你現在用哪個資料庫。 |
 | Message broker | RabbitMQ | 好幾個服務之間需要依規則轉送訊息。例如訂單服務要通知庫存和出貨。 | Broker 要自己維運。Dead letter 預設是在沒有 publisher confirm 的情況下重新發布，所以可能會掉一則；用 quorum queue 才能做到 at-least-once 的 dead letter。 |
-| AWS | Amazon SQS | 用 AWS，不想自己維運 broker：有 visibility timeout、超過 `maxReceiveCount` 次就進 dead-letter queue，標準 queue 是 at-least-once。例如產生縮圖的 job。 | 處理 job 的 consumer 要自己寫、自己跑。AWS 提醒，在 FIFO queue 上用 dead-letter queue 可能會打亂訊息順序。 |
-| Google Cloud | Cloud Tasks | 用 Google Cloud，想讓 job 依你設定的速率，以 HTTP 請求的方式送到你的 endpoint。例如產生 PDF 的 Cloud Run endpoint。 | 最後一次重試後 task 就被刪掉。Endpoint 必須在時限內回應（預設 10 分鐘，最多 30 分鐘）。 |
-| 託管、durable | Inngest、Trigger.dev、Temporal | 工作要撐過一個請求的時間、撐過當機，並且能從最後完成的步驟接著做。Inngest：每個 step 的結果都會保存，例如使用者註冊後等三天，再寄新手教學信。Trigger.dev：跑很久的任務，有 `maxDuration`（每次嘗試的運算時間，等待不算），例如影片轉檔。Temporal：每一步都記在事件紀錄裡的 workflow，例如需要人工審核的貸款申請。 | Inngest：每個 step 都是一個呼叫你 App 的請求，所以要符合主機的時間上限。Trigger.dev：自己架設時沒有 checkpoint 和自動擴充。Temporal：worker 一定要自己跑；不用 Temporal Cloud 的話，伺服器（Go 加一個資料庫）也要自己跑。 |
+| 雲端 queue（AWS） | Amazon SQS | 用 AWS，不想自己維運 broker：有 visibility timeout、超過 `maxReceiveCount` 次就進 dead-letter queue，標準 queue 是 at-least-once。例如產生縮圖的 job。 | 處理 job 的 consumer 要自己寫、自己跑。AWS 提醒，在 FIFO queue 上用 dead-letter queue 可能會打亂訊息順序。 |
+| 雲端 queue（Google Cloud） | Cloud Tasks | 用 Google Cloud，想讓 job 依你設定的速率，以 HTTP 請求的方式送到你的 endpoint。例如產生 PDF 的 Cloud Run endpoint。 | 最後一次重試後 task 就被刪掉。Endpoint 必須在時限內回應（預設 10 分鐘，最多 30 分鐘）。 |
+| Durable workflow | Inngest、Trigger.dev、Temporal | 工作要撐過一個請求的時間、撐過當機，並且能從最後完成的步驟接著做。Inngest：每個 step 的結果都會保存，例如使用者註冊後等三天，再寄新手教學信。Trigger.dev：跑很久的任務，有 `maxDuration`（每次嘗試的運算時間，等待不算），例如影片轉檔。Temporal：每一步都記在事件紀錄裡的 workflow，例如需要人工審核的貸款申請。 | Inngest：每個 step 都是一個呼叫你 App 的請求，所以要符合主機的時間上限。Trigger.dev：自己架設時沒有 checkpoint 和自動擴充。Temporal：worker 一定要自己跑；不用 Temporal Cloud 的話，伺服器（Go 加一個資料庫）也要自己跑。 |
 
 「Durable」的意思是進度會被保存下來，所以當機之後，工作會從最後完成的那一步接著做，不用從頭來。
 
