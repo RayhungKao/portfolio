@@ -15,6 +15,6 @@
 <line x1="170" y1="182" x2="170" y2="204" class="arr" marker-end="url(#arrow-server-and-client-layers)"/>
 <line x1="510" y1="108" x2="510" y2="130" class="arr" marker-end="url(#arrow-server-and-client-layers)"/>
 <line x1="510" y1="182" x2="510" y2="204" class="arr" marker-end="url(#arrow-server-and-client-layers)"/>
-<text class="ts" x="170" y="284" text-anchor="middle">Go: wrap http.Handler · Express: app.use</text>
-<text class="ts" x="510" y="284" text-anchor="middle">Go: wrap http.RoundTripper · axios: interceptors</text>
+<text class="ts" x="170" y="284" text-anchor="middle">Express: app.use · Go: wrap http.Handler</text>
+<text class="ts" x="510" y="284" text-anchor="middle">Node: wrap fetch · Go: wrap http.RoundTripper</text>
 </svg>

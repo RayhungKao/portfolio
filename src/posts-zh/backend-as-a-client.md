@@ -2,7 +2,7 @@
 title: "你的後端也是一個用戶端"
 ---
 
-**你會學到：** 為什麼每個後端既是伺服器也是用戶端、它送出的請求周圍該有哪些層、這些層在 Node、Go、Java、Python 和 .NET 裡叫什麼，以及為什麼放在 transport 裡的檢查不會被略過。
+**你會學到：** 為什麼每個後端既是伺服器也是用戶端、它送出的請求周圍該有哪些層、這些層在五種常見技術棧裡叫什麼，以及為什麼每次呼叫只跑一次的檢查會漏掉重新導向。
 
 [後端內部](/blog/inside-a-backend)跟著一個請求走進來：路由、middleware、handler、service、資料存取。那只是一半的圖。同一個後端也會把請求送出去。它查詢資料庫、透過付款 API 刷卡、透過郵件服務寄信、向模型 API 要一則回覆。在這些往來裡，你的後端是**用戶端（client）**。
 
@@ -50,74 +50,67 @@ Middleware 存在的目的，是讓關於進來請求的規則集中在一個地
 
 所以「middleware」是進來那一側的通用說法。送出那一側沒有單一的名詞；最常見的是「interceptor」，Go 的人則說「transport」。
 
-## 一個 Go 範例：只能讀取的用戶端
+## 一個範例：只能讀取的用戶端
 
-假設爬蟲登入用的帳號也能發表回答。程式只能讀取，所以除了登入之外，所有寫入在離開機器之前都會被拒絕。在 Go 裡，這條規則就是一個 transport：
+假設爬蟲登入用的帳號也能發表回答。程式只能讀取，所以除了登入之外，所有寫入在離開機器之前都會被拒絕。在 Node 裡，這條規則放在一個函式裡，所有送出的請求都經過它：
 
-```go
-var ErrReadOnly = errors.New("refused: this account is read-only")
+```ts
+async function readOnlyFetch(url: string, init: RequestInit = {}, hops = 0): Promise<Response> {
+  const method = (init.method ?? 'GET').toUpperCase()
+  const target = new URL(url)
+  const isLogin = method === 'POST' && target.pathname === '/login'
+  if (method !== 'GET' && !isLogin) throw new Error(`refused: ${method} ${url}: this account is read-only`)
 
-// readOnly 位在 http.Client 和網路之間。
-type readOnly struct {
-	next http.RoundTripper
+  // 重新導向在這裡自己跟隨，不交給 fetch，每一跳才都會經過上面的檢查。
+  const res = await fetch(url, { ...init, redirect: 'manual' })
+  const location = res.headers.get('location')
+  if (res.status >= 300 && res.status < 400 && location) {
+    const next = new URL(location, url)
+    if (next.origin !== target.origin) throw new Error(`refused: redirect to ${next.origin}`)
+    if (hops >= 5) throw new Error('refused: too many redirects')
+    return readOnlyFetch(next.href, { headers: init.headers }, hops + 1)
+  }
+  return res
 }
-
-func (t readOnly) RoundTrip(req *http.Request) (*http.Response, error) {
-	isLogin := req.Method == http.MethodPost && req.URL.Path == "/login"
-	if req.Method != http.MethodGet && !isLogin {
-		return nil, fmt.Errorf("%s %s: %w", req.Method, req.URL, ErrReadOnly)
-	}
-	return t.next.RoundTrip(req)
-}
-
-client := &http.Client{Transport: readOnly{next: http.DefaultTransport}}
 ```
 
-`http.Client` 本身從不碰網路。每個請求它都呼叫一次 `Transport.RoundTrip`，每跟隨一次重新導向就再呼叫一次。這讓 transport 擁有兩個在每個呼叫處各自檢查所沒有的特性：
+這個範例只跟隨同一個網站內的重新導向，而且一律用 `GET`，對只讀取的程式來說已經足夠。
 
-- **重新導向也會被檢查。** 如果某個網站回應一個導向別的主機的重新導向，下一跳也會經過 `RoundTrip`，可以在 session cookie 跟著送出去之前就被拒絕。
-- **沒有呼叫者會忘記。** 明年新增、使用同一個 client 的程式碼，也會經過同樣的檢查。
+## 為什麼檢查要自己跟隨重新導向
 
-## 為什麼 transport 一次只看一個請求
-
-Transport 給的保證是：每個請求都會經過它，而且是一個一個分別經過。沒有請求會略過它，所以把防護放在那裡是安全的。
-
-這個保證背後的契約很小。每次呼叫 `RoundTrip` 處理一個請求：一個請求進去，一個回應或一個錯誤出來。這不是 queue。很多 goroutine 可以同時呼叫同一個 transport，而 Go 要求每個 transport 都要能安全地被這樣使用；`http.Transport` 維護一個 connection pool，讓平行的請求不必互相等待。只有當一個請求依賴另一個時，例如需要前一個回應的 `Location` 的重新導向，請求才會依序執行。
-
-這份契約很重要，因為你程式裡的一次呼叫，在網路上可能變成好幾個請求。
+一次呼叫 `fetch`，可能送出不只一個請求。`fetch` 預設會自己跟隨重新導向（`redirect: 'follow'`），而包在它外面的函式只會在第一個請求之前執行一次：
 
 ```text
-client.Get("https://site.example/profile")
+fetch("https://site.example/profile")
   ├─ 請求 1：GET https://site.example/profile  → 302, Location: https://evil.example/steal
-  └─ 請求 2：GET https://evil.example/steal    ← client 決定要跟隨
+  └─ 請求 2：GET https://evil.example/steal    ← fetch 自己跟過去
 ```
 
-每次 `client.Get` 只跑一次的檢查，只看得到你傳進去的 URL。放在 `RoundTrip` 裡的檢查兩個請求都看得到，可以擋下第二個。重試也是一樣：每一次嘗試都是經過 transport 的獨立請求。
+每次呼叫只跑一次的檢查，只看得到你傳進去的 URL。在 Node 22 上對本機測試伺服器實測，包住 `fetch` 的函式只執行了一次，請求卻繼續送到了第二個主機。加上 `redirect: 'manual'`，Node 的 `fetch` 會直接回傳那個 302，交給你的程式決定，下一跳就會和第一跳經過同樣的檢查。瀏覽器的 `fetch` 在 `manual` 模式下回傳的是過濾過的回應，拿不到 `Location`，所以這種寫法屬於伺服器端。
 
-工作被切分開來，讓兩邊都保持簡單。Go 的文件說 `RoundTrip` 不應該處理重新導向、身分驗證或 cookie；那些屬於 `http.Client`。
+這樣放的檢查，有兩個分散在各個呼叫處的檢查所沒有的特性：
 
-| 工作 | 誰負責 |
-| --- | --- |
-| 要不要跟隨 302 | `http.Client` |
-| 替下一個請求挑選 cookie | `http.Client` |
-| 送出這一個請求並回傳它的回應 | Transport |
+- **重新導向也會被檢查。** 導向別的網站的重新導向，會在任何請求抵達那個網站之前就被拒絕，session cookie 也就不會被送過去。
+- **沒有呼叫者會忘記。** 只要程式送出的請求都經過 `readOnlyFetch`，明年新增的程式碼也會經過同樣的檢查。
 
-因為每個 transport 都接收 `*http.Request`、回傳 `*http.Response` 和 error，transport 可以一層套一層，每一層針對一個請求回答一個問題：
+重試也遵守同一條規則：每一次嘗試都是一個新的請求，所以重試要放在每次嘗試之前都還會跑到檢查的地方。
+
+有些 HTTP 用戶端把這件事內建了。Go 的 `http.Client` 對每個請求都呼叫一次它的 transport（一個 `http.RoundTripper`），重新導向也一樣，所以放在 transport 裡的防護不必自己跟隨重新導向，就能看到每一跳。
+
+## 一層，一個問題
+
+不管用哪種技術棧，送出請求周圍的層都像 middleware 一樣一層套一層，每一層針對一個請求回答一個問題：
 
 | 層 | 它的問題 |
 | --- | --- |
 | Guard（防護） | 這個請求到底可不可以送出？ |
 | Retry（重試） | 這次嘗試失敗了，要再送一次嗎？ |
 | Proxy（代理） | 這個請求要不要經過代理伺服器的位址？ |
-| `http.DefaultTransport` | 送出去。 |
+| HTTP 函式庫 | 送出去。 |
 
-如果某一層處理一整串請求，例如自己跟隨重新導向，那麼它外面的層就永遠看不到中間的請求，防護也就擋不住它們。伺服器的 middleware 在相反的方向遵守同樣的規則：一個 Express middleware `(req, res, next)` 處理一個進來的請求，所以 middleware 才能串接起來。
+如果某一層處理一整串請求，例如在裡面自己跟隨重新導向，那麼它外面的層就永遠看不到中間的請求，防護也就擋不住它們。伺服器的 middleware 在相反的方向遵守同樣的規則：一個 Express middleware `(req, res, next)` 處理一個進來的請求，所以 middleware 才能串接起來。
 
-層會疊起來：`readOnly{next: retry{next: proxy{next: http.DefaultTransport}}}`。順序很重要。Guard 要放在 proxy 層外面，因為 proxy 層會把 URL 改寫成代理廠商的位址，改寫之後 guard 就分辨不出這個請求原本是要送去哪個網站了。
-
-## 哪種語言適合幾乎全是用戶端的程式
-
-任何後端語言都能送出請求。幾乎只做這件事的程式，例如爬蟲、呼叫 API 的命令列工具、依排程抓資料的服務，常常用 Go 來寫，因為 goroutine 讓大量連線變得便宜，一個 `context` 就能把它們全部取消。這個網站上的 Go 文章會用程式碼說明這點。
+順序很重要。Guard 要放在 proxy 層外面，因為 proxy 層會把 URL 改寫成代理廠商的位址，改寫之後 guard 就分辨不出這個請求原本是要送去哪個網站了。
 
 > [!PRINCIPLE] 核心原則
-> 伺服器和用戶端是一次往來中的角色，而後端兩者都扮演。進來請求的規則放在 middleware，送出請求的規則放在用戶端的 transport，在那裡沒有任何呼叫處能略過它們。
+> 伺服器和用戶端是一次往來中的角色，而後端兩者都扮演。進來請求的規則放在 middleware，送出請求的規則放在每個送出的請求都會經過的那一個地方，重新導向也包括在內。

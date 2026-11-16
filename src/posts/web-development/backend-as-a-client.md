@@ -1,14 +1,14 @@
 ---
 title: "Your backend is also a client"
 date: 2026-10-24
-summary: "A backend answers requests and also sends them. How the layers around outgoing requests mirror middleware, what each language calls them, and why a transport sees every request, redirects included."
+summary: "A backend answers requests and also sends them. How the layers around outgoing requests mirror middleware, what each language calls them, and why a check on outgoing requests must see every one, redirects included."
 series: web-backend
 order: 108
 part: How a backend works
 draft: false
 ---
 
-**What you'll learn:** why every backend is a client as well as a server, what layers belong around the requests it sends, what those layers are called in Node, Go, Java, Python and .NET, and why a check placed in the transport cannot be skipped.
+**What you'll learn:** why every backend is a client as well as a server, what layers belong around the requests it sends, what those layers are called in five common stacks, and why a check that runs once per call can miss a redirect.
 
 [Inside a backend](/blog/inside-a-backend) followed a request on its way in: routing, middleware, handler, service, data access. That is half the picture. The same backend also sends requests out. It queries a database, charges a card through a payment API, sends an email through a mail service, asks a model API for a reply. In each of those exchanges your backend is the **client**.
 
@@ -56,74 +56,67 @@ Both sides use the same shape: each layer wraps the next one and may stop early.
 
 So "middleware" is the common word for the incoming side. For the outgoing side there is no single word; "interceptor" is the most common, and Go people say "transport".
 
-## A Go example: a client that can only read
+## An example: a client that can only read
 
-Suppose the crawler logs in with an account that can also post answers. The program must only read, so every write except the login is refused before it leaves the machine. In Go that rule is a transport:
+Suppose the crawler logs in with an account that can also post answers. The program must only read, so every write except the login is refused before it leaves the machine. In Node, that rule lives in one function that every outgoing request goes through:
 
-```go
-var ErrReadOnly = errors.New("refused: this account is read-only")
+```ts
+async function readOnlyFetch(url: string, init: RequestInit = {}, hops = 0): Promise<Response> {
+  const method = (init.method ?? 'GET').toUpperCase()
+  const target = new URL(url)
+  const isLogin = method === 'POST' && target.pathname === '/login'
+  if (method !== 'GET' && !isLogin) throw new Error(`refused: ${method} ${url}: this account is read-only`)
 
-// readOnly sits between http.Client and the network.
-type readOnly struct {
-	next http.RoundTripper
+  // Follow redirects here, not inside fetch, so every hop passes the check above.
+  const res = await fetch(url, { ...init, redirect: 'manual' })
+  const location = res.headers.get('location')
+  if (res.status >= 300 && res.status < 400 && location) {
+    const next = new URL(location, url)
+    if (next.origin !== target.origin) throw new Error(`refused: redirect to ${next.origin}`)
+    if (hops >= 5) throw new Error('refused: too many redirects')
+    return readOnlyFetch(next.href, { headers: init.headers }, hops + 1)
+  }
+  return res
 }
-
-func (t readOnly) RoundTrip(req *http.Request) (*http.Response, error) {
-	isLogin := req.Method == http.MethodPost && req.URL.Path == "/login"
-	if req.Method != http.MethodGet && !isLogin {
-		return nil, fmt.Errorf("%s %s: %w", req.Method, req.URL, ErrReadOnly)
-	}
-	return t.next.RoundTrip(req)
-}
-
-client := &http.Client{Transport: readOnly{next: http.DefaultTransport}}
 ```
 
-`http.Client` never touches the network itself. For every request it calls `Transport.RoundTrip` once, and for every redirect it follows it calls it again. That gives the transport two properties a check at each call site lacks:
+The example follows only redirects within the same site, and always as a `GET`, which is enough for a program that only reads.
 
-- **Redirects are checked.** If a site answers with a redirect to another host, the next hop goes through `RoundTrip` too and can be refused before the session cookie travels with it.
-- **No caller can forget.** Code added next year that uses the same client passes through the same check.
+## Why the check follows redirects itself
 
-## Why a transport sees one request at a time
-
-The guarantee a transport gives is this: every request goes through it, each one separately. No request skips it, and that is why a guard there is safe.
-
-The contract behind the guarantee is small. Each call to `RoundTrip` handles one request: one request comes in, and one response or one error goes out. That is not a queue. Many goroutines can call the same transport at once, and Go requires every transport to be safe for that; `http.Transport` keeps a pool of connections so parallel requests do not wait for each other. Requests run in order only when one depends on another, such as a redirect, which needs the previous response's `Location`.
-
-The contract matters because one call in your code can become several requests on the wire.
+One call to `fetch` can send more than one request. By default `fetch` follows redirects on its own (`redirect: 'follow'`), and a function wrapped around it runs once, before the first request:
 
 ```text
-client.Get("https://site.example/profile")
+fetch("https://site.example/profile")
   ├─ request 1: GET https://site.example/profile  → 302, Location: https://evil.example/steal
-  └─ request 2: GET https://evil.example/steal    ← the client decides to follow
+  └─ request 2: GET https://evil.example/steal    ← fetch follows it on its own
 ```
 
-A check that runs once per `client.Get` sees only the URL you passed in. A check inside `RoundTrip` sees both requests and can stop the second. Retries work the same way: each attempt is its own request through the transport.
+A check that runs once per call sees only the URL you passed in. Run against a local test server on Node 22, a wrapper around `fetch` ran once while the request went on to a second host. With `redirect: 'manual'`, Node's `fetch` returns the 302 itself and lets your code decide, so the next hop goes through the same check as the first. A browser's `fetch` returns a filtered response for `manual` instead, without the `Location`, so this pattern belongs on the server.
 
-The work is split so that each side stays simple. Go's documentation says `RoundTrip` should not handle redirects, authentication or cookies; those belong to `http.Client`.
+Placed this way, the check has two properties that checks scattered across call sites lack:
 
-| Job | Who does it |
-| --- | --- |
-| Follow a 302 or not | `http.Client` |
-| Pick the cookies for the next request | `http.Client` |
-| Send this one request and return its response | The transport |
+- **Redirects are checked.** A redirect to another site is refused before any request reaches that site, so the session cookie never travels there.
+- **No caller can forget.** As long as the program sends requests only through `readOnlyFetch`, code added next year passes through the same check.
 
-Because every transport takes a `*http.Request` and returns an `*http.Response` and an error, transports fit inside each other, and each layer answers one question about one request:
+Retries follow the same rule: each attempt is a new request, so a retry belongs where the check still runs before every attempt.
+
+Some HTTP clients build this in. Go's `http.Client` calls its transport, an `http.RoundTripper`, once for every request, redirects included, so a guard placed in a transport sees every hop without following redirects by hand.
+
+## One layer, one question
+
+Whatever the stack, the layers around outgoing requests stack like middleware, and each answers one question about one request:
 
 | Layer | Its question |
 | --- | --- |
 | Guard | May this request be sent at all? |
 | Retry | This attempt failed; send it again? |
 | Proxy | Should this request go through the proxy's address? |
-| `http.DefaultTransport` | Send it. |
+| The HTTP library | Send it. |
 
-If one layer handled a whole chain of requests, for example by following redirects itself, the layers outside it would never see the requests in the middle, and the guard could not stop them. Server middleware follows the same rule in the other direction: an Express middleware `(req, res, next)` handles one incoming request, which is why middlewares chain.
+If one layer handled a whole chain of requests, for example by following redirects inside it, the layers outside it would never see the requests in the middle, and the guard could not stop them. Server middleware follows the same rule in the other direction: an Express middleware `(req, res, next)` handles one incoming request, which is why middlewares chain.
 
-Layers stack: `readOnly{next: retry{next: proxy{next: http.DefaultTransport}}}`. Order matters. The guard goes outside the proxy layer, because a proxy layer rewrites the URL to the proxy vendor's address, and after that the guard could no longer tell which site the request was for.
-
-## Which language suits a mostly-client program
-
-Any backend language can send requests. Programs that do little else, such as crawlers, command-line tools that call APIs and services that fetch data on a schedule, are often written in Go, because goroutines make many connections cheap and one `context` cancels them all. The Go articles on this site cover that in code.
+Order matters. The guard goes outside the proxy layer, because a proxy layer rewrites the URL to the proxy vendor's address, and after that the guard could no longer tell which site the request was for.
 
 > [!PRINCIPLE] Core principle
-> Server and client are roles in one exchange, and a backend plays both. Put the rules for incoming requests in middleware and the rules for outgoing requests in the client's transport, where no call site can skip them.
+> Server and client are roles in one exchange, and a backend plays both. Put the rules for incoming requests in middleware, and the rules for outgoing requests in the one place every outgoing request passes through, redirects included.
