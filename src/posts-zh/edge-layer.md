@@ -1,43 +1,43 @@
 ---
-title: "邊緣層：CDN 與 reverse proxy"
+title: "Edge 層：CDN 與 reverse proxy"
 ---
 
-**你會學到：** CDN 和 reverse proxy 是什麼、Cloudflare、CloudFront、Nginx 和 Caddy 怎麼搭在一起，以及為什麼你管理的伺服器上的代理擋不住洪水般的流量。
+**你會學到：** CDN 和 reverse proxy 是什麼、Cloudflare、CloudFront、Nginx 和 Caddy 怎麼搭配，以及為什麼裝在你自己伺服器上的 proxy 擋不住大量灌進來的流量。
 
-在瀏覽器和你的 App 之間，有一層你很少為它寫程式的地方：邊緣層（edge）。它從離使用者近的地方提供檔案、終結 TLS 連線，並決定哪些請求有資格碰到你的伺服器。大部分情況可以用兩個名詞涵蓋：CDN 和 reverse proxy。
+在瀏覽器和你的 App 之間，還有一層你很少需要寫程式的地方：edge。它在離使用者近的地方提供檔案、處理 TLS 連線，也決定哪些請求能進到你的伺服器。大部分情況下，這一層就是兩樣東西：CDN 和 reverse proxy。
 
-## 一條路徑，兩個停靠站
+## 一條路，兩個關卡
 
-**Reverse proxy** 代替你的 App 接收請求，再轉送過去。**CDN**（內容傳遞網路）是一個同時在很多城市運作的 reverse proxy，讓每個使用者都連到附近的副本。CDN 是 reverse proxy 能做的其中一件事，不是另一個物種。
+**Reverse proxy** 替你的 App 接下請求，再轉交給 App。**CDN**（Content Delivery Network）則是同時在很多城市運作的 reverse proxy，讓每個使用者都連到離自己近的那一份資料。所以 CDN 是 reverse proxy 的一種用法，不是另一種東西。
 
 ![A request through Cloudflare and Nginx to the app](diagram:edge-layer-request-path)
 
-在這個架構裡，第一站是位在網際網路邊緣的 Cloudflare。它自己就能回應快取的檔案，並在攻擊流量靠近你之前就吸收掉。第二站是跑在你自己 VPS 上的 Nginx。它終結 TLS、把 `/api` 送到後端、其他都送到前端，並壓縮回應。你的 App 只會看到通過這兩關的請求。
+在這個架構裡，第一關是位在網際網路邊緣的 Cloudflare。快取過的檔案它自己就能回應，攻擊流量也會在接近你之前就被它擋掉。第二關是你自己 VPS 上的 Nginx：處理 TLS、把 `/api` 轉給後端、其他的轉給前端，並壓縮回應。你的 App 只會看到通過這兩關的請求。
 
 ## 四個產品，兩種工作
 
-| 產品 | 在哪裡運作 | 典型用途 | 例子 |
+| 產品 | 跑在哪裡 | 常見用途 | 例子 |
 | --- | --- | --- | --- |
-| Cloudflare | Cloudflare 的網路，介於使用者和你之間 | CDN、DNS、DDoS 防護、防火牆規則 | 一個放在 VPS 上的部落格，由 Cloudflare 快取圖片並擋掉機器人。 |
-| CloudFront | Amazon 的網路，AWS 的一部分 | 給託管在 AWS 上的網站用的 CDN | 放在 S3 bucket 的商品照片，透過 CloudFront 傳送。 |
-| Nginx | 你管理的伺服器（例如 VPS） | reverse proxy、TLS、路由、靜態檔案 | `/api` 送到 port 4000 的 Node 服務，其餘送到 port 3000 的 Next.js。 |
-| Caddy | 你管理的伺服器（例如 VPS） | 和 Nginx 一樣的工作，外加自動 HTTPS | 一個 side project，你想要能用的 HTTPS 憑證，又不想碰 certbot。 |
+| Cloudflare | Cloudflare 的網路，在使用者和你之間 | CDN、DNS、DDoS 防護、防火牆規則 | 一個架在 VPS 上的部落格，由 Cloudflare 快取圖片、擋掉機器人。 |
+| CloudFront | Amazon 的網路，屬於 AWS | 給架在 AWS 上的網站用的 CDN | 放在 S3 bucket 裡的商品照片，透過 CloudFront 提供。 |
+| Nginx | 你自己管理的伺服器（例如 VPS） | Reverse proxy、TLS、路由、靜態檔案 | `/api` 轉到 port 4000 的 Node 服務，其他的轉到 port 3000 的 Next.js。 |
+| Caddy | 你自己管理的伺服器（例如 VPS） | 跟 Nginx 一樣，再加上自動處理 HTTPS | 一個 side project，想要能用的 HTTPS 憑證，又不想碰 certbot。 |
 
-這張表要兩兩一組來看。Nginx 和 Caddy 互為替代：一台機器挑一個。Cloudflare 和 CloudFront 也互為替代：挑一個 CDN。但 CDN 和 reverse proxy 不是互相替代的，因為它們位在不同的地方，通常會疊在一起用。
+這張表要兩個兩個看。Nginx 和 Caddy 是二選一：一台機器裝一個就好。Cloudflare 和 CloudFront 也是二選一：選一個 CDN。但 CDN 和 reverse proxy 不是二選一，它們放在不同的位置，通常會一起用。
 
-Cloudflare 通常是小專案的首選。截至 2026 年 10 月，W3Techs 統計約 28% 的網站使用它，相當於在已知有使用 reverse proxy 的網站中佔了約 86%。它監測的網站中約有 68% 完全沒有使用 reverse proxy。
+小專案通常第一個選 Cloudflare。截至 2026 年 10 月，W3Techs 的統計顯示大約 28% 的網站使用 Cloudflare；在已知有用 reverse proxy 的網站裡，它佔了大約 86%。另外，W3Techs 調查的網站中，約有 68% 完全沒有用 reverse proxy。
 
-## 為什麼光靠 Nginx 擋不住洪水
+## 為什麼光靠 Nginx 擋不住大量流量
 
-很容易就會想在 Nginx 加個 rate limiting 就當作搞定。這對付一個吵鬧的用戶端有用，但遇到洪水就失效了，因為等到 Nginx 看到請求時，接收它的成本已經付出去了。
+很多人會想：在 Nginx 加個 rate limiting 不就好了？這對付單一個發太多請求的 client 有用，但遇到大量灌進來的流量就沒用了，因為請求到了 Nginx 手上時，接收它的成本已經付出去了。
 
 ![Limits along the request path](diagram:request-path-resource-limits)
 
-網路線路的頻寬是固定的，管子塞滿了，正常的封包也一起被丟掉。核心（kernel）只維護有限的連線表，大量半開連線就能把它塞滿。每一次 TLS 交握都要花 CPU，即使是 Nginx 下一刻就會拒絕的請求也一樣。Nginx 和你的程式只能在這三關之後才行動。CDN 之所以有效，是因為它是擋在你前面一根大得多的管子，攻擊者在抵達的地方就被擋下了。
+網路線路的頻寬是固定的，一旦塞滿，正常的封包也會跟著被丟掉。作業系統的 kernel 能記錄的連線數量有限，大量建立到一半的連線就能把它塞滿。每一次 TLS handshake 都要花 CPU，就算是 Nginx 下一步就要拒絕的請求也一樣。Nginx 和你的程式，都要等這三關過了才能動作。CDN 之所以有用，是因為它在你前面擋了一條粗得多的線路，攻擊流量在它那裡就被擋下來了。
 
-## 三個容易出錯的細節
+## 三個容易出錯的地方
 
-**真實的用戶端 IP。** 在 Cloudflare 後面，每條連到 Nginx 的連線都來自 Cloudflare 的位址，所以日誌和 rate limit 看到的都是同樣那幾個 IP。Cloudflare 會在 `CF-Connecting-IP` header 裡傳遞真實位址。告訴 Nginx 只在來源是 Cloudflare 公布的 IP 範圍時才信任這個 header：
+**取得 client 真正的 IP。** 放在 Cloudflare 後面時，每一條連到 Nginx 的連線都來自 Cloudflare 的位址，所以日誌和 rate limit 看到的都是同樣那幾個 IP。Cloudflare 會把真正的位址放在 `CF-Connecting-IP` header 裡。要設定 Nginx，只在來源是 Cloudflare 公布的 IP 範圍時才相信這個 header：
 
 ```nginx
 # 每個 Cloudflare 範圍一行 set_real_ip_from
@@ -46,9 +46,9 @@ real_ip_header CF-Connecting-IP;
 limit_req_status 429;   # 被 rate limit 時回 429「請求太多」；不寫這行，Nginx 會回 503
 ```
 
-**SSL 模式。** Cloudflare 可以只加密瀏覽器那一段，再用明文 HTTP 和你的伺服器溝通，這樣第二段就能被讀取。請用 *Full (strict)*：Cloudflare 對你的伺服器也加密，並檢查它的憑證是否有效。
+**SSL 模式。** Cloudflare 可以只加密瀏覽器到它這一段，再用沒加密的 HTTP 連到你的伺服器，這樣後面那一段就可能被看光。請用 *Full (strict)*：Cloudflare 連到你的伺服器時也加密，而且會檢查憑證是否有效。
 
-**防火牆。** 只有在攻擊者繞不過 Cloudflare 時，它才幫得上忙。如果你伺服器的 IP 位址外洩，他們會直接把流量打過去。設定 VPS 防火牆，讓 port 80 和 443 只接受來自 Cloudflare IP 範圍的連線。
+**防火牆。** Cloudflare 只有在攻擊者繞不過它的時候才有用。如果你伺服器的 IP 外洩，對方可以直接打你的伺服器。把 VPS 的防火牆設成 port 80 和 443 只接受 Cloudflare IP 範圍來的連線。
 
 > [!PRINCIPLE] 核心原則
-> CDN 是 reverse proxy 能做的其中一件事。Cloudflare 位在網際網路邊緣、吸收流量；Nginx 位在你管理的伺服器上、負責路由。
+> CDN 是 reverse proxy 的一種用法。Cloudflare 在網際網路的邊緣吸收流量，Nginx 在你自己管理的伺服器上負責轉送。
