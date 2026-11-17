@@ -59,11 +59,15 @@ Stack Overflow 2025 開發者調查問所有受訪者用了哪些網頁框架和
 | --- | --- | --- |
 | 直接呼叫 | 每個服務都有自己的公開 endpoint | 小型系統，特別是 client 是伺服器端的網頁 App 時 |
 | API gateway | 一個入口把每個請求轉給對應的服務、檢查憑證，也可以把好幾個服務的結果合成一個回應 | 手機 App 和 single-page app、服務很多時 |
-| Backend for frontend（BFF） | 每一種 client 一個 gateway，例如網頁一個、手機一個 | 一個 gateway 要應付所有 client，越長越大時 |
+| Backend for frontend（BFF） | 專為一種 client 做的小型後端，由那個 client 的團隊負責：它去呼叫各個服務，把資料整理成那個 client 畫面需要的樣子 | 各種 client 的需求不同時，例如網頁和手機 |
 
 服務越多，直接呼叫的問題就越明顯。client 得知道系統是怎麼拆的，一旦拆法改了，client 也要跟著改。一個畫面可能要呼叫好幾個服務、來回好幾趟。每個服務都直接暴露在網路上，也都得各自處理授權和 TLS。
 
 Gateway 可以解決這些問題，但也有代價：多一個要開發和維運的元件，每個請求多經過一站，而且它一掛，所有人都受影響。Gateway 只負責轉送請求、檢查憑證、合併回應，商業規則不該放在它裡面。Microsoft 的指南也提醒，如果一個 gateway 要應付所有 client，最後很容易變成另一個 monolith，所以建議依 client 的種類各用一個。[身分驗證實務](/blog/authentication-in-practice)裡的 gateway 就是一個例子：它把各種外部憑證轉成同一種內部 token。
+
+**Gateway 是專門給 API 用的 reverse proxy。**（reverse proxy 請見 [Edge 層](/blog/edge-layer)。） Microsoft 的 microservice 指南把「把請求轉給對應的服務」，也就是 reverse proxy 的工作，列為 gateway 的基礎。在這之上，gateway 還能把好幾個服務的結果合成一個回應，並接手各服務共同的工作：身分驗證、依使用者或 API key 做 rate limit、快取回應、重試和記錄 log。Nginx 經過設定也能做到其中一部分，而 API gateway Kong 本身就是透過 OpenResty 跑在 Nginx 上，所以兩者的界線看起來很模糊。
+
+Gateway 和 BFF 做的是不同的事，所以一個系統可以兩個都有。描述 BFF pattern 的 Sam Newman 這樣定義 BFF：它只專注在一個介面上，也只服務那個介面；身分驗證這類共用的工作，他傾向放在更前面的另一層。Microsoft 的 BFF pattern 也一樣：BFF 只處理自己那個 client 的邏輯，授權、rate limit 和路由則另外處理。Microsoft 的範例裡，Azure API Management 擋在所有 client 前面，統一處理授權、監控和快取，再把每個請求轉給那種 client 專用的 BFF（手機一個、桌面一個），由 BFF 去呼叫各個 microservice。Gateway 是所有 client 共用的；每個 BFF 則屬於使用它的前端團隊。BFF 也不是一定要有：Microsoft 提到，用 GraphQL 並替每個前端寫各自的 resolver，或只用一個 gateway，都可能讓 BFF 變得不必要。只有一個網頁 App 時怎麼判斷，請見[全端框架，還是獨立的後端](/blog/full-stack-or-separate-backend#什麼時候值得用-bff)。
 
 ### 先從一個開始
 

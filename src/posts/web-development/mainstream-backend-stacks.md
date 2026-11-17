@@ -65,11 +65,15 @@ No. A client can call the services directly, or reach them through one entry poi
 | --- | --- | --- |
 | Direct calls | Each service has its own public endpoint | A small system, especially when the client is a server-side web app |
 | API gateway | One entry point routes each request to a service, checks credentials, and can combine several services into one response | Mobile apps and single-page apps, many services |
-| Backend for frontend (BFF) | One gateway per kind of client, such as one for web and one for mobile | When one gateway serving every client grows too large |
+| Backend for frontend (BFF) | A small backend for one kind of client, built by that client's team: it calls the services and shapes the data for that client's screens | Clients whose needs differ, such as web and mobile |
 
 Direct calls have a cost that grows with the number of services. The client must know how the system is split, so changing the split breaks clients. One screen may need several round trips. Every service is exposed to the internet, and each one handles authorization and TLS itself.
 
 A gateway fixes those and adds its own: another part to build and run, an extra network hop, and one more place that can fail for everyone. Its job is routing, checking credentials and combining responses, not business rules. Microsoft's guide warns that a single gateway serving every client tends to grow into a monolith of its own, which is why it suggests one per kind of client. The gateway in [Authentication in practice](/blog/authentication-in-practice) is one example: it turns each outside credential into one internal token.
+
+**A gateway is a reverse proxy built for APIs.** (A reverse proxy is explained in [The edge layer](/blog/edge-layer).) Microsoft's microservices guide lists routing requests to services, the reverse proxy job, as a gateway's foundation. On top of it a gateway can combine several services into one response and take over cross-cutting work: authentication, rate limits per user or key, response caching, retries and logging. Nginx can be configured to do part of this, and Kong, an API gateway, runs on Nginx through OpenResty, which is why the line between the two looks blurry.
+
+A gateway and a BFF do different jobs, so a system can have both. Sam Newman, who described the BFF pattern, defines a BFF as "tightly focused on a single UI, and just that UI", and would put shared concerns such as authentication in a layer further upstream. Microsoft's BFF pattern says the same: a BFF handles only logic for its own client, while authorization, rate limiting and routing are handled separately. In Microsoft's example, Azure API Management sits in front of every client and handles authorization, monitoring and caching, then sends each request to the BFF for that client, one for mobile and one for desktop, which calls the microservices. The gateway is shared by all clients; each BFF belongs to the frontend team that uses it. A BFF is not always needed either: Microsoft names GraphQL with resolvers per frontend, or a gateway on its own, as setups that can make it unnecessary. How a single web app decides is in [Full-stack framework or a separate backend](/blog/full-stack-or-separate-backend#when-a-bff-pays-off).
 
 ### Start with one
 
