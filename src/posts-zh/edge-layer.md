@@ -2,7 +2,7 @@
 title: "Edge 層：CDN 與 reverse proxy"
 ---
 
-**你會學到：** CDN 和 reverse proxy 是什麼、Cloudflare、CloudFront、Nginx 和 Caddy 怎麼搭配，以及為什麼裝在你自己伺服器上的 proxy 擋不住大量灌進來的流量。
+**你會學到：** CDN 和 reverse proxy 是什麼、Cloudflare、CloudFront、Nginx 和 Caddy 怎麼搭配、為什麼 S3 不是其中之一，以及為什麼裝在你自己伺服器上的 proxy 擋不住大量灌進來的流量。
 
 在瀏覽器和你的 App 之間，還有一層你很少需要寫程式的地方：edge。它在離使用者近的地方提供檔案、處理 TLS 連線，也決定哪些請求能進到你的伺服器。大部分情況下，這一層就是兩樣東西：CDN 和 reverse proxy。
 
@@ -26,6 +26,10 @@ title: "Edge 層：CDN 與 reverse proxy"
 這張表要兩個兩個看。Nginx 和 Caddy 是二選一：一台機器裝一個就好。Cloudflare 和 CloudFront 也是二選一：選一個 CDN。但 CDN 和 reverse proxy 不是二選一，它們放在不同的位置，通常會一起用。
 
 小專案通常第一個選 Cloudflare。截至 2026 年 10 月，W3Techs 的統計顯示大約 28% 的網站使用 Cloudflare；在已知有用 reverse proxy 的網站裡，它佔了大約 86%。另外，W3Techs 調查的網站中，約有 68% 完全沒有用 reverse proxy。
+
+## S3 是儲存空間，不是 CDN
+
+ 一個 bucket 放在 AWS 的某一個 Region，所以每個請求都要連到那個 Region。S3 可以直接提供靜態網站，但 AWS 寫明它的 website endpoint 不支援 HTTPS。要用 HTTPS，AWS 建議在 bucket 前面放 CloudFront，或改用底層也是 CloudFront 的 Amplify Hosting。所以 AWS 上靜態網站的標準做法，是 S3 bucket 加上 CloudFront。
 
 ## 為什麼光靠 Nginx 擋不住大量流量
 

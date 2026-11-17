@@ -39,7 +39,7 @@ export async function requireUser(req, res, next) {
 
 ## A gateway that turns mixed credentials into one
 
-A company may have a web app that uses a session cookie, a mobile app that uses a bearer token, and several services behind them. Making every service understand both is a mess. Instead, a **gateway** (or backend-for-frontend, BFF) sits in front.
+A company may have a web app that uses a session cookie, a mobile app that uses a bearer token, and several services behind them. Making every service understand both is a mess. Instead, a **gateway** sits in front.
 
 ![A gateway checks outside credentials and passes an internal JWT to services](diagram:mixed-credentials-gateway)
 

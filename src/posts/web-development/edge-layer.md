@@ -8,7 +8,7 @@ part: How a backend works
 draft: false
 ---
 
-**What you'll learn:** what a CDN and a reverse proxy are, how Cloudflare, CloudFront, Nginx and Caddy fit together, and why a proxy on a server you run cannot stop a flood of traffic.
+**What you'll learn:** what a CDN and a reverse proxy are, how Cloudflare, CloudFront, Nginx and Caddy fit together, why S3 is not one of them, and why a proxy on a server you run cannot stop a flood of traffic.
 
 Between the browser and your app sits a layer you rarely write code for: the edge. It serves files from a place close to the user, ends the TLS connection, and decides which requests are allowed to reach your server at all. Two names cover most of it: a CDN and a reverse proxy.
 
@@ -32,6 +32,10 @@ In this setup the first stop is Cloudflare, which lives on the internet edge. It
 Read the table in pairs. Nginx and Caddy are alternatives: you pick one for the machine. Cloudflare and CloudFront are alternatives too: you pick one CDN. A CDN and a reverse proxy are not alternatives, because they live in different places and are normally stacked.
 
 Cloudflare is the usual first choice for small projects. As of October 2026, W3Techs reports it on about 28% of all websites, which is about 86% of the sites with a known reverse proxy. About 68% of the sites it monitors use none.
+
+## S3 is storage, not a CDN
+
+A bucket lives in one AWS Region, so every request travels to that Region. S3 can serve a static website, but AWS states that its website endpoints do not support HTTPS. For HTTPS, AWS points you to CloudFront in front of the bucket, or to Amplify Hosting, which uses CloudFront. That is why the usual AWS setup for a static site is an S3 bucket behind CloudFront.
 
 ## Why Nginx alone cannot stop a flood
 

@@ -33,7 +33,7 @@ export async function requireUser(req, res, next) {
 
 ## 把各種憑證統一的 gateway
 
-一間公司可能有一個用 session cookie 的網頁 App、一個用 bearer token 的手機 App，後面還有好幾個服務。如果每個服務都要看得懂這兩種憑證，會變得很亂。比較好的做法是在前面放一個 **gateway**（或 backend-for-frontend，BFF）。
+一間公司可能有一個用 session cookie 的網頁 App、一個用 bearer token 的手機 App，後面還有好幾個服務。如果每個服務都要看得懂這兩種憑證，會變得很亂。比較好的做法是在前面放一個 **gateway**。
 
 ![A gateway checks outside credentials and passes an internal JWT to services](diagram:mixed-credentials-gateway)
 
